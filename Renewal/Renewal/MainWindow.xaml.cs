@@ -28,6 +28,10 @@ namespace Renewal
         {
             InitializeComponent();
 
+            // move mouse
+
+
+            // calculate screen size
             Width = Screen.PrimaryScreen.Bounds.Width / 8;
             Height = Screen.PrimaryScreen.Bounds.Height;
 
