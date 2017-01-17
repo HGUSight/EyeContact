@@ -15,7 +15,7 @@ namespace Renewal
     public partial class App : Application
     {
         // Tobii host start
-        private WpfEyeXHost _eyeXHost;
+        public WpfEyeXHost _eyeXHost;
 
         public App()
         {

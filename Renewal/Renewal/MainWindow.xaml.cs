@@ -13,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+//move mouse
+using System.Runtime.InteropServices;
+//Tobii
+using Tobii.EyeX.Framework;
 
 namespace Renewal
 {
@@ -29,7 +33,7 @@ namespace Renewal
             InitializeComponent();
 
             // move mouse
-
+            Move_Mouse();
 
             // calculate screen size
             Width = Screen.PrimaryScreen.Bounds.Width / 8;
@@ -42,12 +46,25 @@ namespace Renewal
 
         }
 
+
+        // move mouse
+        [DllImport("User32.dll")]
+        private static extern bool SetCursorPos(int X, int Y);
+        // move_mouse event?
+        private void Move_Mouse()
+        {
+            var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
+            lightlyFilteredGazeDataStream.Next += (s, e) => SetCursorPos((int)e.X, (int)e.Y);
+
+            var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
+        }
+
+        // button click event
         private void Mouse_Click(object sender, RoutedEventArgs e)
         {
             Mouse dlg = new Renewal.Mouse();
             dlg.Show();
         }
-
         private void Keyboard_Click(object sender, RoutedEventArgs e)
         {
             Keyboard dlg = new Renewal.Keyboard();
