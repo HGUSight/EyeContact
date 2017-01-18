@@ -1,0 +1,14 @@
+diff a/Renewal/Renewal/Setting.xaml b/Renewal/Renewal/Setting.xaml	(rejected hunks)
+@@ -5,8 +5,8 @@
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:local="clr-namespace:Renewal"
+         mc:Ignorable="d"
+-        Title="Setting" Height="720" Width="240">
+-<WrapPanel x:Name="wrapPanel" >
+-        <Button x:Name="SetCoordinate" Content="SetCoordinate" Width="240" Height="180" Click="SetCoordinate_Click"/>
+-    </WrapPanel>
++        Title="Setting" Height="300" Width="300">
++    <Grid>
++        
++    </Grid>
+ </Window>
