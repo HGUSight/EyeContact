@@ -44,22 +44,35 @@ namespace Renewal
 
             Size.Equals(Width, Height);
 
+            //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
+            SetHook();
+
         }
 
 
         // move mouse
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
+
+        // coordinate Gaze Point
+        public static int userCoordinateX = 0;
+        public static int userCoordinateY = 0;
+
+        // make sure SetCoordinate is opened.
+        public static bool isCoordinate = false;
+
         // move_mouse event?
         private void Move_Mouse()
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
-            lightlyFilteredGazeDataStream.Next += (s, e) => SetCursorPos((int)e.X, (int)e.Y);
+            lightlyFilteredGazeDataStream.Next += (s, e) => SetCursorPos((int)e.X + userCoordinateX, (int)e.Y + userCoordinateY);
 
             var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
+        //**********************************************
 
-        // button click event
+
+        // button click event 마우스 버튼, 키보드 버튼이 나타남
         private void Mouse_Click(object sender, RoutedEventArgs e)
         {
             Mouse dlg = new Renewal.Mouse();

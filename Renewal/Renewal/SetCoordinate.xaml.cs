@@ -22,6 +22,7 @@ namespace Renewal
         public SetCoordinate()
         {
             InitializeComponent();
+            MainWindow.isCoordinate = true;
         }
     }
 }

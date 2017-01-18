@@ -1,0 +1,16 @@
+diff a/Renewal/Renewal/SetCoordinate.xaml.cs b/Renewal/Renewal/SetCoordinate.xaml.cs	(rejected hunks)
+@@ -22,14 +22,6 @@
+         public SetCoordinate()
+         {
+             InitializeComponent();
+-            MainWindow.isCoordinate = true;
+-
+-        }
+-
+-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+-        {
+-            MainWindow.isCoordinate = false;
+         }
+     }
+-    
+ }
