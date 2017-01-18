@@ -204,10 +204,11 @@ namespace Renewal
             else if (button.Content.ToString() == "OK")
             {
                 Clipboard.SetText(textBox.Text);
-                var myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
-                ShowWindow(myWindowHandler, 5);
-                SetForegroundWindow(myWindowHandler);
-                System.Windows.Clipboard.GetText();
+                //var myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
+                //ShowWindow(myWindowHandler, 5);
+                //SetForegroundWindow(myWindowHandler);
+                PlayAround();
+                Clipboard.GetText();
                 this.Close();
             }
             // 클릭한 버튼이 한글일 경우
@@ -273,5 +274,22 @@ namespace Renewal
 
         [DllImportAttribute("User32.DLL")]
         private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetFocus(HandleRef hWnd);
+
+        public void PlayAround()
+        {
+            Process[] processList = Process.GetProcesses();
+
+            foreach (Process theProcess in processList)
+            {
+                string processName = theProcess.ProcessName;
+                string mainWindowTitle = theProcess.MainWindowTitle;
+                SetFocus(new HandleRef(null, theProcess.MainWindowHandle));
+                Clipboard.GetText();
+            }
+
+        }
     }
 }

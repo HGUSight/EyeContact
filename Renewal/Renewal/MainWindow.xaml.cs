@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
+using System.Diagnostics;
 
 namespace Renewal
 {
@@ -81,10 +82,15 @@ namespace Renewal
         private void Keyboard_Click(object sender, RoutedEventArgs e)
         {
             Keyboard dlg = new Renewal.Keyboard();
+            dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show();
         }
         //**********************************************
 
+        void Keyboard_Closed(object sender, EventArgs e)
+        {
+            System.Windows.Clipboard.GetText();
+        }
 
         //키보드 후킹
         [DllImport("user32.dll")]
@@ -194,5 +200,8 @@ namespace Renewal
             dlg.Show();
         }
         //**********************************************
+
+
+
     }
 }
