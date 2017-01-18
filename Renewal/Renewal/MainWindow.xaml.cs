@@ -58,9 +58,6 @@ namespace Renewal
         public static int userCoordinateX = 0;
         public static int userCoordinateY = 0;
 
-        // make sure SetCoordinate is opened.
-        public static bool isCoordinate = false;
-
         // move_mouse event?
         private void Move_Mouse()
         {
@@ -135,32 +132,6 @@ namespace Renewal
             if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN) // keydown이 인지
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-
-                //when user coordinates gaze Point and mouse position. 
-                if (isCoordinate)
-                {
-                    switch (vkCode)
-                    {
-                        //A key- 왼쪽으로 좌표점 이동시키기
-                        case 65:
-                            userCoordinateX -= 5;
-                            break;
-                        //D key - 오른쪽으로 좌표점 이동시키기 
-                        case 68:
-                            userCoordinateX += 5;
-                            break;
-                        //W key - 위로 이동시키기
-                        case 87:
-                            userCoordinateY -= 5;
-                            break;
-                        //S key - 아래로 이동시키기
-                        case 83:
-                            userCoordinateY += 5;
-                            break;
-                        default:
-                            break;
-                    }
-                }
 
                 if (vkCode.ToString() == "38") // 38: up key
                                                    // http://cherrytree.at/misc/vk.htm 참조
