@@ -23,11 +23,5 @@ namespace Renewal
         {
             InitializeComponent();
         }
-
-        private void SetCoordinate_Click(object sender, RoutedEventArgs e)
-        {
-            SetCoordinate dlg = new Renewal.SetCoordinate();
-            dlg.Show();
-        }
     }
 }

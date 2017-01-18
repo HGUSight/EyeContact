@@ -22,14 +22,6 @@ namespace Renewal
         public SetCoordinate()
         {
             InitializeComponent();
-            MainWindow.isCoordinate = true;
-
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MainWindow.isCoordinate = false;
         }
     }
-    
 }
