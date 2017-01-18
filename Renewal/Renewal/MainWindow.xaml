@@ -6,5 +6,6 @@
     <WrapPanel x:Name="wrapPanel" >
         <Button x:Name="Mouse" Content="Mouse" Width="240" Height="180" Click="Mouse_Click"/>
         <Button x:Name="Keyboard" Content="Keyboard" Width="240" Height="180" Click="Keyboard_Click"/>
+        <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click"/>
     </WrapPanel>
 </Window>
