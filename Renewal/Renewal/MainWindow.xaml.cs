@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 
+
 namespace Renewal
 {
     /// <summary>
@@ -111,6 +112,16 @@ namespace Renewal
         public const int MOUSEWHEEL = 0x0800;
         //마우스 후킹 변수들 
 
+        public static int mouseEvent_var;
+        public enum mouseEvent
+        {
+            LCLICKED = 0,
+            RCLICKED = 1,
+            DOUBLECLICKED = 2,
+            DRAGCLICKED = 3
+        }
+        // 마우스 이벤트 변수들
+
         public void SetHook() // 후킹을 시작
         {
             IntPtr hInstance = LoadLibrary("User32");
@@ -128,13 +139,38 @@ namespace Renewal
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
-                if (vkCode.ToString() == "38") // 38: up key
+                if (vkCode.ToString() == "81") // 38: up key 81: q key
                                                // http://cherrytree.at/misc/vk.htm 참조
                 {
-                    mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 작동
-                    mouse_event(LEFTUP, 0, 0, 0, 0);
+                    switch (mouseEvent_var)
+                    {
+                        case (int)mouseEvent.LCLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                        return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.RCLICKED:
+                            mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭 
+                            mouse_event(RIGHTUP, 0, 0, 0, 0);
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.DOUBLECLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.DRAGCLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    }
+                    
                 }
-                return CallNextHookEx(hhook, code, (int)wParam, lParam); ;
+                return CallNextHookEx(hhook, code, (int)wParam, lParam); 
             }
             else
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);
