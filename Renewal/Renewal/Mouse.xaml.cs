@@ -23,5 +23,20 @@ namespace Renewal
         {
             InitializeComponent();
         }
+
+        private void RClick_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.RCLICKED;
+        }
+
+        private void DClick_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DOUBLECLICKED;
+        }
+
+        private void Drag_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DRAGCLICKED;
+        }
     }
 }

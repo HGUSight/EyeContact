@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 
+
 namespace Renewal
 {
     /// <summary>
@@ -117,6 +118,16 @@ namespace Renewal
         public const int MOUSEWHEEL = 0x0800;
         //마우스 후킹 변수들 
 
+        public static int mouseEvent_var;
+        public enum mouseEvent
+        {
+            LCLICKED = 0,
+            RCLICKED = 1,
+            DOUBLECLICKED = 2,
+            DRAGCLICKED = 3
+        }
+        // 마우스 이벤트 변수들
+
         public void SetHook() // 후킹을 시작
         {
             IntPtr hInstance = LoadLibrary("User32");
@@ -134,14 +145,76 @@ namespace Renewal
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
+<<<<<<< HEAD
                 if (vkCode.ToString() == "38") // 38: up key
                                                    // http://cherrytree.at/misc/vk.htm 참조
                     {
                         mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 작동
                         mouse_event(LEFTUP, 0, 0, 0, 0);
                     }
+=======
+
+                if (vkCode.ToString() == "38") // 38: up key 81: q key
+                                               // http://cherrytree.at/misc/vk.htm 참조
+                {
+                    switch (mouseEvent_var)
+                    {
+                        case (int)mouseEvent.LCLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                        return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.RCLICKED:
+                            mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭 
+                            mouse_event(RIGHTUP, 0, 0, 0, 0);
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.DOUBLECLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); 
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                        case (int)mouseEvent.DRAGCLICKED:
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    }
+                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                }
+
+                //when user coordinates gaze Point and mouse position. 
+                if (isCoordinate)
+                {
+                    switch (vkCode)
+                    {
+                        //A key- 왼쪽으로 좌표점 이동시키기
+                        case 65:
+                            userCoordinateX -= 5;
+                            break;
+                        //D key - 오른쪽으로 좌표점 이동시키기 
+                        case 68:
+                            userCoordinateX += 5;
+                            break;
+                        //W key - 위로 이동시키기
+                        case 87:
+                            userCoordinateY -= 5;
+                            break;
+                        //S key - 아래로 이동시키기
+                        case 83:
+                            userCoordinateY += 5;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+>>>>>>> e66a20fcacc1e393b1cc2fafa6c5f850e526b06c
                
-                return CallNextHookEx(hhook, code, (int)wParam, lParam); ;
+                return CallNextHookEx(hhook, code, (int)wParam, lParam); 
             }
             else
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);
