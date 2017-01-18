@@ -15,19 +15,21 @@ using System.Windows.Shapes;
 namespace Renewal
 {
     /// <summary>
-    /// Setting.xaml에 대한 상호 작용 논리
+    /// SetCoordinate.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class Setting : Window
+    public partial class SetCoordinate : Window
     {
-        public Setting()
+        public SetCoordinate()
         {
             InitializeComponent();
+            MainWindow.isCoordinate = true;
+
         }
 
-        private void SetCoordinate_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            SetCoordinate dlg = new Renewal.SetCoordinate();
-            dlg.Show();
+            MainWindow.isCoordinate = false;
         }
     }
+    
 }
