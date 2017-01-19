@@ -173,7 +173,7 @@ namespace Renewal
                 int vkCode = Marshal.ReadInt32(lParam);
 
 
-                if (vkCode.ToString() == "38") // 38: up key 81: q key
+                if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                // http://cherrytree.at/misc/vk.htm 참조
                 {
                     switch (mouseEvent_var)
@@ -181,13 +181,13 @@ namespace Renewal
                         case (int)mouseEvent.LCLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
                             mouse_event(LEFTUP, 0, 0, 0, 0);
-                        return CallNextHookEx(hhook, code, (int)wParam, lParam);
-
+                            return (IntPtr)1; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                                              // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
                         case (int)mouseEvent.RCLICKED:
                             mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭 
                             mouse_event(RIGHTUP, 0, 0, 0, 0);
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
 
                         case (int)mouseEvent.DOUBLECLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
@@ -195,15 +195,17 @@ namespace Renewal
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); 
                             mouse_event(LEFTUP, 0, 0, 0, 0);
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
 
                         case (int)mouseEvent.DRAGCLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
                     }
-                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    
                 }
+
+               
 
                 //when user coordinates gaze Point and mouse position. 
                 if (isCoordinate)
@@ -231,11 +233,12 @@ namespace Renewal
                     }
                 }
 
-               
-                return CallNextHookEx(hhook, code, (int)wParam, lParam); 
+                else
+                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                
             }
-            else
-                return CallNextHookEx(hhook, code, (int)wParam, lParam);
+            return CallNextHookEx(hhook, code, (int)wParam, lParam);
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
