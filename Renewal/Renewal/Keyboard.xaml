@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Keyboard" Height="300" Width="300">
-    <Grid>
-        
+        WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
+    <Grid Margin="0">
+        <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="alphaPanel" Margin="0" HorizontalAlignment="Left" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="alphaButton" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="koreanButton" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="0" BorderThickness="1" HorizontalAlignment="Left" FontWeight="Normal" FontFamily="KoPubDotum Medium" AcceptsReturn="True" />
     </Grid>
 </Window>
