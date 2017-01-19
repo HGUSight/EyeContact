@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-//using System.Windows.Forms;
-
 
 namespace Renewal
 {
-    /// <summary>
-    /// Keyboard.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class Keyboard : Window
     {
+        // 버튼 크기 결정
         double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 10; // 버튼 너비는 해상도 너비의 1/10
         double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
 
@@ -22,39 +17,34 @@ namespace Renewal
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
+        // Virtual-Key Code
         public const int KEYEVENTF_KEYDOWN = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
         public const int DOT = 0xBE; // '.' flag
 
-        static string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        static string korean = "ㅁㅠㅊㅇㄷㄹㅎㅗㅑㅓㅏㅣㅡㅜㅐㅔㅂㄱㄴㅅㅕㅍㅈㅌㅛㅋ";
-        static string special = "!@#$%^&*()~-=+[]<>?/:;'\"\\|,.";
+        // for문으로 qwerty 순서로 버튼을 생성하기 위한 문자별 array
+        static string korean = "ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔㅁㄴㅇㄹㅎㅗㅓㅏㅣㅋㅌㅊㅍㅠㅜㅡ";
         static string qwerty = "QWERTYUIOPASDFGHJKLZXCVBNM";
-
-        string previousState = "Korean";
-
+        static string special = "!@#$%^&*()~-=+[]<>?/:;'\"\\|,.";
+        
         public Keyboard()
         {
             InitializeComponent();
 
             // Panel 사이즈, 위치 조정
-            topPanel.Height /= 2;
+            topPanel.Height = ButtonHeight;
+            leftPanel.Width = ButtonWidth;
+            leftPanel.Height = ButtonHeight * 2;
+            leftPanel.Margin = new Thickness(0, ButtonHeight, 0, 0);
+            rightPanel.Width = ButtonWidth * 2;
+            rightPanel.Height = ButtonHeight * 2;
+            rightPanel.Margin = new Thickness(ButtonWidth * 8, ButtonHeight, 0, 0);
             koreanPanel.Height /= 2;
-            koreanPanel.Margin = new Thickness(0, topPanel.Height, 0, 0);
-            alphaPanel.Height /= 2;
-            alphaPanel.Margin = new Thickness(0, topPanel.Height, 0, 0);
+            koreanPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
+            englishPanel.Height /= 2;
+            englishPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
             specialPanel.Height /= 2;
-            specialPanel.Margin = new Thickness(0, topPanel.Height, 0, 0);
-
-            // 특수문자 입력시 특수문자 버튼 부분에 한/영 전환 버튼이 있도록(기본값: Hidden)
-            alphaButton.Width = ButtonWidth;
-            alphaButton.Height = ButtonHeight;
-            alphaButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
-            alphaButton.Children.Add(new Button { Content = "English", Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            koreanButton.Width = ButtonWidth;
-            koreanButton.Height = ButtonHeight;
-            koreanButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
-            koreanButton.Children.Add(new Button { Content = "Korean", Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            specialPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
 
             // TextBox 사이즈, 위치 조정
             textBox.Width = ButtonWidth * 7;
@@ -67,50 +57,40 @@ namespace Renewal
                 topPanel.Children.Add(new Button { Content = i.ToString(), Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             }
 
-            // 시스템 버튼 생성(Top Pannel)
-            for (int i = 0; i <= 19; i++)
-            {
-                if (i == 0)
-                    topPanel.Children.Add(new Button { Content = "What", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else if (i == 8)
-                    topPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else if (i == 9)
-                    topPanel.Children.Add(new Button { Content = "Special", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else if (i == 10)
-                    topPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else if (i == 18)
-                    topPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else if (i == 19)
-                    topPanel.Children.Add(new Button { Content = "OK", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                else
-                    topPanel.Children.Add(new Button { Content = "Empty", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            }
+            // 좌측 시스템 버튼 생성(Left Panel)
+            leftPanel.Children.Add(new Button { Content = "What", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
-            // 영어 버튼 생성(Alpha Pannel)
-            for (var c = 'A'; c <= 'Z'; c++)
-            {
-                alphaPanel.Children.Add(new Button { Content = ConvertToQwerty(c), Tag = "Alpha", Width = ButtonWidth, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
-                if (AlphaToKorean(ConvertToQwerty(c)) == 'ㅣ')
-                    alphaPanel.Children.Add(new Button { Content = "Korean", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                if (AlphaToKorean(ConvertToQwerty(c)) == 'ㅍ')
-                    alphaPanel.Children.Add(new Button { Content = ' ', Tag = "System", Width = ButtonWidth * 2, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
-            }
+            // 우측 시스템 버튼 생성(Right Panel)
+            Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
+            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            rightPanel.Children.Add(specialButton);
+            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            rightPanel.Children.Add(new Button { Content = "OK", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
-            alphaPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            // 영어 버튼 생성(English Pannel)
+            for (int i = 0; i < qwerty.Length; i++)
+            {
+                englishPanel.Children.Add(new Button { Content = qwerty[i], Tag = "Alpha", Width = ButtonWidth, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
+                if (qwerty[i] == 'L')
+                    englishPanel.Children.Add(new Button { Content = "Korean", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+                if (qwerty[i] == 'V')
+                    englishPanel.Children.Add(new Button { Content = ' ', Tag = "System", Width = ButtonWidth * 2, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
+            }
+            englishPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 한글 버튼 생성(Korean Pannel)
-            for (var c = 'A'; c <= 'Z'; c++)
+            for (int i = 0; i < korean.Length; i++)
             {
-                koreanPanel.Children.Add(new Button { Content = AlphaToKorean(ConvertToQwerty(c)), Tag = "Korean", Width = ButtonWidth, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
-                if (AlphaToKorean(ConvertToQwerty(c)) == 'ㅣ')
+                koreanPanel.Children.Add(new Button { Content = korean[i], Tag = "Korean", Width = ButtonWidth, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
+                if (korean[i] == 'ㅣ')
                     koreanPanel.Children.Add(new Button { Content = "English", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-                if (AlphaToKorean(ConvertToQwerty(c)) == 'ㅍ')
+                if (korean[i] == 'ㅍ')
                     koreanPanel.Children.Add(new Button { Content = ' ', Tag = "System", Width = ButtonWidth * 2, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
             }
             koreanPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 특수문자 버튼 생성(Speical Pannel)
-
             for (int i = 0; i < special.Length; i++)
             {
                 specialPanel.Children.Add(new Button { Content = special[i], Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false, Background = System.Windows.Media.Brushes.White });
@@ -119,107 +99,48 @@ namespace Renewal
             }
             specialPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
+            // 한영 전환 버튼
+            changeButton.Width = ButtonWidth;
+            changeButton.Height = ButtonHeight;
+            changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
 
             // 각 버튼과 Button Click method 연결
             foreach (Button button in topPanel.Children)
-            {
                 button.Click += Button_Click;
-            }
-            foreach (Button button in topPanel.Children)
-            {
+            foreach (Button button in leftPanel.Children)
                 button.Click += Button_Click;
-            }
+            foreach (Button button in rightPanel.Children)
+                button.Click += Button_Click;
             foreach (Button button in koreanPanel.Children)
-            {
                 button.Click += Button_Click;
-            }
-            foreach (Button button in alphaPanel.Children)
-            {
+            foreach (Button button in englishPanel.Children)
                 button.Click += Button_Click;
-            }
             foreach (Button button in specialPanel.Children)
-            {
                 button.Click += Button_Click;
-            }
-            foreach (Button button in alphaButton.Children)
-            {
-                button.Click += Button_Click;
-            }
-            foreach (Button button in koreanButton.Children)
-            {
-                button.Click += Button_Click;
-            }
 
-            // TextBox에 포커스 맞춤
-            textBox.Focus();
-
-            // 특수문자 panel 숨기기(초기값: 한글)
-            specialPanel.Visibility = Visibility.Hidden;
-            alphaButton.Visibility = Visibility.Hidden;
-            koreanButton.Visibility = Visibility.Hidden;
+            textBox.Focus(); // TextBox에 포커스 맞춤
+            specialPanel.Visibility = Visibility.Hidden; // 특수문자 panel 숨기기(초기값: 한글)
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
-            var chars = button.Content.ToString().ToCharArray(); // 버튼 content의 내용을 char array로 받아옴
+            string content = button.Content.ToString();
 
-            // 한영 전환 버튼 클릭시 Korean Panel <-> English Panel 변경
-            if (button.Content.ToString() == "English")
-            {
-                koreanPanel.Visibility = Visibility.Hidden;
-                specialPanel.Visibility = Visibility.Hidden;
-                alphaButton.Visibility = Visibility.Hidden;
-                koreanButton.Visibility = Visibility.Hidden;
-                previousState = "English";
-            }
-            else if (button.Content.ToString() == "Korean")
-            {
-                specialPanel.Visibility = Visibility.Hidden;
-                koreanPanel.Visibility = Visibility.Visible;
-                alphaButton.Visibility = Visibility.Hidden;
-                koreanButton.Visibility = Visibility.Hidden;
-                previousState = "Korean";
-            }
-            // 특수문자 버튼 클릭시 Korean 또는 English Panel <-> Special Panel 변경
-            else if (button.Content.ToString() == "Special")
-            {
-                specialPanel.Visibility = Visibility.Visible;
-                if (previousState == "Korean")
-                {
-                    koreanButton.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    alphaButton.Visibility = Visibility.Visible;
-                }
-
-            }
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
-            else if (button.Content.ToString() == "OK")
+            if (content == "OK")
             {
                 Clipboard.SetText(textBox.Text);
                 this.Close();
             }
-            // 클릭한 버튼이 한글일 경우
-            else if (button.Tag.ToString() == "Korean")
+            else if (button.Tag.ToString() == "SpecialButton")
             {
-                InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Native;
-                keybd_event((byte)KoreanToAlpha(chars[0]), 0, KEYEVENTF_KEYDOWN, 0);
-                keybd_event((byte)KoreanToAlpha(chars[0]), 0, KEYEVENTF_KEYUP, 0);
-            }
-            // 클릭한 버튼이 영어일 경우
-            else if (button.Tag.ToString() == "Alpha")
-            {
-                InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Alphanumeric;
-                keybd_event((byte)chars[0], 0, KEYEVENTF_KEYDOWN, 0);
-                keybd_event((byte)chars[0], 0, KEYEVENTF_KEYUP, 0);
-            }
-            // 클릭한 버튼이 숫자일 경우
-            else if (button.Tag.ToString() == "Digit")
-            {
-                keybd_event((byte)chars[0], 0, KEYEVENTF_KEYDOWN, 0);
-                keybd_event((byte)chars[0], 0, KEYEVENTF_KEYUP, 0);
+                specialPanel.Visibility = Visibility.Visible;
+                if (changeButton.Content.ToString() == "한")
+                    changeButton.Content = "영";
+                else
+                    changeButton.Content = "한";
+                changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
             }
             // 시스템 키
             else if (button.Tag.ToString() == "System")
@@ -227,7 +148,21 @@ namespace Renewal
                 keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYDOWN, 0);
                 keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYUP, 0);
             }
-            // 그 외 특수문자
+            // 클릭한 버튼이 한글일 경우
+            else if (button.Tag.ToString() == "Korean")
+            {
+                InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Native;
+                keybd_event((byte)KoreanToAlpha(content[0]), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event((byte)KoreanToAlpha(content[0]), 0, KEYEVENTF_KEYUP, 0);
+            }
+            // 클릭한 버튼이 영어일 경우
+            else if (button.Tag.ToString() == "Alpha")
+            {
+                InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Alphanumeric;
+                keybd_event((byte)content[0], 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event((byte)content[0], 0, KEYEVENTF_KEYUP, 0);
+            }
+            // 그 외 숫자, 특수문자
             else
             {
                 textBox.Text += button.Content.ToString();
@@ -235,28 +170,33 @@ namespace Renewal
             }
 
         }
-
-        // 영문자 위치에 해당하는 한글로 변환 ex. 'A' -> 'ㅁ'
-        public static char AlphaToKorean(char ch)
-        {
-            int index = alpha.IndexOf(ch);
-
-            return korean[index];
-        }
-
         // 한글 위치에 해당하는 한글로 변환 ex. 'ㅁ' -> 'A'
         public static char KoreanToAlpha(char ch)
         {
             int index = korean.IndexOf(ch);
 
-            return alpha[index];
+            return qwerty[index];
         }
 
-        // 한글 위치에 해당하는 한글로 변환 ex. 'ㅁ' -> 'A'
-        public static char ConvertToQwerty(char ch)
+        // 한영 전환 버튼 클릭시
+        private void changeButton_Click(object sender, RoutedEventArgs e)
         {
-            int index = alpha.IndexOf(ch);
-            return qwerty[index];
+            string content = changeButton.Content.ToString();
+
+            if (content == "영")
+            {
+                koreanPanel.Visibility = Visibility.Hidden;
+                specialPanel.Visibility = Visibility.Hidden;
+                changeButton.Content = "한";
+                changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
+            }
+            else
+            {
+                specialPanel.Visibility = Visibility.Hidden;
+                koreanPanel.Visibility = Visibility.Visible;
+                changeButton.Content = "영";
+                changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
+            }
         }
     }
 }
