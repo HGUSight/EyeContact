@@ -130,6 +130,7 @@ namespace Renewal
             foreach (Button button in topPanel.Children)
             {
                 button.Click += Button_Click;
+              
             }
 
             foreach (Button button in koreanPanel.Children)
@@ -209,7 +210,7 @@ namespace Renewal
                 //SetForegroundWindow(myWindowHandler);
                 PlayAround();
                 Clipboard.GetText();
-                this.Close();
+                //this.Close();
             }
             // 클릭한 버튼이 한글일 경우
             else if (button.Tag.ToString() == "Korean")
@@ -291,5 +292,8 @@ namespace Renewal
             }
 
         }
+
+
+
     }
 }
