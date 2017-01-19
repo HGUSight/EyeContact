@@ -5,11 +5,73 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Mouse" Height="720" Width="240">
+        Title="Mouse" Height="720" Width="200">
     <Grid>
-        <Button x:Name="RClick" Content="오른쪽 클릭" HorizontalAlignment="Left" Height="180" Margin="-3,-2,-5,0" VerticalAlignment="Top" Width="240" Click="RClick_Click"/>
-        <Button x:Name="DClick" Content="더블 클릭"  HorizontalAlignment="Left" Height="180" Margin="-5,178,-3,0" VerticalAlignment="Top" Width="240" Click="DClick_Click"/>
-        <Button x:Name="Drag" Content="드래그" HorizontalAlignment="Left" Height="180" Margin="-5,357,-3,0" VerticalAlignment="Top" Width="240" Click="Drag_Click"/>
+        <Button x:Name="RClick" Template="{DynamicResource BackgroundButton}" Margin="0,0,0,529" Click="RClick_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="IDB_M_RCL.bmp" />
+            </Button.Background>
+            <Button.Resources>
+                <ControlTemplate x:Key="BackgroundButton" TargetType="Button">
+                    <Border Name="border" BorderThickness="1" BorderBrush="Black" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="IDB_M_RCL_OVER.bmp" Opacity="0.5" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Resources>
+        </Button>
+
+        <Button x:Name="DClick" Template="{DynamicResource BackgroundButton}" Margin="0,159,0,370" Click="DClick_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="IDB_M_DCL.bmp" />
+            </Button.Background>
+            <Button.Resources>
+                <ControlTemplate x:Key="BackgroundButton" TargetType="Button">
+                    <Border Name="border" BorderThickness="1" BorderBrush="Black" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="IDB_M_DCL_OVER.bmp" Opacity="0.5" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Resources>
+        </Button>
+
+        <Button x:Name="Drag" Template="{DynamicResource BackgroundButton}" Margin="0,319,0,210" Click="Drag_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="IDB_M_RAG.bmp" />
+            </Button.Background>
+            <Button.Resources>
+                <ControlTemplate x:Key="BackgroundButton" TargetType="Button">
+                    <Border Name="border" BorderThickness="1" BorderBrush="Black" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="IDB_M_RAG_OVER.bmp" Opacity="0.5" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Resources>
+        </Button>
 
     </Grid>
 </Window>
