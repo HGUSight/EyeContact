@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 //move mouse
 using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 using System.Diagnostics;
-
+using System.Windows.Interop;
 
 namespace Renewal
 {
@@ -26,20 +15,16 @@ namespace Renewal
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
     /// 
-    
+
     public partial class MainWindow : Window
     {
 
 
-
-    public MainWindow()
+        public MainWindow()
         {
+
             InitializeComponent();
 
-            Focusable = false;
-
-
-            // move mouse
             Move_Mouse();
 
             // calculate screen size
@@ -54,9 +39,26 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
 
-           
+
         }
 
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+            IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
+                GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
+        }
 
 
         // move mouse
@@ -96,9 +98,18 @@ namespace Renewal
         }
         //**********************************************
 
+
+        // 키보드 이벤트 API
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
+        //  키보드 종료 되면서 clipboard에 복사된 텍스트가 ctrl + v 됨
         void Keyboard_Closed(object sender, EventArgs e)
         {
-            System.Windows.Clipboard.GetText();
+            keybd_event((byte)0x11, 0, 0, 0);
+            keybd_event((byte)'V', 0, 0, 0);
+            keybd_event((byte)0x11, 0, 0x0002, 0);
+            keybd_event((byte)'V', 0, 0x0002, 0);
         }
 
         //키보드 후킹
@@ -246,6 +257,7 @@ namespace Renewal
             dlg.Show();
         }
         //**********************************************
+
 
 
 

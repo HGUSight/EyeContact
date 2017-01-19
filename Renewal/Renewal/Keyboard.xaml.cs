@@ -4,7 +4,9 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
 //using System.Windows.Forms;
+
 
 namespace Renewal
 {
@@ -13,14 +15,8 @@ namespace Renewal
     /// </summary>
     public partial class Keyboard : Window
     {
-
-
-        double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 10;
-        double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6;
-
-        private const int ButtonSize = 60;
-        private const int WsExNoactivate = 0x08000000;
-        private const int GwlExstyle = -20;
+        double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 10; // 버튼 너비는 해상도 너비의 1/10
+        double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
 
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
@@ -28,7 +24,7 @@ namespace Renewal
 
         public const int KEYEVENTF_KEYDOWN = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
-        public const int DOT = 0xBE;
+        public const int DOT = 0xBE; // '.' flag
 
         static string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         static string korean = "ㅁㅠㅊㅇㄷㄹㅎㅗㅑㅓㅏㅣㅡㅜㅐㅔㅂㄱㄴㅅㅕㅍㅈㅌㅛㅋ";
@@ -59,8 +55,6 @@ namespace Renewal
             koreanButton.Height = ButtonHeight;
             koreanButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
             koreanButton.Children.Add(new Button { Content = "Korean", Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-
-
 
             // TextBox 사이즈, 위치 조정
             textBox.Width = ButtonWidth * 7;
@@ -130,29 +124,27 @@ namespace Renewal
             foreach (Button button in topPanel.Children)
             {
                 button.Click += Button_Click;
-              
             }
-
+            foreach (Button button in topPanel.Children)
+            {
+                button.Click += Button_Click;
+            }
             foreach (Button button in koreanPanel.Children)
             {
                 button.Click += Button_Click;
             }
-
             foreach (Button button in alphaPanel.Children)
             {
                 button.Click += Button_Click;
             }
-
             foreach (Button button in specialPanel.Children)
             {
                 button.Click += Button_Click;
             }
-
             foreach (Button button in alphaButton.Children)
             {
                 button.Click += Button_Click;
             }
-
             foreach (Button button in koreanButton.Children)
             {
                 button.Click += Button_Click;
@@ -160,6 +152,7 @@ namespace Renewal
 
             // TextBox에 포커스 맞춤
             textBox.Focus();
+
             // 특수문자 panel 숨기기(초기값: 한글)
             specialPanel.Visibility = Visibility.Hidden;
             alphaButton.Visibility = Visibility.Hidden;
@@ -179,7 +172,6 @@ namespace Renewal
                 alphaButton.Visibility = Visibility.Hidden;
                 koreanButton.Visibility = Visibility.Hidden;
                 previousState = "English";
-
             }
             else if (button.Content.ToString() == "Korean")
             {
@@ -189,6 +181,7 @@ namespace Renewal
                 koreanButton.Visibility = Visibility.Hidden;
                 previousState = "Korean";
             }
+            // 특수문자 버튼 클릭시 Korean 또는 English Panel <-> Special Panel 변경
             else if (button.Content.ToString() == "Special")
             {
                 specialPanel.Visibility = Visibility.Visible;
@@ -202,15 +195,11 @@ namespace Renewal
                 }
 
             }
+            // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             else if (button.Content.ToString() == "OK")
             {
                 Clipboard.SetText(textBox.Text);
-                //var myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
-                //ShowWindow(myWindowHandler, 5);
-                //SetForegroundWindow(myWindowHandler);
-                PlayAround();
-                Clipboard.GetText();
-                //this.Close();
+                this.Close();
             }
             // 클릭한 버튼이 한글일 경우
             else if (button.Tag.ToString() == "Korean")
@@ -269,31 +258,5 @@ namespace Renewal
             int index = alpha.IndexOf(ch);
             return qwerty[index];
         }
-
-        [DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [DllImportAttribute("User32.DLL")]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern IntPtr SetFocus(HandleRef hWnd);
-
-        public void PlayAround()
-        {
-            Process[] processList = Process.GetProcesses();
-
-            foreach (Process theProcess in processList)
-            {
-                string processName = theProcess.ProcessName;
-                string mainWindowTitle = theProcess.MainWindowTitle;
-                SetFocus(new HandleRef(null, theProcess.MainWindowHandle));
-                Clipboard.GetText();
-            }
-
-        }
-
-
-
     }
 }
