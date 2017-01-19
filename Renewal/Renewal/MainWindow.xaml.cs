@@ -29,9 +29,14 @@ namespace Renewal
     public partial class MainWindow : Window
     {
 
-        public MainWindow()
+
+
+    public MainWindow()
         {
             InitializeComponent();
+
+            Focusable = false;
+
 
             // move mouse
             Move_Mouse();
@@ -48,7 +53,9 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
 
+           
         }
+
 
 
         // move mouse
@@ -79,6 +86,7 @@ namespace Renewal
             Mouse dlg = new Renewal.Mouse();
             dlg.Show();
         }
+
         private void Keyboard_Click(object sender, RoutedEventArgs e)
         {
             Keyboard dlg = new Renewal.Keyboard();
