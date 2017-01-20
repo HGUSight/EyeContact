@@ -83,6 +83,11 @@ namespace Renewal
 
             var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
+
+        private void move_mouse(double x, double y)
+        {
+
+        }
         //**********************************************
 
 

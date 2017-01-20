@@ -7,6 +7,9 @@
             <ColumnDefinition Width="235*"/>
             <ColumnDefinition Width="59*"/>
         </Grid.ColumnDefinitions>
+        <Button Content="말하기" HorizontalAlignment="Left" Margin="39,31,0,0" VerticalAlignment="Top" Width="75" Click="Start_Click"/>
+        <Button Content="말하기 끝" HorizontalAlignment="Left" Margin="39,69,0,0" VerticalAlignment="Top" Width="75" Click="Finish_Click"/>
+        <Button Content="확인" HorizontalAlignment="Left" Margin="39,125,0,0" VerticalAlignment="Top" Width="75" Click="OK_Click"/>
 
     </Grid>
 </Window>

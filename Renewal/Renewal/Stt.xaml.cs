@@ -11,7 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-
+// dll
+using System.Runtime.InteropServices;
 // voice..
 using System.Net;
 using System.IO;
@@ -24,15 +25,45 @@ namespace Renewal
     /// </summary>
     public partial class Stt : Window
     {
+        private string virtual_path = @"C:\";
+        private string file_name = @"audio";
+        private string path = @"C;\audio.flac";
+
+        [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        private static extern int mciSendString(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
+
         public Stt()
         {
             InitializeComponent();
         }
 
+        #region button_click
+
+        private void Start_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Finish_Click(object sender, RoutedEventArgs e)
+        {
+
+
+            StoT();
+        }
+
+        private void OK_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
+
+
         public void StoT()
         {
-            string path = @"C:\WorkSpace\capstone\EyeContact\Renewal\test.flac";
-
+            // request
             FileStream fileStream = File.OpenRead(path);
             MemoryStream memoryStream = new MemoryStream();
             memoryStream.SetLength(fileStream.Length);
@@ -51,13 +82,17 @@ namespace Renewal
             stream.Close();
 
             HttpWebResponse HWR_Response = (HttpWebResponse)_HWR_SpeechToText.GetResponse();
+
+            // response 
             if (HWR_Response.StatusCode == HttpStatusCode.OK)
             {
                 StreamReader SR_Response = new StreamReader(HWR_Response.GetResponseStream());
                 Console.WriteLine(SR_Response.ReadToEnd());
             }
 
-        }  
+        }
+
+
 
     }
 }
