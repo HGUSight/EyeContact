@@ -58,7 +58,7 @@ namespace Renewal
             }
 
             // 좌측 시스템 버튼 생성(Left Panel)
-            leftPanel.Children.Add(new Button { Content = "What", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            leftPanel.Children.Add(new Button { Content = "말하기", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 우측 시스템 버튼 생성(Right Panel)
@@ -132,6 +132,11 @@ namespace Renewal
             {
                 Clipboard.SetText(textBox.Text);
                 this.Close();
+            }
+            else if (button.Content.ToString() == "말하기")
+            {
+                Stt dlg = new Stt();
+                dlg.Show();
             }
             else if (button.Tag.ToString() == "SpecialButton")
             {
