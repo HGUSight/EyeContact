@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 using Tobii.EyeX.Framework;
 using System.Diagnostics;
 using System.Windows.Interop;
+using System.Windows.Controls;
+using System.Net;
+using System.IO;
 
 namespace Renewal
 {
@@ -23,7 +26,7 @@ namespace Renewal
         {
 
             InitializeComponent();
-
+  
             // calculate screen and button size
             Width /= 8;
             double ButtonWidth = Width;
@@ -37,6 +40,8 @@ namespace Renewal
             Exit.Width = ButtonWidth;
             Exit.Height = ButtonHeight;
 
+
+
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -45,7 +50,6 @@ namespace Renewal
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
-
 
         }
 
@@ -270,11 +274,22 @@ namespace Renewal
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
             Close();
         }
+
+        // 윈도우 로드, 클로즈 시 Work area 변경
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.Right);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
+
         //**********************************************
-
-
 
 
     }
