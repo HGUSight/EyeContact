@@ -25,14 +25,12 @@ namespace Renewal
 
             InitializeComponent();
 
-            Visibility = Visibility.Visible;
-
             // calculate screen size
-            Width = Screen.PrimaryScreen.Bounds.Width / 8;
-            Height = Screen.PrimaryScreen.Bounds.Height;
+            Width = SystemParameters.MaximizedPrimaryScreenWidth / 8;
+            Height = SystemParameters.MaximizedPrimaryScreenHeight;
 
-            int ButtonWidth = Screen.PrimaryScreen.Bounds.Width / 8;
-            int ButtonHeight = Screen.PrimaryScreen.Bounds.Height / 6;
+            double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 8;
+            double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6;
 
             Left = ButtonWidth * 7;
             Top = 0;
