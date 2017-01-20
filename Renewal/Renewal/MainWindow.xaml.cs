@@ -26,11 +26,10 @@ namespace Renewal
             InitializeComponent();
 
             // calculate screen size
-            Width = SystemParameters.MaximizedPrimaryScreenWidth / 8;
-            Height = SystemParameters.MaximizedPrimaryScreenHeight;
+            Width /= 8;
 
-            double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 8;
-            double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6;
+            double ButtonWidth = Width;
+            double ButtonHeight = Height / 6;
 
             Left = ButtonWidth * 7;
             Top = 0;
