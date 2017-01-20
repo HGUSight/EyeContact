@@ -1,0 +1,13 @@
+﻿<Window x:Class="Renewal.SpeechRecognition"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Renewal"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <TextBox Name="tb_speech" Height="50" Width="400"></TextBox>
+        <Button Name="btn_listen_now" Width="150" Height="90" FontWeight="Bold" Margin="175,190,192,29" Click="btn_listen_now_Click_1">Start listening</Button>
+    </Grid>
+</Window>
