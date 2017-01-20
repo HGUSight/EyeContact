@@ -19,24 +19,29 @@ namespace Renewal
     public partial class MainWindow : Window
     {
 
-
         public MainWindow()
         {
 
             InitializeComponent();
 
-            // calculate screen size
+            // calculate screen and button size
             Width /= 8;
-
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
+            Mouse.Width = ButtonWidth;
+            Mouse.Height = ButtonHeight;
+            Keyboard.Width = ButtonWidth;
+            Keyboard.Height = ButtonHeight;
+            Setting.Width = ButtonWidth;
+            Setting.Height = ButtonHeight;
+            Exit.Width = ButtonWidth;
+            Exit.Height = ButtonHeight;
 
-            Left = ButtonWidth * 7;
+            // 툴바 위치 설정
+            Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
 
             Move_Mouse();
-
-            Size.Equals(Width, Height);
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
@@ -261,6 +266,11 @@ namespace Renewal
         {
             Setting dlg = new Renewal.Setting();
             dlg.Show();
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
         //**********************************************
 

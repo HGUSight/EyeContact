@@ -10,8 +10,8 @@ namespace Renewal
     public partial class Keyboard : Window
     {
         // 버튼 크기 결정
-        double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 10; // 버튼 너비는 해상도 너비의 1/10
-        double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
+        double ButtonWidth = SystemParameters.WorkArea.Right / 10; // 버튼 너비는 해상도 너비의 1/10
+        double ButtonHeight = SystemParameters.WorkArea.Bottom / 6; // 버튼 높이는 해상도 너비의 1/6
 
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
