@@ -105,9 +105,9 @@ namespace Renewal
         }
         //**********************************************
 
-
-        // 키보드 이벤트 API
-        [DllImport("user32.dll", SetLastError = true)]
+        
+    // 키보드 이벤트 API
+    [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         //  키보드 종료 되면서 clipboard에 복사된 텍스트가 ctrl + v 됨
@@ -255,6 +255,8 @@ namespace Renewal
 
         }
 
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -264,6 +266,12 @@ namespace Renewal
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
             Setting dlg = new Renewal.Setting();
+            dlg.Show();
+        }
+
+        private void Internet_Click(object sender, RoutedEventArgs e)
+        {
+            Internet dlg = new Renewal.Internet();
             dlg.Show();
         }
         //**********************************************
