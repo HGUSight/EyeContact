@@ -40,6 +40,7 @@ namespace Renewal
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
@@ -49,20 +50,43 @@ namespace Renewal
                 GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
 
+
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
-        const int KEYDOWN = 0;
+        const int KEYDOWN = 0x0000;
         const int KEYUP = 0x0002;
 
-        private void Back_Click(object sender, RoutedEventArgs e)
+        private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
             //for keyboard event trigger
-            keybd_event((byte)0x12, 0, 0, 0);
-            keybd_event((byte)0x25, 0, 0, 0);
-            keybd_event((byte)0x12, 0, 0x0002, 0);
-            keybd_event((byte)0x25, 0, 0x0002, 0);
+            const byte ALT = 0x12;// alt
+            const byte Left = 0x25;// <-
+            
+            keybd_event(ALT, 0, KEYDOWN, 0); 
+            keybd_event(Left, 0, KEYDOWN, 0); 
+            keybd_event(ALT, 0, KEYUP, 0);
+            keybd_event(Left, 0, KEYUP, 0);
+        }
+
+        private void Forward_Click(object sender, RoutedEventArgs e) // 앞으로
+        {
+            const byte ALT = 0x12;// alt
+            const byte Right = 0x27;// ->
+
+            keybd_event(ALT, 0, KEYDOWN, 0); 
+            keybd_event(Right, 0, KEYDOWN, 0); 
+            keybd_event(ALT, 0, KEYUP, 0);
+            keybd_event(Right, 0, KEYUP, 0);
+        }
+
+        private void Re_Click(object sender, RoutedEventArgs e)
+        {
+            const byte F5 = 0x74;// F5
+
+            keybd_event(F5, 0, KEYDOWN, 0);
+            keybd_event(F5, 0, KEYUP, 0);
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -72,5 +96,7 @@ namespace Renewal
                                                                             + "\\Internet Explorer\\iexplore.exe", "http://www.naver.com");
             process.Start();
         }
+
+     
     }
 }
