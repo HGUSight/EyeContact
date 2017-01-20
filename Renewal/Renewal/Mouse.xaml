@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Mouse" Height="720" Width="200">
+        Title="Mouse" Height="720" Width="200" Topmost="True">
     <Grid>
         <Button x:Name="RClick" Template="{DynamicResource BackgroundButton}" Margin="0,0,0,529" Click="RClick_Click">
             <Button.Background>

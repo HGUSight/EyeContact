@@ -25,14 +25,19 @@ namespace Renewal
 
             InitializeComponent();
 
-            Move_Mouse();
-
             // calculate screen size
             Width = Screen.PrimaryScreen.Bounds.Width / 8;
             Height = Screen.PrimaryScreen.Bounds.Height;
 
             int ButtonWidth = Screen.PrimaryScreen.Bounds.Width / 8;
             int ButtonHeight = Screen.PrimaryScreen.Bounds.Height / 6;
+
+            Left = ButtonWidth * 7;
+            Top = 0;
+
+            Move_Mouse();
+
+
 
             Size.Equals(Width, Height);
 
@@ -42,6 +47,8 @@ namespace Renewal
 
         }
 
+
+        // 창에 focus 가지 않도록 no activate
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
 

@@ -22,6 +22,8 @@ namespace Renewal
         public Mouse()
         {
             InitializeComponent();
+            Left = Application.Current.MainWindow.Left;
+            Top = 0;
         }
 
         private void RClick_Click(object sender, RoutedEventArgs e)
