@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 //move mouse
 using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 using System.Diagnostics;
-
+using System.Windows.Interop;
 
 namespace Renewal
 {
@@ -26,21 +15,15 @@ namespace Renewal
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
     /// 
-    
+
     public partial class MainWindow : Window
     {
 
 
-
-    public MainWindow()
+        public MainWindow()
         {
+
             InitializeComponent();
-
-            Focusable = false;
-
-
-            // move mouse
-            Move_Mouse();
 
             // calculate screen size
             Width = Screen.PrimaryScreen.Bounds.Width / 8;
@@ -49,14 +32,40 @@ namespace Renewal
             int ButtonWidth = Screen.PrimaryScreen.Bounds.Width / 8;
             int ButtonHeight = Screen.PrimaryScreen.Bounds.Height / 6;
 
+            Left = ButtonWidth * 7;
+            Top = 0;
+
+            Move_Mouse();
+
+
+
             Size.Equals(Width, Height);
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
 
-           
+
         }
 
+
+        // 창에 focus 가지 않도록 no activate
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+            IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
+                GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
+        }
 
 
         // move mouse
@@ -96,9 +105,18 @@ namespace Renewal
         }
         //**********************************************
 
+
+        // 키보드 이벤트 API
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
+        //  키보드 종료 되면서 clipboard에 복사된 텍스트가 ctrl + v 됨
         void Keyboard_Closed(object sender, EventArgs e)
         {
-            System.Windows.Clipboard.GetText();
+            keybd_event((byte)0x11, 0, 0, 0);
+            keybd_event((byte)'V', 0, 0, 0);
+            keybd_event((byte)0x11, 0, 0x0002, 0);
+            keybd_event((byte)'V', 0, 0x0002, 0);
         }
 
         //키보드 후킹
@@ -162,7 +180,7 @@ namespace Renewal
                 int vkCode = Marshal.ReadInt32(lParam);
 
 
-                if (vkCode.ToString() == "38") // 38: up key 81: q key
+                if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                // http://cherrytree.at/misc/vk.htm 참조
                 {
                     switch (mouseEvent_var)
@@ -170,13 +188,13 @@ namespace Renewal
                         case (int)mouseEvent.LCLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
                             mouse_event(LEFTUP, 0, 0, 0, 0);
-                        return CallNextHookEx(hhook, code, (int)wParam, lParam);
-
+                            return (IntPtr)1; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                                              // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
                         case (int)mouseEvent.RCLICKED:
                             mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭 
                             mouse_event(RIGHTUP, 0, 0, 0, 0);
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
 
                         case (int)mouseEvent.DOUBLECLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
@@ -184,15 +202,17 @@ namespace Renewal
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); 
                             mouse_event(LEFTUP, 0, 0, 0, 0);
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
 
                         case (int)mouseEvent.DRAGCLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                            return (IntPtr)1;
                     }
-                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+                    
                 }
+
+               
 
                 //when user coordinates gaze Point and mouse position. 
                 if (isCoordinate)
@@ -220,11 +240,12 @@ namespace Renewal
                     }
                 }
 
-               
-                return CallNextHookEx(hhook, code, (int)wParam, lParam); 
+                else
+                    return CallNextHookEx(hhook, code, (int)wParam, lParam);
+
+                
             }
-            else
-                return CallNextHookEx(hhook, code, (int)wParam, lParam);
+            return CallNextHookEx(hhook, code, (int)wParam, lParam);
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -246,6 +267,7 @@ namespace Renewal
             dlg.Show();
         }
         //**********************************************
+
 
 
 

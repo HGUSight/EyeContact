@@ -22,6 +22,8 @@ namespace Renewal
         public Setting()
         {
             InitializeComponent();
+            Left = Application.Current.MainWindow.Left;
+            Top = 0;
         }
 
         private void SetCoordinate_Click(object sender, RoutedEventArgs e)
