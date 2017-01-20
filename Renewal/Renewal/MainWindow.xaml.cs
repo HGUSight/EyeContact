@@ -68,6 +68,14 @@ namespace Renewal
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
+        // last Point
+        public static int lastX = 0;
+        public static int lastY = 0;
+
+        // err 
+        public static int errX = 50;
+        public static int errY = 50;
+
         // coordinate Gaze Point
         public static int userCoordinateX = 0;
         public static int userCoordinateY = 0;
@@ -79,14 +87,24 @@ namespace Renewal
         private void Move_Mouse()
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
-            lightlyFilteredGazeDataStream.Next += (s, e) => SetCursorPos((int)e.X + userCoordinateX, (int)e.Y + userCoordinateY);
+            lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
 
             var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
 
         private void move_mouse(double x, double y)
         {
+            if (lastX == 0 && lastY == 0)
+                lastX = (int)x; lastY = (int)y;
 
+            if (x <= lastX - errX || x >= lastX + errX || y >= lastY + errY || y <= lastY - errY)
+            {
+                SetCursorPos((int)x + userCoordinateX, (int)y + userCoordinateY);
+            }
+            else
+            {
+                SetCursorPos(lastX + userCoordinateX, lastY + userCoordinateY);
+            }
         }
         //**********************************************
 
