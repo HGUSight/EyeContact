@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Internet" Height="300" Width="300">
-    <Grid>
-        
-    </Grid>
+        Title="Internet" Height="1080" Width="240"
+        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top">
+
+    <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">
+        <Button x:Name="Open" Content="Open" Width="240"  Height="180" Click="Open_Click" Focusable="False" FocusManager.IsFocusScope="False"/>
+        <Button x:Name="Back" Content="뒤로" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False"/>
+
+    </WrapPanel>
 </Window>
