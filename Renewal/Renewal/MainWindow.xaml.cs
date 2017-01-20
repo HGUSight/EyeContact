@@ -25,6 +25,8 @@ namespace Renewal
 
             InitializeComponent();
 
+            Visibility = Visibility.Visible;
+
             // calculate screen size
             Width = Screen.PrimaryScreen.Bounds.Width / 8;
             Height = Screen.PrimaryScreen.Bounds.Height;
@@ -37,8 +39,6 @@ namespace Renewal
 
             Move_Mouse();
 
-
-
             Size.Equals(Width, Height);
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
@@ -46,7 +46,6 @@ namespace Renewal
 
 
         }
-
 
         // 창에 focus 가지 않도록 no activate
         private const int GWL_EXSTYLE = -20;
