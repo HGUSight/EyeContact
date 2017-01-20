@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+// voice..
+using System.Net;
+using System.IO;
 
 
 namespace Renewal
@@ -25,13 +28,6 @@ namespace Renewal
         {
             InitializeComponent();
         }
-
-
-        public Stt()
-        {
-            InitializeComponent();
-        }
-
 
         public void StoT()
         {
@@ -61,13 +57,7 @@ namespace Renewal
                 Console.WriteLine(SR_Response.ReadToEnd());
             }
 
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            StoT();
-        }
-           
+        }  
 
     }
 }
