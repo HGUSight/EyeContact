@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using Tobii.EyeX.Framework;
 using System.Diagnostics;
 using System.Windows.Interop;
+using System.Windows.Input;
 
 namespace Renewal
 {
@@ -149,6 +150,7 @@ namespace Renewal
         //마우스 후킹 변수들 
 
         public static int mouseEvent_var;
+      
         public enum mouseEvent
         {
             LCLICKED = 0,
@@ -261,6 +263,25 @@ namespace Renewal
         {
             Setting dlg = new Renewal.Setting();
             dlg.Show();
+        }
+
+
+        private void PgUp_Click(object sender, RoutedEventArgs e)
+        {
+            
+             const int KEYUP = 0x0002;
+             keybd_event(0x21, 0, 0,0);  // Page Up key 다운
+             keybd_event(0x21, 0, KEYUP, 0);
+                        
+            
+        }   
+
+        private void PgDn_Click(object sender, RoutedEventArgs e)
+        {
+            const int KEYUP = 0x0002;
+           
+            keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
+            keybd_event(0x22, 0, KEYUP, 0);
         }
         //**********************************************
 
