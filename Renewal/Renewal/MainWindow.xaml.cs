@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Tobii.EyeX.Framework;
 using System.Windows.Interop;
 
+
 namespace Renewal
 {
     /// <summary>
@@ -29,10 +30,15 @@ namespace Renewal
             Mouse.Height = ButtonHeight;
             Keyboard.Width = ButtonWidth;
             Keyboard.Height = ButtonHeight;
+            Internet.Width = ButtonWidth;
+            Internet.Height = ButtonHeight; Internet.Width = ButtonWidth;
+            Internet.Height = ButtonHeight;
+            PgUp.Width = ButtonWidth;
+            PgUp.Height = ButtonHeight;
+            PgDn.Width = ButtonWidth;
+            PgDn.Height = ButtonHeight;
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
-            Exit.Width = ButtonWidth;
-            Exit.Height = ButtonHeight;
 
 
 
@@ -152,6 +158,7 @@ namespace Renewal
         //마우스 후킹 변수들 
 
         public static int mouseEvent_var;
+      
         public enum mouseEvent
         {
             LCLICKED = 0,
@@ -268,18 +275,32 @@ namespace Renewal
             dlg.Show();
         }
 
+
+        private void PgUp_Click(object sender, RoutedEventArgs e)
+        {
+            
+             const int KEYUP = 0x0002;
+             keybd_event(0x21, 0, 0,0);  // Page Up key 다운
+             keybd_event(0x21, 0, KEYUP, 0);
+                        
+            
+        }   
+
+        private void PgDn_Click(object sender, RoutedEventArgs e)
+        {
+            const int KEYUP = 0x0002;
+           
+            keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
+            keybd_event(0x22, 0, KEYUP, 0);
+        }
+        //**********************************************
+
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
         }
 
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            AppBarFunctions.SetAppBar(this, ABEdge.None);
-            Close();
-        }
 
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -297,3 +318,4 @@ namespace Renewal
 
     }
 }
+

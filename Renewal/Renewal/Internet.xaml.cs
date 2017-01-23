@@ -70,25 +70,8 @@ namespace Renewal
             keybd_event(Left, 0, KEYUP, 0);
         }
 
-        private void Forward_Click(object sender, RoutedEventArgs e) // 앞으로
-        {
-            const byte ALT = 0x12;// alt
-            const byte Right = 0x27;// ->
 
-            keybd_event(ALT, 0, KEYDOWN, 0); 
-            keybd_event(Right, 0, KEYDOWN, 0); 
-            keybd_event(ALT, 0, KEYUP, 0);
-            keybd_event(Right, 0, KEYUP, 0);
-        }
-
-        private void Re_Click(object sender, RoutedEventArgs e)
-        {
-            const byte F5 = 0x74;// F5
-
-            keybd_event(F5, 0, KEYDOWN, 0);
-            keybd_event(F5, 0, KEYUP, 0);
-        }
-
+      
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             Process process = new System.Diagnostics.Process();
@@ -97,6 +80,39 @@ namespace Renewal
             process.Start();
         }
 
-     
+        private void Wallpaper_Click(object sender, RoutedEventArgs e)
+        {
+            const byte Window = 0x5B;// window key
+            const byte D = 0x44;// D
+
+            keybd_event(Window, 0, KEYDOWN, 0);
+            keybd_event(D, 0, KEYDOWN, 0);
+            keybd_event(Window, 0, KEYUP, 0);
+            keybd_event(D, 0, KEYUP, 0);
+        }
+
+        /*// 앞으로
+        private void Forward_Click(object sender, RoutedEventArgs e) 
+        {
+            const byte ALT = 0x12;// alt
+            const byte Right = 0x27;// ->
+
+            keybd_event(ALT, 0, KEYDOWN, 0);
+            keybd_event(Right, 0, KEYDOWN, 0);
+            keybd_event(ALT, 0, KEYUP, 0);
+            keybd_event(Right, 0, KEYUP, 0);
+        }
+        */
+
+        /*// 새로고침
+      private void Re_Click(object sender, RoutedEventArgs e)
+      {
+          const byte F5 = 0x74;
+
+          keybd_event(F5, 0, KEYDOWN, 0);//F5
+          keybd_event(F5, 0, KEYUP, 0);
+      }
+      */
     }
 }
+
