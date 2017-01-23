@@ -10,10 +10,10 @@
     <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">
         <Button x:Name="Mouse" Content="Mouse" Width="240" Height="180" Click="Mouse_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="Keyboard" Content="Keyboard" Width="240" Height="180" Click="Keyboard_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="Internet" Content="Internet" Width="240" Height="180" Click="Internet_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="PgUp" Content="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False" />
+        <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
+        <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="Exit" Content="Exit" Width="240" Height= "180" Click="Exit_Click"  Focusable="False" FocusManager.IsFocusScope="False" />
     </WrapPanel>
 
