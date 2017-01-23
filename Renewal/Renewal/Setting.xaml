@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Setting" Height="720" Width="240" Topmost="True">
-<WrapPanel x:Name="wrapPanel" >
+        Title="Setting" Height="1080" Width ="240" Topmost="True" WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True" >
+
+    <WrapPanel x:Name="wrapPanel">
         <Button x:Name="SetCoordinate" Content="SetCoordinate" Width="240" Height="180" Click="SetCoordinate_Click"/>
+        <Button x:Name="Back" Content="Back" Width="240" Height="180" Click="Back_Click"/>
+
     </WrapPanel>
 </Window>

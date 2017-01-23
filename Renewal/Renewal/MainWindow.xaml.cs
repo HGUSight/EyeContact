@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Windows;
-using System.Windows.Forms;
 //move mouse
 using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
-using System.Diagnostics;
 using System.Windows.Interop;
-using System.Windows.Controls;
-using System.Net;
-using System.IO;
 
 namespace Renewal
 {
