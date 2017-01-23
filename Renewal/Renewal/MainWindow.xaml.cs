@@ -40,8 +40,6 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
-
-
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -273,6 +271,7 @@ namespace Renewal
         {
             Setting dlg = new Renewal.Setting();
             dlg.Show();
+
         }
 
 
@@ -311,6 +310,7 @@ namespace Renewal
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
 
         //**********************************************

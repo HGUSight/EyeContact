@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
         Title="Internet" Height="1080" Width="240"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
         ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top">
 
     <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">

@@ -28,6 +28,18 @@ namespace Renewal
         public Internet()
         {
             InitializeComponent();
+
+            Width = Application.Current.MainWindow.Width;
+            Height = Application.Current.MainWindow.Height;
+
+            Open.Width = Width;
+            Open.Height = Height / 6;
+
+            Back.Width = Width;
+            Back.Height = Height / 6;
+
+            Wallpaper.Width = Width;
+            Wallpaper.Height = Height / 6;
         }
 
         // 창에 focus 가지 않도록 no activate
@@ -113,6 +125,19 @@ namespace Renewal
           keybd_event(F5, 0, KEYUP, 0);
       }
       */
+
+        /*******************************************************/
+        // 윈도우 로드, 클로즈 시 Work area 변경
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.Left);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
+
     }
 }
 
