@@ -1,9 +1,11 @@
-﻿
-<Window x:Class="Renewal.MainWindow"
+﻿<Window x:Class="Renewal.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow"
-        Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}">
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        Closed="Keyboard_Closed"
+        Topmost="True" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" WindowStyle="None" BorderThickness="0" HorizontalAlignment="Right" AllowsTransparency="True">
 
     <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">
         <Button x:Name="Mouse" Content="Mouse" Width="240" Height="180" Click="Mouse_Click" Focusable="False" FocusManager.IsFocusScope="False" />
@@ -11,8 +13,10 @@
         <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="PgUp" Content="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
+        <Button x:Name="Internet" Content="Internet" Width="240" Height="180" Click="Internet_Click" Focusable="False" FocusManager.IsFocusScope="False" />
+        <Button x:Name="Exit" Content="Exit" Width="240" Height= "180" Click="Exit_Click"  Focusable="False" FocusManager.IsFocusScope="False" />
     </WrapPanel>
-   
-   
+
+
 </Window>
 

@@ -20,28 +20,34 @@ namespace Renewal
     public partial class MainWindow : Window
     {
 
-
         public MainWindow()
         {
 
             InitializeComponent();
-
-            // calculate screen size
+  
+            // calculate screen and button size
             Width /= 8;
-
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
+            Mouse.Width = ButtonWidth;
+            Mouse.Height = ButtonHeight;
+            Keyboard.Width = ButtonWidth;
+            Keyboard.Height = ButtonHeight;
+            Setting.Width = ButtonWidth;
+            Setting.Height = ButtonHeight;
+            Exit.Width = ButtonWidth;
+            Exit.Height = ButtonHeight;
 
-            Left = ButtonWidth * 7;
+
+
+            // 툴바 위치 설정
+            Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
 
             Move_Mouse();
 
-            Size.Equals(Width, Height);
-
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
-
 
         }
 
@@ -102,9 +108,9 @@ namespace Renewal
         }
         //**********************************************
 
-
-        // 키보드 이벤트 API
-        [DllImport("user32.dll", SetLastError = true)]
+        
+    // 키보드 이벤트 API
+    [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         //  키보드 종료 되면서 clipboard에 복사된 텍스트가 ctrl + v 됨
@@ -253,6 +259,8 @@ namespace Renewal
 
         }
 
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -285,7 +293,31 @@ namespace Renewal
         }
         //**********************************************
 
+        private void Internet_Click(object sender, RoutedEventArgs e)
+        {
+            Internet dlg = new Renewal.Internet();
+            dlg.Show();
+        }
 
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Close();
+        }
+
+        // 윈도우 로드, 클로즈 시 Work area 변경
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.Right);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
+
+        //**********************************************
 
 
     }

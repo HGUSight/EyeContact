@@ -10,11 +10,12 @@ namespace Renewal
     public partial class Keyboard : Window
     {
         // 버튼 크기 결정
-        double ButtonWidth = SystemParameters.MaximizedPrimaryScreenWidth / 10; // 버튼 너비는 해상도 너비의 1/10
-        double ButtonHeight = SystemParameters.MaximizedPrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
+        double ButtonWidth = SystemParameters.PrimaryScreenWidth / 10;
+        double ButtonHeight = SystemParameters.WorkArea.Bottom / 6; // 버튼 높이는 해상도 너비의 1/6
 
-        // 키보드 이벤트 API
-        [DllImport("user32.dll", SetLastError = true)]
+
+       // 키보드 이벤트 API
+       [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         // Virtual-Key Code
@@ -33,6 +34,7 @@ namespace Renewal
 
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
+            topPanel.Width = ButtonWidth * 10;
             leftPanel.Width = ButtonWidth;
             leftPanel.Height = ButtonHeight * 2;
             leftPanel.Margin = new Thickness(0, ButtonHeight, 0, 0);
@@ -40,10 +42,13 @@ namespace Renewal
             rightPanel.Height = ButtonHeight * 2;
             rightPanel.Margin = new Thickness(ButtonWidth * 8, ButtonHeight, 0, 0);
             koreanPanel.Height /= 2;
+            koreanPanel.Width = ButtonWidth * 10;
             koreanPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
+            englishPanel.Width = ButtonWidth * 10;
             englishPanel.Height /= 2;
             englishPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
             specialPanel.Height /= 2;
+            specialPanel.Width = ButtonWidth * 10;
             specialPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
 
             // TextBox 사이즈, 위치 조정
