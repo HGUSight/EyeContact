@@ -140,9 +140,6 @@ namespace Renewal
                     
                 dlg.Closed += new EventHandler(Keyboard_Closed);
                 dlg.Show(); // 키보드 열기
-                   
-
-
             }
             else if (host.IndexOf("daum") != -1)
             {
@@ -187,30 +184,30 @@ namespace Renewal
             Clipboard.SetText(url);
             const byte Alt = 0x12;// Alt key
             const byte D = 0x44;// D
-
+            
             keybd_event(Alt, 0, KEYDOWN, 0);
             keybd_event(D, 0, KEYDOWN, 0);
             keybd_event(Alt, 0, KEYUP, 0);
             keybd_event(D, 0, KEYUP, 0);
-
-            System.Threading.Thread.Sleep(100);
+            
+            System.Threading.Thread.Sleep(5000);
 
             keybd_event(0x08, 0, 0, 0); // backspace
             keybd_event(0x08, 0, 0x0002, 0);
 
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(5000);
 
             keybd_event(0x11, 0, 0, 0); // ctrl+V
             keybd_event((byte)'V', 0, 0, 0);
             keybd_event(0x11, 0, 0x0002, 0);
             keybd_event((byte)'V', 0, 0x0002, 0);
 
-           
+           /*
             System.Threading.Thread.Sleep(100);
 
             keybd_event((byte)0x0D, 0, 0, 0); // enter
             keybd_event((byte)0x0D, 0, 0x0002, 0);
-
+            */
 
         }
 
