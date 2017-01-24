@@ -29,6 +29,20 @@ namespace Renewal
         {
             InitializeComponent();
 
+            Width = Application.Current.MainWindow.Width;
+            Height = Application.Current.MainWindow.Height;
+
+            Open.Width = Width;
+            Open.Height = Height / 6;
+
+            Back.Width = Width;
+            Back.Height = Height / 6;
+
+            Wallpaper.Width = Width;
+            Wallpaper.Height = Height / 6;
+
+            Search.Width = Width;
+            Search.Height = Height / 6;
 
         }
 
@@ -233,6 +247,19 @@ namespace Renewal
           keybd_event(F5, 0, KEYUP, 0);
       }
       */
+
+        /*******************************************************/
+        // 윈도우 로드, 클로즈 시 Work area 변경
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.Left);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
+
     }
 }
 

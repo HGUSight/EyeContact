@@ -3,16 +3,25 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+// stt
+using System.IO;
+using System.Net;
+using CUETools.Codecs;
+using CUETools.Codecs.FLAKE;
+using NAudio.Wave;
+// json parsing
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Renewal
 {
     public partial class Keyboard : Window
     {
+        #region variable
         // 버튼 크기 결정
         double ButtonWidth = SystemParameters.PrimaryScreenWidth / 10;
         double ButtonHeight = SystemParameters.WorkArea.Bottom / 6; // 버튼 높이는 해상도 너비의 1/6
-
 
        // 키보드 이벤트 API
        [DllImport("user32.dll", SetLastError = true)]
@@ -27,7 +36,22 @@ namespace Renewal
         static string korean = "ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔㅁㄴㅇㄹㅎㅗㅓㅏㅣㅋㅌㅊㅍㅠㅜㅡ";
         static string qwerty = "QWERTYUIOPASDFGHJKLZXCVBNM";
         static string special = "!@#$%^&*()~-=+[]<>?/:;'\"\\|,.";
-        
+
+        // voice click
+        private string path = @"C:\Audio\";
+        private string rawFile = @"raw.wav";
+        private string wavFile = @"audio.wav";
+        private string flacFile = @"audio.flac";
+        private string flac_path = @"C:\Audio\audio.flac";
+        private bool isStart = true;
+
+        [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
+        private static extern int mciSendString(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
+
+
+        #endregion
+
+        #region make-keyboard
         public Keyboard()
         {
             InitializeComponent();
@@ -63,7 +87,7 @@ namespace Renewal
             }
 
             // 좌측 시스템 버튼 생성(Left Panel)
-            leftPanel.Children.Add(new Button { Content = "What", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            leftPanel.Children.Add(new Button { Content = "Speech", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 우측 시스템 버튼 생성(Right Panel)
@@ -126,7 +150,9 @@ namespace Renewal
             textBox.Focus(); // TextBox에 포커스 맞춤
             specialPanel.Visibility = Visibility.Hidden; // 특수문자 panel 숨기기(초기값: 한글)
         }
+        #endregion
 
+        #region button-click
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
@@ -137,6 +163,10 @@ namespace Renewal
             {
                 Clipboard.SetText(textBox.Text);
                 this.Close();
+            }
+            else if (content == "Speech")
+            {
+                Stt();
             }
             else if (button.Tag.ToString() == "SpecialButton")
             {
@@ -173,8 +203,10 @@ namespace Renewal
                 textBox.Text += button.Content.ToString();
                 textBox.CaretIndex = textBox.Text.Length;
             }
-
         }
+        #endregion
+
+        #region korean to english
         // 한글 위치에 해당하는 한글로 변환 ex. 'ㅁ' -> 'A'
         public static char KoreanToAlpha(char ch)
         {
@@ -203,5 +235,156 @@ namespace Renewal
                 changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
             }
         }
+        #endregion
+
+        #region Speech to text
+        private void Stt()
+        {
+            System.IO.Directory.CreateDirectory(path);
+
+            if(isStart)
+            {
+                isStart = false;
+                start_record();
+            }
+            else
+            {
+                isStart = true;
+                end_record();
+                convert();
+                send();
+            }
+        }
+
+        private void start_record()
+        {
+            mciSendString("open new Type waveaudio Alias recsound", "", 0, 0);
+            mciSendString("record recsound", "", 0, 0);
+        }
+
+        private void end_record()
+        {
+            mciSendString(@"save recsound " + path + rawFile, "", 0, 0);
+            mciSendString("close recsound ", "", 0, 0);
+        }
+
+        private void convert()
+        {
+            using (var reader = new WaveFileReader(path + rawFile))
+            {
+                var newFormat = new NAudio.Wave.WaveFormat(16000, 16, 1);
+                using (var conversionStream = new WaveFormatConversionStream(newFormat, reader))
+                {
+                    WaveFileWriter.CreateWaveFile(path + wavFile, conversionStream);
+                }
+            }
+
+            if (!File.Exists(path + wavFile))
+            {
+                Console.WriteLine("wav file no!");
+            }
+            else
+            {
+                using (FileStream sourceStream = new FileStream(path + wavFile, FileMode.Open))
+                {
+                    //FileStream sourceStream = new FileStream(path + wavFile, FileMode.Open);
+                    WAVReader audioSource = new WAVReader(path + wavFile, sourceStream);
+
+                    //FlakeWriter flac = new FlakeWriter(File.Create(path), audioSource.PCM);
+
+                    AudioBuffer buff = new AudioBuffer(audioSource, 0x10000);
+                    FlakeWriter flakeWriter = new FlakeWriter(path + flacFile, audioSource.PCM);
+
+                    flakeWriter.CompressionLevel = 8;
+                    while (audioSource.Read(buff, -1) != 0)
+                    {
+                        flakeWriter.Write(buff);
+                    }
+
+                    flakeWriter.Close();
+                    audioSource.Close();
+                }
+            }
+        }
+
+        private void send()
+        {
+            // request
+            using (FileStream fileStream = File.OpenRead(flac_path))
+            {
+                //FileStream fileStream = File.OpenRead(flac_path);
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    //MemoryStream memoryStream = new MemoryStream();
+                    memoryStream.SetLength(fileStream.Length);
+                    fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
+                    byte[] BA_AudioFile = memoryStream.GetBuffer();
+                    HttpWebRequest _HWR_SpeechToText = null;
+                    _HWR_SpeechToText =
+                                (HttpWebRequest)HttpWebRequest.Create(
+                                    "https://www.google.com/speech-api/v2/recognize?output=json&lang=ko-KR&key=AIzaSyCzsbEmnTv36-aWE5ThgGTnNXuJF-AeLcs");
+                    _HWR_SpeechToText.Credentials = CredentialCache.DefaultCredentials;
+                    _HWR_SpeechToText.Method = "POST";
+                    _HWR_SpeechToText.ContentType = "audio/x-flac; rate=16000";
+                    _HWR_SpeechToText.ContentLength = BA_AudioFile.Length;
+                    using (Stream stream = _HWR_SpeechToText.GetRequestStream())
+                    {
+                        //Stream stream = _HWR_SpeechToText.GetRequestStream();
+                        stream.Write(BA_AudioFile, 0, BA_AudioFile.Length);
+                        stream.Close();
+
+                        HttpWebResponse HWR_Response = (HttpWebResponse)_HWR_SpeechToText.GetResponse();
+
+                        // response 
+                        if (HWR_Response.StatusCode == HttpStatusCode.OK)
+                        {
+                            StreamReader SR_Response = new StreamReader(HWR_Response.GetResponseStream());
+                            
+                            var result = SR_Response.ReadToEnd();
+                            Console.WriteLine("This is result : " + result);
+
+                            var jsons = result.Split('\n');
+
+                            json_parsing(jsons);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void json_parsing(string[] jsons)
+        {
+            foreach (var root in jsons)
+            {
+                dynamic jsonObject = JsonConvert.DeserializeObject(root);
+                if (jsonObject == null || jsonObject.result.Count <= 0)
+                    continue;
+
+                string json = jsonObject.result[0].alternative.ToString();
+                var json_array = JArray.Parse(json);
+
+                int i = 0;
+                int max = 0;
+                var max_confidence = 0;
+                foreach (var a in json_array)
+                {
+                    if (i == 0)
+                    {
+                        max = i;
+                        max_confidence = jsonObject.result[0].alternative[0].confidence;
+                    }
+                    else if (jsonObject.result[0].alternative[i].confidence >= max_confidence)
+                    {
+                        max = i;
+                        max_confidence = jsonObject.result[0].alternative[i].confidence;
+                    }
+                    Console.WriteLine("1, 2, 3 : " + a);
+                    i++;
+                }
+                var text = jsonObject.result[0].alternative[max].transcript;
+                Console.WriteLine("test : " + text);
+            }
+        }
+        #endregion
     }
 }

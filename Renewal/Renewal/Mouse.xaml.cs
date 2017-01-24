@@ -24,8 +24,6 @@ namespace Renewal
         {
             InitializeComponent();
 
-
-
             Left = Application.Current.MainWindow.Left;
             Top = 0;
         }

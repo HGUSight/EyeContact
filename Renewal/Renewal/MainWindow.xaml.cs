@@ -17,9 +17,9 @@ namespace Renewal
     public partial class MainWindow : Window
     {
 
+        #region main
         public MainWindow()
         {
-
             InitializeComponent();
   
             // calculate screen and button size
@@ -40,8 +40,6 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
-
-
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -50,9 +48,10 @@ namespace Renewal
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
-
         }
+        #endregion
 
+        #region focus
         // 창에 focus 가지 않도록 no activate
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
@@ -71,48 +70,57 @@ namespace Renewal
             IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
                 GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
+        #endregion
 
-
+        #region Tobii-mouse-move
         // move mouse
         [DllImport("User32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
-        // coordinate Gaze Point
-        public static int userCoordinateX = 0;
-        public static int userCoordinateY = 0;
-
-        // make sure SetCoordinate is opened.
+        // last Point
+        private static int lastX = 0;
+        private static int lastY = 0;
+         
+        // err
+        private static int errX = 50;
+        private static int errY = 50;
+         
+        //user Gaze Point
+        private static int userCoordinateX = 0;
+        private static int userCoordinateY = 0;
+         
+        // sure SetCoordinate is opened.
         public static bool isCoordinate = false;
 
         // move_mouse event?
         private void Move_Mouse()
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
-            lightlyFilteredGazeDataStream.Next += (s, e) => SetCursorPos((int)e.X + userCoordinateX, (int)e.Y + userCoordinateY);
+            lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
 
             var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
-        //**********************************************
 
-
-        // button click event 마우스 버튼, 키보드 버튼이 나타남
-        private void Mouse_Click(object sender, RoutedEventArgs e)
+        private void move_mouse(double x, double y)
         {
-            Mouse dlg = new Renewal.Mouse();
-            dlg.Show();
+            if (lastX == 0 && lastY == 0)
+                lastX = (int)x; lastY = (int)y;
+
+            if (x <= lastX - errX || x >= lastX + errX || y >= lastY + errY || y <= lastY - errY)
+            {
+                SetCursorPos((int)x + userCoordinateX, (int)y + userCoordinateY);
+            }
+            else
+            {
+                SetCursorPos(lastX + userCoordinateX, lastY + userCoordinateY);
+            }
         }
 
-        private void Keyboard_Click(object sender, RoutedEventArgs e)
-        {
-            Keyboard dlg = new Renewal.Keyboard();
-            dlg.Closed += new EventHandler(Keyboard_Closed);
-            dlg.Show();
-        }
-      
 
-        
-    // 키보드 이벤트 API
-    [DllImport("user32.dll", SetLastError = true)]
+        #endregion
+
+        // 키보드 이벤트 API
+        [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         //  키보드 종료 되면서 clipboard에 복사된 텍스트가 ctrl + v 됨
@@ -124,7 +132,11 @@ namespace Renewal
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
 
+
         //**********************************************
+
+
+        #region About hooking - keyboard, mouse, cursor cordinate
 
         //키보드 후킹
         [DllImport("user32.dll")]
@@ -217,10 +229,9 @@ namespace Renewal
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
                             return (IntPtr)1;
                     }
-                    
+
                 }
 
-               
 
                 //when user coordinates gaze Point and mouse position. 
                 if (isCoordinate)
@@ -263,47 +274,51 @@ namespace Renewal
 
         }
 
-
-
         private void Form1_Load(object sender, EventArgs e)
         {
 
             SetHook();
         }
+        #endregion
 
+        #region button click event
+        // button click event 
+        private void Mouse_Click(object sender, RoutedEventArgs e)
+        {
+            Mouse dlg = new Renewal.Mouse();
+            dlg.Show();
+        }
+        private void Keyboard_Click(object sender, RoutedEventArgs e)
+        {
+            Keyboard dlg = new Renewal.Keyboard();
+            dlg.Closed += new EventHandler(Keyboard_Closed);
+            dlg.Show();
+        }
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
             Setting dlg = new Renewal.Setting();
             dlg.Show();
         }
-
-
         private void PgUp_Click(object sender, RoutedEventArgs e)
         {
-            
              const int KEYUP = 0x0002;
              keybd_event(0x21, 0, 0,0);  // Page Up key 다운
              keybd_event(0x21, 0, KEYUP, 0);
-                        
-            
-        }   
-
+        }
         private void PgDn_Click(object sender, RoutedEventArgs e)
         {
             const int KEYUP = 0x0002;
-           
             keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
             keybd_event(0x22, 0, KEYUP, 0);
         }
-        //**********************************************
-
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
         }
+        #endregion
 
-
+        #region 바탕화면 크기 조정?
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -313,10 +328,9 @@ namespace Renewal
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
-
-        //**********************************************
-
+        #endregion
 
     }
 }

@@ -23,7 +23,6 @@ namespace Renewal
         public Setting()
         {
             InitializeComponent();
-            IntPtr windowHandle = new WindowInteropHelper(this).Handle;
 
             Width = Application.Current.MainWindow.Width;
             Height = Application.Current.MainWindow.Height;

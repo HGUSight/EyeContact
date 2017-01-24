@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
         Title="Internet" Height="1080" Width="240"
-        Topmost="True" WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True">
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top">
+
 
     <WrapPanel x:Name="wrapPanel" >
         <Button x:Name="Open" Content="Open" Width="240"  Height="180" Click="Open_Click" />
