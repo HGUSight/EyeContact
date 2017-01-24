@@ -10,7 +10,8 @@ using CUETools.Codecs;
 using CUETools.Codecs.FLAKE;
 using NAudio.Wave;
 // json parsing
-using Newtonsoft.
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Renewal
@@ -381,13 +382,10 @@ namespace Renewal
                     Console.WriteLine("1, 2, 3 : " + a);
                     i++;
                 }
-
                 var text = jsonObject.result[0].alternative[max].transcript;
                 Console.WriteLine("test : " + text);
             }
         }
-
         #endregion
-
     }
 }
