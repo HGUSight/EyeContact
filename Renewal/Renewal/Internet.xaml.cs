@@ -196,24 +196,24 @@ namespace Renewal
             keybd_event(Alt, 0, KEYUP, 0);
             keybd_event(D, 0, KEYUP, 0);
             
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(100);
 
             keybd_event(0x08, 0, 0, 0); // backspace
             keybd_event(0x08, 0, 0x0002, 0);
 
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(100);
 
             keybd_event(0x11, 0, 0, 0); // ctrl+V
             keybd_event((byte)'V', 0, 0, 0);
             keybd_event(0x11, 0, 0x0002, 0);
             keybd_event((byte)'V', 0, 0x0002, 0);
 
-           /*
+           
             System.Threading.Thread.Sleep(100);
 
             keybd_event((byte)0x0D, 0, 0, 0); // enter
             keybd_event((byte)0x0D, 0, 0x0002, 0);
-            */
+            
 
         }
 
