@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Text;
 using System.Windows;
-using System.Windows.Forms;
 //move mouse
 using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
-using System.Diagnostics;
 using System.Windows.Interop;
-using System.Windows.Input;
+
 
 namespace Renewal
 {
@@ -33,10 +30,15 @@ namespace Renewal
             Mouse.Height = ButtonHeight;
             Keyboard.Width = ButtonWidth;
             Keyboard.Height = ButtonHeight;
+            Internet.Width = ButtonWidth;
+            Internet.Height = ButtonHeight; Internet.Width = ButtonWidth;
+            Internet.Height = ButtonHeight;
+            PgUp.Width = ButtonWidth;
+            PgUp.Height = ButtonHeight;
+            PgDn.Width = ButtonWidth;
+            PgDn.Height = ButtonHeight;
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
-            Exit.Width = ButtonWidth;
-            Exit.Height = ButtonHeight;
 
 
 
@@ -106,7 +108,7 @@ namespace Renewal
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show();
         }
-        //**********************************************
+      
 
         
     // 키보드 이벤트 API
@@ -121,6 +123,8 @@ namespace Renewal
             keybd_event((byte)0x11, 0, 0x0002, 0);
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
+
+        //**********************************************
 
         //키보드 후킹
         [DllImport("user32.dll")]
@@ -185,7 +189,7 @@ namespace Renewal
 
 
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
-                                               // http://cherrytree.at/misc/vk.htm 참조
+                                                // http://crynut84.tistory.com/34 참조
                 {
                     switch (mouseEvent_var)
                     {
@@ -299,12 +303,6 @@ namespace Renewal
             dlg.Show();
         }
 
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            AppBarFunctions.SetAppBar(this, ABEdge.None);
-            Close();
-        }
 
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
