@@ -43,7 +43,6 @@ namespace Renewal
         private string wavFile = @"audio.wav";
         private string flacFile = @"audio.flac";
         private string flac_path = @"C:\Audio\audio.flac";
-        private string output_text = @"";
         private bool isStart = true;
 
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
