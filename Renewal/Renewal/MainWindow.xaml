@@ -14,7 +14,6 @@
         <Button x:Name="PgUp" Content="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-
     </WrapPanel>
 
 

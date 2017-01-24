@@ -35,7 +35,7 @@ namespace Renewal
 
 
             Left = Application.Current.MainWindow.Left; 
-             Top = 0;
+            Top = 0;
         }
 
         private void SetCoordinate_Click(object sender, RoutedEventArgs e)

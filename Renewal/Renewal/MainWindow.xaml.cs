@@ -117,6 +117,7 @@ namespace Renewal
             }
         }
 
+
         #endregion
 
         // 키보드 이벤트 API
@@ -132,7 +133,11 @@ namespace Renewal
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
 
+
         #region About hooking - keyboard, mouse, cursor cordinate
+
+        //**********************************************
+
         //키보드 후킹
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc callback, IntPtr hInstance, uint threadId);
@@ -196,7 +201,7 @@ namespace Renewal
 
 
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
-                                               // http://cherrytree.at/misc/vk.htm 참조
+                                                // http://crynut84.tistory.com/34 참조
                 {
                     switch (mouseEvent_var)
                     {

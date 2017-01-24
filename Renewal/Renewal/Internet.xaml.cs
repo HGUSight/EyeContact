@@ -40,6 +40,7 @@ namespace Renewal
 
             Wallpaper.Width = Width;
             Wallpaper.Height = Height / 6;
+
         }
 
         // 창에 focus 가지 않도록 no activate
@@ -103,6 +104,124 @@ namespace Renewal
             keybd_event(D, 0, KEYUP, 0);
         }
 
+
+        //****************************************************************************
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(int hwnd, int msg, int wParam, StringBuilder sb);
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        private static extern int FindWindow(string _ClassName, string _WindowName);
+        [DllImport("user32.dll", EntryPoint = "FindWindowEx")]
+        private static extern int FindWindowEx(int _Parent, int _ChildAfter, string _ClassName, string _WindowName);
+
+        public const int WM_GETTEXTLENGTH = 0x000E;
+        public const int WM_GETTEXT = 0x000D;
+
+        Keyboard dlg = new Renewal.Keyboard();
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            int ie = FindWindow("IEFrame", null);
+            int worker = FindWindowEx(ie, 0, "WorkerW", null);
+            int toolbar = FindWindowEx(worker, 0, "rebarwindow32", null);
+            int comboboxex = FindWindowEx(toolbar, 0, "Address Band Root", null);
+            int edit = FindWindowEx(comboboxex, 0, "Edit", null);
+
+            StringBuilder sb = new StringBuilder(512);
+            SendMessage(edit, WM_GETTEXT, 255, sb);
+            string url;
+
+           
+            url = sb.ToString();
+            Uri myUri = new Uri(url);
+            string host = myUri.Host;
+            //MessageBox.Show("here 1 = " + host);
+
+            if( host.IndexOf("naver") != -1 )
+            {
+                    
+                dlg.Closed += new EventHandler(Keyboard_Closed);
+                dlg.Show(); // 키보드 열기
+                   
+
+
+            }
+            else if (host.IndexOf("daum") != -1)
+            {
+
+            }
+            else if(host.IndexOf("google") != -1)
+            {
+
+            }
+            else if (host.IndexOf("zum") != -1)
+            {
+
+            }
+            else if(host.IndexOf("bing") != -1 || host.IndexOf("MSN") != -1)
+            {
+
+            }
+            else if (host.IndexOf("youtube") != -1)
+            {
+
+            }
+            else
+            {
+                MessageBox.Show("검색 기능이 지원되지 않는 사이트입니다. 검색 창에 직접 커서를 올려주세요.");
+            }
+
+
+               
+        
+
+          
+        }
+
+        void Keyboard_Closed(object sender, EventArgs e)
+        {
+            
+            string word = dlg.textBox.Text;
+            // MessageBox.Show(word);
+            string url = "http://search.naver.com/search.naver?where=nexearch&query=" + word;
+        
+
+            Clipboard.SetText(url);
+            const byte Alt = 0x12;// Alt key
+            const byte D = 0x44;// D
+
+            keybd_event(Alt, 0, KEYDOWN, 0);
+            keybd_event(D, 0, KEYDOWN, 0);
+            keybd_event(Alt, 0, KEYUP, 0);
+            keybd_event(D, 0, KEYUP, 0);
+
+            System.Threading.Thread.Sleep(100);
+
+            keybd_event(0x08, 0, 0, 0); // backspace
+            keybd_event(0x08, 0, 0x0002, 0);
+
+            System.Threading.Thread.Sleep(100);
+
+            keybd_event(0x11, 0, 0, 0); // ctrl+V
+            keybd_event((byte)'V', 0, 0, 0);
+            keybd_event(0x11, 0, 0x0002, 0);
+            keybd_event((byte)'V', 0, 0x0002, 0);
+
+           
+            System.Threading.Thread.Sleep(100);
+
+            keybd_event((byte)0x0D, 0, 0, 0); // enter
+            keybd_event((byte)0x0D, 0, 0x0002, 0);
+
+
+        }
+
+        void Keyboard_Exit()
+        {
+            
+
+            
+
+        }
         /*// 앞으로
         private void Forward_Click(object sender, RoutedEventArgs e) 
         {
