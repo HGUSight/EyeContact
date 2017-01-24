@@ -23,7 +23,6 @@ namespace Renewal
     /// </summary>
     public partial class Internet : Window
     {
-        
 
         public Internet()
         {
@@ -257,6 +256,15 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
 
+        private void Favorite_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
 

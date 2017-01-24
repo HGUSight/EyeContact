@@ -43,6 +43,7 @@ namespace Renewal
         private string wavFile = @"audio.wav";
         private string flacFile = @"audio.flac";
         private string flac_path = @"C:\Audio\audio.flac";
+        private string text = "";
         private bool isStart = true;
 
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
@@ -378,11 +379,11 @@ namespace Renewal
                         max = i;
                         max_confidence = jsonObject.result[0].alternative[i].confidence;
                     }
-                    Console.WriteLine("1, 2, 3 : " + a);
                     i++;
                 }
-                var text = jsonObject.result[0].alternative[max].transcript;
-                Console.WriteLine("test : " + text);
+                text = jsonObject.result[0].alternative[max].transcript;
+                textBox.Text += text;
+                textBox.CaretIndex = textBox.Text.Length;
             }
         }
         #endregion
