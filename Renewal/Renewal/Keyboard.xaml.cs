@@ -21,7 +21,7 @@ namespace Renewal
         #region variable
         // 버튼 크기 결정
         double ButtonWidth = SystemParameters.PrimaryScreenWidth / 10;
-        double ButtonHeight = SystemParameters.WorkArea.Bottom / 6; // 버튼 높이는 해상도 너비의 1/6
+        double ButtonHeight = SystemParameters.PrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
 
        // 키보드 이벤트 API
        [DllImport("user32.dll", SetLastError = true)]

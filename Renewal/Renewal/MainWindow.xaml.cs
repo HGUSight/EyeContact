@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 using System.Windows.Interop;
-
+using System.Windows.Media;
 
 namespace Renewal
 {
@@ -21,9 +21,10 @@ namespace Renewal
         public MainWindow()
         {
             InitializeComponent();
-  
+
             // calculate screen and button size
             Width /= 8;
+            
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
             Mouse.Width = ButtonWidth;
@@ -316,6 +317,8 @@ namespace Renewal
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
+
             AppBarFunctions.SetAppBar(this, ABEdge.Right);
         }
 
