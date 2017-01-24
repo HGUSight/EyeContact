@@ -40,6 +40,12 @@ namespace Renewal
             Wallpaper.Width = Width;
             Wallpaper.Height = Height / 6;
 
+            Favorite.Width = Width;
+            Favorite.Height = Height / 6;
+
+            Exit.Width = Width;
+            Exit.Height = Height / 6;
+
         }
 
         // 창에 focus 가지 않도록 no activate
@@ -263,7 +269,7 @@ namespace Renewal
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-
+            Close();
         }
     }
 }
