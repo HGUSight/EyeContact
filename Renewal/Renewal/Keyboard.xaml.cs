@@ -57,9 +57,10 @@ namespace Renewal
         {
             InitializeComponent();
 
+            // 버튼 위에 띄어지는 조그만 박스 초기화, 크기 설정
             label.Text = "";
             label.Width = ButtonWidth;
-            label.Visibility = Visibility.Hidden;
+
 
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
@@ -166,10 +167,9 @@ namespace Renewal
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
+            // 버튼 위에 띄어지는 조그만 텍스트 박스 위치 설정 = 버튼 위치로 이동
             Point point = button.TransformToAncestor(this).Transform(new Point(0, 0));
-           // var point = button.PointToScreen(new Point(0, 0));
             label.Margin = new Thickness(point.X, point.Y, 0, 0);
-            //label.Margin = new Thickness(button.PointToScreen(new Point(0, 0)).X, button.PointToScreen(new Point(0, 0)).Y, 0, 0);
 
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
@@ -403,12 +403,16 @@ namespace Renewal
         }
         #endregion
 
+        // 텍스트 박스의 값이 변경되면 버튼 위에 띄어지는 조그만 박스의 값도 업데이트
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             label.Visibility = Visibility.Visible;
             var sentence = textBox.Text.Split(' ');
             label.Text = sentence[sentence.Length - 1];
-            
+            if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+            {
+                label.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
