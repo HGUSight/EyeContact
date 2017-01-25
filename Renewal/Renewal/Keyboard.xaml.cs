@@ -21,7 +21,7 @@ namespace Renewal
         #region variable
         // 버튼 크기 결정
         double ButtonWidth = SystemParameters.PrimaryScreenWidth / 10;
-        double ButtonHeight = SystemParameters.WorkArea.Bottom / 6; // 버튼 높이는 해상도 너비의 1/6
+        double ButtonHeight = SystemParameters.PrimaryScreenHeight / 6; // 버튼 높이는 해상도 너비의 1/6
 
        // 키보드 이벤트 API
        [DllImport("user32.dll", SetLastError = true)]
@@ -43,6 +43,7 @@ namespace Renewal
         private string wavFile = @"audio.wav";
         private string flacFile = @"audio.flac";
         private string flac_path = @"C:\Audio\audio.flac";
+        private string speech_output = "";
         private bool isStart = true;
 
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
@@ -287,10 +288,7 @@ namespace Renewal
             {
                 using (FileStream sourceStream = new FileStream(path + wavFile, FileMode.Open))
                 {
-                    //FileStream sourceStream = new FileStream(path + wavFile, FileMode.Open);
                     WAVReader audioSource = new WAVReader(path + wavFile, sourceStream);
-
-                    //FlakeWriter flac = new FlakeWriter(File.Create(path), audioSource.PCM);
 
                     AudioBuffer buff = new AudioBuffer(audioSource, 0x10000);
                     FlakeWriter flakeWriter = new FlakeWriter(path + flacFile, audioSource.PCM);
@@ -312,10 +310,8 @@ namespace Renewal
             // request
             using (FileStream fileStream = File.OpenRead(flac_path))
             {
-                //FileStream fileStream = File.OpenRead(flac_path);
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
-                    //MemoryStream memoryStream = new MemoryStream();
                     memoryStream.SetLength(fileStream.Length);
                     fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
                     byte[] BA_AudioFile = memoryStream.GetBuffer();
@@ -329,7 +325,6 @@ namespace Renewal
                     _HWR_SpeechToText.ContentLength = BA_AudioFile.Length;
                     using (Stream stream = _HWR_SpeechToText.GetRequestStream())
                     {
-                        //Stream stream = _HWR_SpeechToText.GetRequestStream();
                         stream.Write(BA_AudioFile, 0, BA_AudioFile.Length);
                         stream.Close();
 
@@ -341,8 +336,6 @@ namespace Renewal
                             StreamReader SR_Response = new StreamReader(HWR_Response.GetResponseStream());
                             
                             var result = SR_Response.ReadToEnd();
-                            Console.WriteLine("This is result : " + result);
-
                             var jsons = result.Split('\n');
 
                             json_parsing(jsons);
@@ -378,11 +371,11 @@ namespace Renewal
                         max = i;
                         max_confidence = jsonObject.result[0].alternative[i].confidence;
                     }
-                    Console.WriteLine("1, 2, 3 : " + a);
                     i++;
                 }
-                var text = jsonObject.result[0].alternative[max].transcript;
-                Console.WriteLine("test : " + text);
+                speech_output = jsonObject.result[0].alternative[max].transcript;
+                textBox.Text += speech_output;
+                textBox.CaretIndex = textBox.Text.Length;
             }
         }
         #endregion

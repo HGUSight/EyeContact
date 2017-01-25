@@ -5,7 +5,7 @@
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         Closed="Keyboard_Closed"
-        Topmost="True" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" WindowStyle="None" BorderThickness="0" HorizontalAlignment="Right" AllowsTransparency="True">
+        Topmost="True" WindowStyle="None" BorderThickness="0" HorizontalAlignment="Right" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
 
     <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">
         <Button x:Name="Mouse" Content="Mouse" Width="240" Height="180" Click="Mouse_Click" Focusable="False" FocusManager.IsFocusScope="False" />
@@ -14,8 +14,6 @@
         <Button x:Name="PgUp" Content="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
         <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-
-
     </WrapPanel>
 
 

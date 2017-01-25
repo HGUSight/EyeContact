@@ -5,7 +5,11 @@ using System.Runtime.InteropServices;
 //Tobii
 using Tobii.EyeX.Framework;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Diagnostics;
 
+using System.Threading;
+using SHDocVw;
 
 namespace Renewal
 {
@@ -21,9 +25,10 @@ namespace Renewal
         public MainWindow()
         {
             InitializeComponent();
-  
+
             // calculate screen and button size
             Width /= 8;
+            
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
             Mouse.Width = ButtonWidth;
@@ -133,10 +138,16 @@ namespace Renewal
         }
 
 
+
         //**********************************************
 
 
         #region About hooking - keyboard, mouse, cursor cordinate
+
+
+
+        //**********************************************
+
 
         //키보드 후킹
         [DllImport("user32.dll")]
@@ -311,10 +322,23 @@ namespace Renewal
             keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
             keybd_event(0x22, 0, KEYUP, 0);
         }
+
+
+
+
+        
+        public static InternetExplorer ie = new InternetExplorer();
+        public static IWebBrowserApp webBrowser = ie;
+
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
+
+            //ShowWindow((IntPtr)ie.HWND, 3);
+            webBrowser.Visible = true;
+            webBrowser.GoHome();
+            
         }
         #endregion
 
@@ -322,6 +346,8 @@ namespace Renewal
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+
+
             AppBarFunctions.SetAppBar(this, ABEdge.Right);
         }
 

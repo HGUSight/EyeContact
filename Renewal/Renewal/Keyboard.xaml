@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
         Topmost="True"
-        WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
+        WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>

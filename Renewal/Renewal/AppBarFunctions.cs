@@ -227,7 +227,7 @@ namespace Renewal
             SHAppBarMessage((int)ABMsg.ABM_QUERYPOS, ref barData);
             SHAppBarMessage((int)ABMsg.ABM_SETPOS, ref barData);
 
-            Rect rect = new Rect((double)barData.rc.left, (double)barData.rc.top,
+            Rect rect = new Rect((double)barData.rc.left , (double)barData.rc.top,
                 (double)(barData.rc.right - barData.rc.left), (double)(barData.rc.bottom - barData.rc.top));
             //This is done async, because WPF will send a resize after a new appbar is added.  
             //if we size right away, WPFs resize comes last and overrides us.
