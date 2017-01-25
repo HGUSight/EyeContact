@@ -402,6 +402,7 @@ namespace Renewal
         }
         #endregion
 
+        #region Mini Textbox
         // 텍스트 박스의 값이 변경되면 버튼 위에 띄어지는 조그만 박스의 값도 업데이트
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -413,5 +414,6 @@ namespace Renewal
                 label.Visibility = Visibility.Hidden;
             }
         }
+        #endregion
     }
 }

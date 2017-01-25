@@ -174,8 +174,6 @@ namespace Renewal
             dlg.Closed += new EventHandler(Keyboard_Closed);
 
 
-
-
         }
 
         void Keyboard_Closed(object sender, EventArgs e)
