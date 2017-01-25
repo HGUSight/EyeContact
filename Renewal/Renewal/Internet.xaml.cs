@@ -129,7 +129,8 @@ namespace Renewal
             dlg = new Keyboard();
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
-            
+
+
         }
 
 
@@ -167,14 +168,14 @@ namespace Renewal
             else if(title.IndexOf("NAVER") != -1)
             {
                 doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement query = doc3.getElementsByName("nx_query").item("nx_query", 0);
+                IHTMLElement query = doc3.getElementsByName("query").item("query", 0);
                 //검색어 셋팅
                 query.setAttribute("value", Clipboard.GetText());
 
                 //네이버검색버튼 : search_btn
-               // doc3.getElementById("search_btn").click();
-                IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
-                form_naver.submit();
+               doc3.getElementById("search_btn").click();
+               // IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
+               // form_naver.submit();
             }
 
             else if(title.IndexOf("Daum") != -1)
@@ -186,21 +187,12 @@ namespace Renewal
 
                 IHTMLFormElement form_daum = doc2.forms.item(Type.Missing, 0);
                 form_daum.submit();
-
                 //doc3.getElementById("searchSubmit").click();
             }
                 
-     
 
         }
-
-        void Keyboard_Exit()
-        {
-            
-
-            
-
-        }
+        
         /*// 앞으로
         private void Forward_Click(object sender, RoutedEventArgs e) 
         {
@@ -234,6 +226,7 @@ namespace Renewal
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.webBrowser.Quit();
             Close();
         }
     }

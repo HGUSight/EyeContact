@@ -45,6 +45,7 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
+
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -54,6 +55,8 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
         }
+
+
         #endregion
 
         #region focus
@@ -88,7 +91,7 @@ namespace Renewal
          
         // err
         private static int errX = 50;
-        private static int errY = 50;
+        private static int errY = 100;
          
         //user Gaze Point
         private static int userCoordinateX = 0;
@@ -102,8 +105,6 @@ namespace Renewal
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
             lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
-
-            var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
 
         private void move_mouse(double x, double y)
@@ -124,6 +125,7 @@ namespace Renewal
 
         #endregion
 
+        #region Keyboard Ctrl + v event
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
@@ -136,7 +138,7 @@ namespace Renewal
             keybd_event((byte)0x11, 0, 0x0002, 0);
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
-
+        #endregion
 
 
         //**********************************************
@@ -327,13 +329,16 @@ namespace Renewal
 
 
         
-        public static InternetExplorer ie = new InternetExplorer();
-        public static IWebBrowserApp webBrowser = ie;
+        
+        public static IWebBrowserApp webBrowser;
 
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
+
+            InternetExplorer ie = new InternetExplorer();
+            webBrowser = ie;
 
             //ShowWindow((IntPtr)ie.HWND, 3);
             webBrowser.Visible = true;
@@ -351,12 +356,27 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.Right);
         }
 
+    
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
             Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+        }
+
         #endregion
+
 
     }
 }

@@ -24,6 +24,19 @@ namespace Renewal
         {
             InitializeComponent();
 
+            Width = Application.Current.MainWindow.Width;
+            Height = Application.Current.MainWindow.Height;
+
+            RClick.Width = Width;
+            RClick.Height = Height / 6;
+
+            DClick.Width = Width;
+            DClick.Height = Height / 6;
+
+            Drag.Width = Width;
+            Drag.Height = Height / 6;
+
+
             Left = Application.Current.MainWindow.Left;
             Top = 0;
         }
@@ -42,5 +55,12 @@ namespace Renewal
         {
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DRAGCLICKED;
         }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
     }
 }

@@ -57,6 +57,10 @@ namespace Renewal
         {
             InitializeComponent();
 
+            // 버튼 위에 띄어지는 조그만 박스 초기화, 크기 설정
+            label.Text = "";
+            label.Width = ButtonWidth;
+
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
             topPanel.Width = ButtonWidth * 10;
@@ -81,6 +85,9 @@ namespace Renewal
             textBox.Height = ButtonHeight * 2;
             textBox.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
 
+            
+
+
             // 숫자 버튼 생성(Top Pannel)
             for (var i = 0; i <= 9; i++)
             {
@@ -88,7 +95,7 @@ namespace Renewal
             }
 
             // 좌측 시스템 버튼 생성(Left Panel)
-            leftPanel.Children.Add(new Button { Content = "Speech", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            leftPanel.Children.Add(new Button { Content = "▶", Tag = "Speech", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 우측 시스템 버튼 생성(Right Panel)
@@ -159,14 +166,26 @@ namespace Renewal
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
+            // 버튼 위에 띄어지는 조그만 텍스트 박스 위치 설정 = 버튼 위치로 이동
+            Point point = button.TransformToAncestor(this).Transform(new Point(0, 0));
+            label.Margin = new Thickness(point.X, point.Y, 0, 0);
+
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
             {
                 Clipboard.SetText(textBox.Text);
                 this.Close();
             }
-            else if (content == "Speech")
+            else if (button.Tag.ToString() == "Speech")
             {
+                if (isStart)
+                {
+                    button.Content = "■";
+                }
+                else
+                {
+                    button.Content = "▶";
+                }
                 Stt();
             }
             else if (button.Tag.ToString() == "SpecialButton")
@@ -197,6 +216,7 @@ namespace Renewal
                 InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Alphanumeric;
                 keybd_event((byte)content[0], 0, KEYEVENTF_KEYDOWN, 0);
                 keybd_event((byte)content[0], 0, KEYEVENTF_KEYUP, 0);
+                
             }
             // 그 외 숫자, 특수문자
             else
@@ -204,6 +224,8 @@ namespace Renewal
                 textBox.Text += button.Content.ToString();
                 textBox.CaretIndex = textBox.Text.Length;
             }
+
+
         }
         #endregion
 
@@ -376,6 +398,20 @@ namespace Renewal
                 speech_output = jsonObject.result[0].alternative[max].transcript;
                 textBox.Text += speech_output;
                 textBox.CaretIndex = textBox.Text.Length;
+            }
+        }
+        #endregion
+
+        #region Mini Textbox
+        // 텍스트 박스의 값이 변경되면 버튼 위에 띄어지는 조그만 박스의 값도 업데이트
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            label.Visibility = Visibility.Visible;
+            var sentence = textBox.Text.Split(' ');
+            label.Text = sentence[sentence.Length - 1];
+            if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+            {
+                label.Visibility = Visibility.Hidden;
             }
         }
         #endregion
