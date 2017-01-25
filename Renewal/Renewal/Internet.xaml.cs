@@ -122,7 +122,7 @@ namespace Renewal
         public const int WM_GETTEXTLENGTH = 0x000E;
         public const int WM_GETTEXT = 0x000D;
 
-        Keyboard dlg = new Renewal.Keyboard();
+        Keyboard dlg;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
             int ie = FindWindow("IEFrame", null);
@@ -143,8 +143,7 @@ namespace Renewal
 
             if( host.IndexOf("naver") != -1 )
             {
-                    
-                dlg.Closed += new EventHandler(Keyboard_Closed);
+                dlg = new Keyboard();    
                 dlg.Show(); // 키보드 열기
             }
             else if (host.IndexOf("daum") != -1)
@@ -172,11 +171,11 @@ namespace Renewal
                 MessageBox.Show("검색 기능이 지원되지 않는 사이트입니다. 검색 창에 직접 커서를 올려주세요.");
             }
 
+            dlg.Closed += new EventHandler(Keyboard_Closed);
 
-               
-        
 
-          
+
+
         }
 
         void Keyboard_Closed(object sender, EventArgs e)
@@ -213,7 +212,6 @@ namespace Renewal
 
             keybd_event((byte)0x0D, 0, 0, 0); // enter
             keybd_event((byte)0x0D, 0, 0x0002, 0);
-            
 
         }
 
