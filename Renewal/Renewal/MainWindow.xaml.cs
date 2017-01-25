@@ -84,7 +84,7 @@ namespace Renewal
          
         // err
         private static int errX = 50;
-        private static int errY = 50;
+        private static int errY = 100;
          
         //user Gaze Point
         private static int userCoordinateX = 0;
@@ -98,8 +98,6 @@ namespace Renewal
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
             lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
-
-            var eyePositionDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateEyePositionDataStream();
         }
 
         private void move_mouse(double x, double y)
