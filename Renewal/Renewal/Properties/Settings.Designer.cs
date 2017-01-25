@@ -26,5 +26,201 @@ namespace Renewal.Properties
                 return defaultInstance;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int maxMagnifierHeight
+        {
+            get
+            {
+                return ((int)(this["maxMagnifierHeight"]));
+            }
+            set
+            {
+                this["maxMagnifierHeight"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int maxMagnifierWidth
+        {
+            get
+            {
+                return ((int)(this["maxMagnifierWidth"]));
+            }
+            set
+            {
+                this["maxMagnifierWidth"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isLens
+        {
+            get
+            {
+                return ((bool)(this["isLens"]));
+            }
+            set
+            {
+                this["isLens"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool startWithSystem
+        {
+            get
+            {
+                return ((bool)(this["startWithSystem"]));
+            }
+            set
+            {
+                this["startWithSystem"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool alwaysOnTop
+        {
+            get
+            {
+                return ((bool)(this["alwaysOnTop"]));
+            }
+            set
+            {
+                this["alwaysOnTop"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ar")]
+        public string culture
+        {
+            get
+            {
+                return ((string)(this["culture"]));
+            }
+            set
+            {
+                this["culture"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool invertMagnifierColour
+        {
+            get
+            {
+                return ((bool)(this["invertMagnifierColour"]));
+            }
+            set
+            {
+                this["invertMagnifierColour"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int magnificationRate
+        {
+            get
+            {
+                return ((int)(this["magnificationRate"]));
+            }
+            set
+            {
+                this["magnificationRate"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte overlayR
+        {
+            get
+            {
+                return ((byte)(this["overlayR"]));
+            }
+            set
+            {
+                this["overlayR"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte overlayG
+        {
+            get
+            {
+                return ((byte)(this["overlayG"]));
+            }
+            set
+            {
+                this["overlayG"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public byte overlayB
+        {
+            get
+            {
+                return ((byte)(this["overlayB"]));
+            }
+            set
+            {
+                this["overlayB"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool isRuler
+        {
+            get
+            {
+                return ((bool)(this["isRuler"]));
+            }
+            set
+            {
+                this["isRuler"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int rulerWidth
+        {
+            get
+            {
+                return ((int)(this["rulerWidth"]));
+            }
+            set
+            {
+                this["rulerWidth"] = value;
+            }
+        }
+
     }
 }

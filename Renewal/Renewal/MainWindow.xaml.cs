@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using Tobii.EyeX.Framework;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Forms;
+using System.Windows.Threading;
+using Karna.Magnification;
 
 namespace Renewal
 {
@@ -155,6 +158,7 @@ namespace Renewal
 
         const int WH_KEYBOARD_LL = 13;
         const int WM_KEYDOWN = 0x100;
+        const int WM_KEYUP = 0x0101;
 
         private LowLevelKeyboardProc _proc = hookProc;
 
@@ -193,33 +197,81 @@ namespace Renewal
             UnhookWindowsHookEx(hhook);
         }
 
+        public static DispatcherTimer Timer = new DispatcherTimer();
+        public static magnifier magnifierWindowLens = null;
+        public static magnifier magnifierWindowDocked = null;
+        public static Magnifier mgnLens = null;
+        public static Magnifier mgnDocked = null;
+
+
+        private static void Timer_Tick(object sender, EventArgs e)
+        {
+            startMagnifier();
+            Timer.Stop();
+            // Create the interop host control.
+            //  System.Windows.Forms.Integration.WindowsFormsHost host =
+            //     new System.Windows.Forms.Integration.WindowsFormsHost();
+
+            // Add the interop host control to the Grid
+            // control's collection of child controls.
+            //MainWindow.wrapPanel.Children.Add(host);
+        }
+
+        private static void startMagnifier()
+        {
+
+            if (Properties.Settings.Default.isLens)
+            {
+                magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
+
+                magnifierWindowLens.Show();
+                mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, Properties.Settings.Default.isLens);
+
+                mgnLens.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
+            }
+            else
+            {
+                magnifierWindowDocked = new magnifier(Properties.Settings.Default.isLens);
+                magnifierWindowDocked.Show();
+                mgnDocked = new Magnifier(magnifierWindowDocked, Properties.Settings.Default.isLens);
+                mgnDocked.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
+            }
+
+        }
+
         public static IntPtr hookProc(int code, IntPtr wParam, IntPtr lParam)
         {
             if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN) // keydown이 인지
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
-
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                 // http://crynut84.tistory.com/34 참조
                 {
+                    
+
+                    if (!Timer.IsEnabled)
+                    {
+                        Timer.Interval = TimeSpan.FromSeconds(2);
+                        Timer.Tick += new EventHandler(Timer_Tick);
+                        Timer.Start();
+                    }
                     switch (mouseEvent_var)
                     {
                         case (int)mouseEvent.LCLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
-                            mouse_event(LEFTUP, 0, 0, 0, 0);
-                            return (IntPtr)1; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
-                                              // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
+                            return (IntPtr)1; //return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                           // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
+
                         case (int)mouseEvent.RCLICKED:
-                            mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭 
-                            mouse_event(RIGHTUP, 0, 0, 0, 0);
-                            mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return (IntPtr)1;
+                            mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭
+                            return (IntPtr)1;  // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
+
 
                         case (int)mouseEvent.DOUBLECLICKED:
                             mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
                             mouse_event(LEFTUP, 0, 0, 0, 0);
-                            mouse_event(LEFTDOWN, 0, 0, 0, 0); 
+                            mouse_event(LEFTDOWN, 0, 0, 0, 0);
                             mouse_event(LEFTUP, 0, 0, 0, 0);
                             mouseEvent_var = (int)mouseEvent.LCLICKED;
                             return (IntPtr)1;
@@ -230,7 +282,10 @@ namespace Renewal
                             return (IntPtr)1;
                     }
 
+
+
                 }
+
 
 
                 //when user coordinates gaze Point and mouse position. 
@@ -257,14 +312,40 @@ namespace Renewal
                         default:
                             break;
                     }
+                    return (IntPtr)1;
                 }
 
                 else
                     return CallNextHookEx(hhook, code, (int)wParam, lParam);
 
-                
+
             }
-            return CallNextHookEx(hhook, code, (int)wParam, lParam);
+            else if (code >= 0 && wParam == (IntPtr)WM_KEYUP)
+            {
+                int vkCode = Marshal.ReadInt32(lParam);
+                if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
+                                                // http://crynut84.tistory.com/34 참조
+                {
+                    if (Timer.IsEnabled)
+                        Timer.Stop();
+                    
+                    switch (mouseEvent_var)
+                    {
+                        case (int)mouseEvent.LCLICKED:
+                            mouse_event(LEFTUP, 0, 0, 0, 0);
+                            return (IntPtr)1; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                                              // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
+                        case (int)mouseEvent.RCLICKED:
+                            mouse_event(RIGHTUP, 0, 0, 0, 0);
+                            mouseEvent_var = (int)mouseEvent.LCLICKED;
+                            return (IntPtr)1;
+
+                    }
+                }
+                return CallNextHookEx(hhook, code, (int)wParam, lParam);
+            }
+            else 
+                return CallNextHookEx(hhook, code, (int)wParam, lParam);
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -330,7 +411,7 @@ namespace Renewal
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
-            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+            System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
         #endregion
 
