@@ -10,6 +10,5 @@
     <WrapPanel x:Name="wrapPanel">
         <Button x:Name="SetCoordinate" Content="SetCoordinate" Width="240" Height="180" Click="SetCoordinate_Click"/>
         <Button x:Name="Back" Content="Back" Width="240" Height="180" Click="Back_Click"/>
-
     </WrapPanel>
 </Window>

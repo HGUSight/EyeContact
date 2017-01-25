@@ -12,6 +12,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Karna.Magnification;
+using System.Windows.Forms;
 
 namespace Renewal
 {
@@ -24,8 +26,8 @@ namespace Renewal
         {
             InitializeComponent();
 
-            Width = Application.Current.MainWindow.Width;
-            Height = Application.Current.MainWindow.Height;
+            Width = System.Windows.Application.Current.MainWindow.Width;
+            Height = System.Windows.Application.Current.MainWindow.Height;
 
             SetCoordinate.Width = Width;
             SetCoordinate.Height = Height / 6;
@@ -34,7 +36,7 @@ namespace Renewal
             Back.Height = Height / 6;
 
 
-            Left = Application.Current.MainWindow.Left; 
+            Left = System.Windows.Application.Current.MainWindow.Left; 
             Top = 0;
         }
 
@@ -48,5 +50,7 @@ namespace Renewal
         {
             this.Close();
         }
+        
+
     }
 }

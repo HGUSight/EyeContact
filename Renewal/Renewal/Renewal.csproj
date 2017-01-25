@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\EyeXFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Gma.UserActivityMonitor">
+      <HintPath>..\..\..\..\Users\rhkr3\eclipse\OneDrive\문서\Visual Studio 2015\Projects\HostingWflnWpf\Karna.Magnification\bin\Debug\Gma.UserActivityMonitor.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\NAudio.dll</HintPath>
@@ -73,6 +76,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -80,6 +84,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBarFunctions.cs" />
+    <Compile Include="magnifier.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="magnifier.Designer.cs">
+      <DependentUpon>magnifier.cs</DependentUpon>
+    </Compile>
     <Compile Include="SetCoordinate.xaml.cs">
       <DependentUpon>SetCoordinate.xaml</DependentUpon>
     </Compile>
@@ -185,6 +195,10 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <ProjectReference Include="..\Karna.Magnification\Karna.Magnification.csproj">
+      <Project>{23e96e6a-2cc7-4514-a8db-e0605b4efde9}</Project>
+      <Name>Karna.Magnification</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
