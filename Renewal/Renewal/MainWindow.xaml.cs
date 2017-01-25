@@ -41,6 +41,7 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
+
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -50,6 +51,8 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
         }
+
+
         #endregion
 
         #region focus
@@ -118,6 +121,7 @@ namespace Renewal
 
         #endregion
 
+        #region Keyboard Ctrl + v event
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
@@ -130,7 +134,7 @@ namespace Renewal
             keybd_event((byte)0x11, 0, 0x0002, 0);
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
-
+        #endregion
 
         #region About hooking - keyboard, mouse, cursor cordinate
 
@@ -325,12 +329,27 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.Right);
         }
 
+    
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
             Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+        }
+
         #endregion
+
 
     }
 }

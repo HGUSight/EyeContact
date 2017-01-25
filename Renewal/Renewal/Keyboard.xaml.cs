@@ -61,7 +61,6 @@ namespace Renewal
             label.Text = "";
             label.Width = ButtonWidth;
 
-
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
             topPanel.Width = ButtonWidth * 10;
