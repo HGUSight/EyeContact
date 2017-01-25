@@ -123,48 +123,12 @@ namespace Renewal
             Uri myUri = new Uri(url);
             string host = myUri.Host;
             //MessageBox.Show("here 1 = " + host);
-
-
-            if( host.IndexOf("naver") != -1 )
-            {
-                dlg = new Keyboard();    
-                dlg.Show(); // 키보드 열기
-            }
-            else if (host.IndexOf("daum") != -1)
-            {
-
-            }
-            else if(host.IndexOf("google") != -1)
-            {
-
-            }
-            else if (host.IndexOf("zum") != -1)
-            {
-
-            }
-            else if(host.IndexOf("bing") != -1 || host.IndexOf("MSN") != -1)
-            {
-
-            }
-            else if (host.IndexOf("youtube") != -1)
-            {
-
-            }
-            else
-            {
-                MessageBox.Show("검색 기능이 지원되지 않는 사이트입니다. 검색 창에 직접 커서를 올려주세요.");
-            }
-
-            dlg.Closed += new EventHandler(Keyboard_Closed);
-
-
-
             */
 
             dlg = new Keyboard();
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
-            
+
         }
 
 
@@ -202,14 +166,14 @@ namespace Renewal
             else if(title.IndexOf("NAVER") != -1)
             {
                 doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement query = doc3.getElementsByName("nx_query").item("nx_query", 0);
+                IHTMLElement query = doc3.getElementsByName("query").item("query", 0);
                 //검색어 셋팅
                 query.setAttribute("value", Clipboard.GetText());
 
                 //네이버검색버튼 : search_btn
-               // doc3.getElementById("search_btn").click();
-                IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
-                form_naver.submit();
+               doc3.getElementById("search_btn").click();
+               // IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
+               // form_naver.submit();
             }
 
             else if(title.IndexOf("Daum") != -1)
@@ -222,9 +186,6 @@ namespace Renewal
                 IHTMLFormElement form_daum = doc2.forms.item(Type.Missing, 0);
                 form_daum.submit();
 
-            keybd_event((byte)0x0D, 0, 0, 0); // enter
-            keybd_event((byte)0x0D, 0, 0x0002, 0);
-
                 //doc3.getElementById("searchSubmit").click();
             }
                 
@@ -232,11 +193,9 @@ namespace Renewal
 
         }
 
-        void Keyboard_Exit()
-        {
-                 
 
-        }
+   //     }
+        
         /*// 앞으로
         private void Forward_Click(object sender, RoutedEventArgs e) 
         {
@@ -270,6 +229,7 @@ namespace Renewal
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.webBrowser.Quit();
             Close();
         }
     }

@@ -330,13 +330,16 @@ namespace Renewal
 
 
         
-        public static InternetExplorer ie = new InternetExplorer();
-        public static IWebBrowserApp webBrowser = ie;
+        
+        public static IWebBrowserApp webBrowser;
 
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
+
+            InternetExplorer ie = new InternetExplorer();
+            webBrowser = ie;
 
             //ShowWindow((IntPtr)ie.HWND, 3);
             webBrowser.Visible = true;
