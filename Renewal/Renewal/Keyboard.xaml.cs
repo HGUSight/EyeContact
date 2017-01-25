@@ -95,7 +95,7 @@ namespace Renewal
             }
 
             // 좌측 시스템 버튼 생성(Left Panel)
-            leftPanel.Children.Add(new Button { Content = "Speech", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            leftPanel.Children.Add(new Button { Content = "▶", Tag = "Speech", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 우측 시스템 버튼 생성(Right Panel)
@@ -166,7 +166,10 @@ namespace Renewal
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
-            label.Margin = new Thickness(button.PointToScreen(new Point(0, 0)).X, button.PointToScreen(new Point(0, 0)).Y, 0, 0);
+            Point point = button.TransformToAncestor(this).Transform(new Point(0, 0));
+           // var point = button.PointToScreen(new Point(0, 0));
+            label.Margin = new Thickness(point.X, point.Y, 0, 0);
+            //label.Margin = new Thickness(button.PointToScreen(new Point(0, 0)).X, button.PointToScreen(new Point(0, 0)).Y, 0, 0);
 
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
@@ -174,8 +177,16 @@ namespace Renewal
                 Clipboard.SetText(textBox.Text);
                 this.Close();
             }
-            else if (content == "Speech")
+            else if (button.Tag.ToString() == "Speech")
             {
+                if (isStart)
+                {
+                    button.Content = "■";
+                }
+                else
+                {
+                    button.Content = "▶";
+                }
                 Stt();
             }
             else if (button.Tag.ToString() == "SpecialButton")
