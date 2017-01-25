@@ -57,6 +57,8 @@ namespace Renewal
         {
             InitializeComponent();
 
+            label.Content = "";
+
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
             topPanel.Width = ButtonWidth * 10;
@@ -80,6 +82,9 @@ namespace Renewal
             textBox.Width = ButtonWidth * 7;
             textBox.Height = ButtonHeight * 2;
             textBox.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
+
+            label.Width = ButtonWidth;
+
 
             // 숫자 버튼 생성(Top Pannel)
             for (var i = 0; i <= 9; i++)
@@ -159,6 +164,8 @@ namespace Renewal
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
+            label.Margin = new Thickness(button.PointToScreen(new Point(0, 0)).X, button.PointToScreen(new Point(0, 0)).Y, 0, 0);
+
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
             {
@@ -197,6 +204,7 @@ namespace Renewal
                 InputMethod.Current.ImeConversionMode = ImeConversionModeValues.Alphanumeric;
                 keybd_event((byte)content[0], 0, KEYEVENTF_KEYDOWN, 0);
                 keybd_event((byte)content[0], 0, KEYEVENTF_KEYUP, 0);
+                
             }
             // 그 외 숫자, 특수문자
             else
@@ -204,6 +212,8 @@ namespace Renewal
                 textBox.Text += button.Content.ToString();
                 textBox.CaretIndex = textBox.Text.Length;
             }
+
+
         }
         #endregion
 
@@ -379,5 +389,12 @@ namespace Renewal
             }
         }
         #endregion
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var sentence = textBox.Text.Split(' ');
+            label.Content = sentence[sentence.Length - 1];
+            
+        }
     }
 }
