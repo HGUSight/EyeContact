@@ -6,6 +6,7 @@
         Closing="Window_Closing"
         Closed="Window_Closed"
         Unloaded="Window_Unloaded"
+        
         Topmost="True" WindowStyle="None" BorderThickness="0" HorizontalAlignment="Right" AllowsTransparency="True" ResizeMode="CanResizeWithGrip" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
 
     <WrapPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">

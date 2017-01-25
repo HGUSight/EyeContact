@@ -60,6 +60,7 @@ namespace Renewal
             // 버튼 위에 띄어지는 조그만 박스 초기화, 크기 설정
             label.Text = "";
             label.Width = ButtonWidth;
+            label.Visibility = Visibility.Hidden;
 
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;

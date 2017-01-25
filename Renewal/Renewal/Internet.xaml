@@ -8,11 +8,11 @@
         Title="Internet" Height="1080" Width="240"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top"
-        WindowStyle="None"  AllowsTransparency="True">
+        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top">
+
+
 
     <WrapPanel x:Name="wrapPanel" >
-        <Button x:Name="Open" Content="Open" Width="240"  Height="180" Click="Open_Click" />
         <Button x:Name="Back" Content="뒤로" Width="240" Height="180" Click="Back_Click" />
         <Button x:Name="Search" Content="검색" Width="240" Height="180" Click="Search_Click" />
         <Button x:Name="Wallpaper" Content="바탕화면" Width="240" Height="180" Click="Wallpaper_Click" />

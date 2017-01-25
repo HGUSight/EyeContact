@@ -6,6 +6,10 @@ using System.Runtime.InteropServices;
 using Tobii.EyeX.Framework;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Diagnostics;
+
+using System.Threading;
+using SHDocVw;
 
 namespace Renewal
 {
@@ -41,6 +45,7 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
+          
 
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
@@ -136,9 +141,16 @@ namespace Renewal
         }
         #endregion
 
-        #region About hooking - keyboard, mouse, cursor cordinate
 
         //**********************************************
+
+
+        #region About hooking - keyboard, mouse, cursor cordinate
+
+
+
+        //**********************************************
+
 
         //키보드 후킹
         [DllImport("user32.dll")]
@@ -313,10 +325,23 @@ namespace Renewal
             keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
             keybd_event(0x22, 0, KEYUP, 0);
         }
+
+
+
+
+        
+        public static InternetExplorer ie = new InternetExplorer();
+        public static IWebBrowserApp webBrowser = ie;
+
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             Internet dlg = new Renewal.Internet();
             dlg.Show();
+
+            //ShowWindow((IntPtr)ie.HWND, 3);
+            webBrowser.Visible = true;
+            webBrowser.GoHome();
+            
         }
         #endregion
 

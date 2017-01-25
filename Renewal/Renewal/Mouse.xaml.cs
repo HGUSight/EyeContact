@@ -36,6 +36,9 @@ namespace Renewal
             Drag.Width = Width;
             Drag.Height = Height / 6;
 
+            Back.Width = Width;
+            Back.Height = Height / 6;
+
 
             Left = Application.Current.MainWindow.Left;
             Top = 0;
