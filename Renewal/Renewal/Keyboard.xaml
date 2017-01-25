@@ -16,6 +16,6 @@
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="0" BorderThickness="1" HorizontalAlignment="Left" FontWeight="Normal" FontFamily="KoPubDotum Medium" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
         <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False"/>
-        <Label x:Name="label" Content="Label" HorizontalAlignment="Left" Margin="348,585,0,0" VerticalAlignment="Top" FontSize="16" BorderThickness="0" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="label" HorizontalAlignment="Left" Margin="348,585,0,0" VerticalAlignment="Top" FontSize="16" BorderThickness="1" HorizontalContentAlignment="Center" VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" TextWrapping="WrapWithOverflow" Focusable="False"/>
     </Grid>
 </Window>

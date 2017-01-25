@@ -57,7 +57,9 @@ namespace Renewal
         {
             InitializeComponent();
 
-            label.Content = "";
+            label.Text = "";
+            label.Width = ButtonWidth;
+            label.Visibility = Visibility.Hidden;
 
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
@@ -83,7 +85,7 @@ namespace Renewal
             textBox.Height = ButtonHeight * 2;
             textBox.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
 
-            label.Width = ButtonWidth;
+            
 
 
             // 숫자 버튼 생성(Top Pannel)
@@ -392,8 +394,9 @@ namespace Renewal
 
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            label.Visibility = Visibility.Visible;
             var sentence = textBox.Text.Split(' ');
-            label.Content = sentence[sentence.Length - 1];
+            label.Text = sentence[sentence.Length - 1];
             
         }
     }
