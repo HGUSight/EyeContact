@@ -35,19 +35,18 @@ namespace Renewal
             
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
-            Mouse.Width = ButtonWidth;
-            Mouse.Height = ButtonHeight;
-            Keyboard.Width = ButtonWidth;
-            Keyboard.Height = ButtonHeight;
-            Internet.Width = ButtonWidth;
-            Internet.Height = ButtonHeight; Internet.Width = ButtonWidth;
-            Internet.Height = ButtonHeight;
-            PgUp.Width = ButtonWidth;
-            PgUp.Height = ButtonHeight;
-            PgDn.Width = ButtonWidth;
-            PgDn.Height = ButtonHeight;
-            Setting.Width = ButtonWidth;
-            Setting.Height = ButtonHeight;
+            Mouse.Width = ButtonWidth * 0.95;
+            Mouse.Height = ButtonHeight * 0.95;
+            Keyboard.Width = ButtonWidth * 0.95;
+            Keyboard.Height = ButtonHeight * 0.95;
+            Internet.Width = ButtonWidth * 0.95;
+            Internet.Height = ButtonHeight * 0.95;
+            PgUp.Width = ButtonWidth * 0.95;
+            PgUp.Height = ButtonHeight * 0.95;
+            PgDn.Width = ButtonWidth * 0.95;
+            PgDn.Height = ButtonHeight * 0.95;
+            Setting.Width = ButtonWidth * 0.95;
+            Setting.Height = ButtonHeight * 0.95;
 
           
 
