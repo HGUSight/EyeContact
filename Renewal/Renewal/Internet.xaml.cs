@@ -1,4 +1,7 @@
-﻿using System;
+﻿using mshtml;
+using SHDocVw;
+using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,12 +12,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using System.Diagnostics;
-using System.Windows.Interop;
+
 
 namespace Renewal
 {
@@ -31,20 +34,22 @@ namespace Renewal
             Width = Application.Current.MainWindow.Width;
             Height = Application.Current.MainWindow.Height;
 
-            Open.Width = Width;
-            Open.Height = Height / 6;
-
             Back.Width = Width;
             Back.Height = Height / 6;
 
             Wallpaper.Width = Width;
             Wallpaper.Height = Height / 6;
 
+
+            Search.Width = Width;
+            Search.Height = Height / 6;
+
             Favorite.Width = Width;
             Favorite.Height = Height / 6;
 
             Exit.Width = Width;
             Exit.Height = Height / 6;
+
 
         }
 
@@ -69,34 +74,20 @@ namespace Renewal
         }
 
 
+        
+        private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
+        {
+            MainWindow.webBrowser.GoBack();
+        }
+
+
+
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         const int KEYDOWN = 0x0000;
         const int KEYUP = 0x0002;
-
-        private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
-        {
-            //for keyboard event trigger
-            const byte ALT = 0x12;// alt
-            const byte Left = 0x25;// <-
-            
-            keybd_event(ALT, 0, KEYDOWN, 0); 
-            keybd_event(Left, 0, KEYDOWN, 0); 
-            keybd_event(ALT, 0, KEYUP, 0);
-            keybd_event(Left, 0, KEYUP, 0);
-        }
-
-
-      
-        private void Open_Click(object sender, RoutedEventArgs e)
-        {
-            Process process = new System.Diagnostics.Process();
-            process.StartInfo = new System.Diagnostics.ProcessStartInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)
-                                                                            + "\\Internet Explorer\\iexplore.exe", "http://www.naver.com");
-            process.Start();
-        }
 
         private void Wallpaper_Click(object sender, RoutedEventArgs e)
         {
@@ -122,128 +113,100 @@ namespace Renewal
         public const int WM_GETTEXTLENGTH = 0x000E;
         public const int WM_GETTEXT = 0x000D;
 
-        Keyboard dlg = new Renewal.Keyboard();
+        Keyboard dlg;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            int ie = FindWindow("IEFrame", null);
-            int worker = FindWindowEx(ie, 0, "WorkerW", null);
-            int toolbar = FindWindowEx(worker, 0, "rebarwindow32", null);
-            int comboboxex = FindWindowEx(toolbar, 0, "Address Band Root", null);
-            int edit = FindWindowEx(comboboxex, 0, "Edit", null);
-
-            StringBuilder sb = new StringBuilder(512);
-            SendMessage(edit, WM_GETTEXT, 255, sb);
-            string url;
-
+            /*
+            
            
             url = sb.ToString();
             Uri myUri = new Uri(url);
             string host = myUri.Host;
             //MessageBox.Show("here 1 = " + host);
+            */
 
-            if( host.IndexOf("naver") != -1 )
-            {
-                    
-                dlg.Closed += new EventHandler(Keyboard_Closed);
-                dlg.Show(); // 키보드 열기
-            }
-            else if (host.IndexOf("daum") != -1)
-            {
+            dlg = new Keyboard();
+            dlg.Closed += new EventHandler(Keyboard_Closed);
+            dlg.Show(); // 키보드 열기
 
-            }
-            else if(host.IndexOf("google") != -1)
-            {
-
-            }
-            else if (host.IndexOf("zum") != -1)
-            {
-
-            }
-            else if(host.IndexOf("bing") != -1 || host.IndexOf("MSN") != -1)
-            {
-
-            }
-            else if (host.IndexOf("youtube") != -1)
-            {
-
-            }
-            else
-            {
-                MessageBox.Show("검색 기능이 지원되지 않는 사이트입니다. 검색 창에 직접 커서를 올려주세요.");
-            }
-
-
-               
-        
-
-          
         }
 
+
+        IHTMLDocument2 doc2;
+        IHTMLDocument3 doc3;
         void Keyboard_Closed(object sender, EventArgs e)
         {
+
+            doc2 = (IHTMLDocument2)MainWindow.webBrowser.Document;
             
-            string word = dlg.textBox.Text;
-            // MessageBox.Show(word);
-            string url = "http://search.naver.com/search.naver?where=nexearch&query=" + word;
+
+            
+            // Cookie 읽기
+            string cookie = doc2.cookie;
+            Console.WriteLine("Cookie: {0}", cookie);
+
+            // Document 속성 읽기
+            string title = doc2.title;
+            string url = doc2.url;
+            Console.WriteLine("{0} - {1}", url, title);
+            
+            //string title = doc2.title;
+            if(title.IndexOf("Google") != -1)
+            {
+                // 특정 Element 컨트롤
+                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
+                IHTMLElement q = doc3.getElementsByName("q").item("q", 0);
+                q.setAttribute("value", Clipboard.GetText());
+
+                IHTMLFormElement form_google = doc2.forms.item(Type.Missing, 0);
+                form_google.submit();
+
+            }
+
+            else if(title.IndexOf("NAVER") != -1)
+            {
+                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
+                IHTMLElement query = doc3.getElementsByName("query").item("query", 0);
+                //검색어 셋팅
+                query.setAttribute("value", Clipboard.GetText());
+
+                //네이버검색버튼 : search_btn
+               doc3.getElementById("search_btn").click();
+               // IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
+               // form_naver.submit();
+            }
+
+            else if(title.IndexOf("Daum") != -1)
+            {
+                // 특정 Element 컨트롤
+                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
+                IHTMLElement q_daum = doc3.getElementsByName("q").item("q", 0);
+                q_daum.setAttribute("value", Clipboard.GetText());
+
+                IHTMLFormElement form_daum = doc2.forms.item(Type.Missing, 0);
+                form_daum.submit();
+
+                //doc3.getElementById("searchSubmit").click();
+            }
+                
+     
+
+        }
+
+
+   //     }
         
-
-            Clipboard.SetText(url);
-            const byte Alt = 0x12;// Alt key
-            const byte D = 0x44;// D
-            
-            keybd_event(Alt, 0, KEYDOWN, 0);
-            keybd_event(D, 0, KEYDOWN, 0);
-            keybd_event(Alt, 0, KEYUP, 0);
-            keybd_event(D, 0, KEYUP, 0);
-            
-            System.Threading.Thread.Sleep(100);
-
-            keybd_event(0x08, 0, 0, 0); // backspace
-            keybd_event(0x08, 0, 0x0002, 0);
-
-            System.Threading.Thread.Sleep(100);
-
-            keybd_event(0x11, 0, 0, 0); // ctrl+V
-            keybd_event((byte)'V', 0, 0, 0);
-            keybd_event(0x11, 0, 0x0002, 0);
-            keybd_event((byte)'V', 0, 0x0002, 0);
-
-           
-            System.Threading.Thread.Sleep(100);
-
-            keybd_event((byte)0x0D, 0, 0, 0); // enter
-            keybd_event((byte)0x0D, 0, 0x0002, 0);
-            
-
-        }
-
-        void Keyboard_Exit()
-        {
-            
-
-            
-
-        }
         /*// 앞으로
         private void Forward_Click(object sender, RoutedEventArgs e) 
         {
-            const byte ALT = 0x12;// alt
-            const byte Right = 0x27;// ->
-
-            keybd_event(ALT, 0, KEYDOWN, 0);
-            keybd_event(Right, 0, KEYDOWN, 0);
-            keybd_event(ALT, 0, KEYUP, 0);
-            keybd_event(Right, 0, KEYUP, 0);
+            MainWindow.webBrowser.GoForward();
         }
         */
 
         /*// 새로고침
       private void Re_Click(object sender, RoutedEventArgs e)
       {
-          const byte F5 = 0x74;
-
-          keybd_event(F5, 0, KEYDOWN, 0);//F5
-          keybd_event(F5, 0, KEYUP, 0);
+          MainWindow.webBrowser.Refresh();
       }
       */
 
@@ -266,6 +229,7 @@ namespace Renewal
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            MainWindow.webBrowser.Quit();
             Close();
         }
     }
