@@ -43,27 +43,21 @@ namespace Renewal
             Left = Application.Current.MainWindow.Left;
             Top = 0;
         }
-
         private void RClick_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.RCLICKED;
         }
-
         private void DClick_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DOUBLECLICKED;
         }
-
         private void Drag_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DRAGCLICKED;
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
-
     }
 }
