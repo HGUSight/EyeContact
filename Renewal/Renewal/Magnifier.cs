@@ -1,279 +1,190 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Gma.UserActivityMonitor;
-using System.Collections;
 
-
-namespace Karna.Magnification
+namespace Renewal
 {
-    public class Magnifier : IDisposable
+    public partial class magnifier : Form
     {
-        private Form form;
-        private IntPtr hwndMag;
-        private float magnification;
-        private bool initialized;
-        private RECT magWindowRect = new RECT();
-        private System.Windows.Forms.Timer timer;
-        public bool isLens;
-        private bool oldIsLens;
-        private int initialStyle; 
-        
+        int defaultStyle;
+        bool isLens;
+        private int initialStyle;
 
-
-        public Magnifier(Form form, bool isLens)
+        public magnifier(bool isLens)
         {
+            GlobalMouseHandler.MouseMovedEvent += GlobalMouseHandler_MouseMovedEvent;
+            Application.AddMessageFilter(new GlobalMouseHandler());
+            InitializeComponent();
             this.isLens = isLens;
-            oldIsLens = isLens;//Used to track changes of the isLens variable because changing the cursor settings of the magnifier requiers recreating the magnifier
-            magnification = 2.0f;
-            this.form = form;
 
-            if (form == null)
-                throw new ArgumentNullException("form");
+            // Setting a position of Magnifier where is the point of cursor
+            this.StartPosition = FormStartPosition.Manual;
 
-            initialized = NativeMethods.MagInitialize();
-         //   NativeMethods.MagShowSystemCursor(true);
+            int x = Control.MousePosition.X - this.Bounds.Width / 2; ;
+            int y = Control.MousePosition.Y - this.Bounds.Height / 2;
+            this.Location = new Point(x, y);
 
-            if (initialized)
+        }
+
+        #region Native Methods
+        //Native functions needed---------------------------------------------------------------
+
+
+
+        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "MagShowSystemCursor")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool MagShowSystemCursor([MarshalAs(UnmanagedType.Bool)]bool fShowCursor);
+
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
+
+        [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+        static extern int GetWindowLong(IntPtr hWnd, int index);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        static extern int SetWindowLong(IntPtr hWnd, int index, int val);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, int crKey, byte bAlpha, LayeredWindowAttributeFlags dwFlags);
+        [FlagsAttribute]
+        [Description("Layered window flags")]
+
+
+        //-----------------------------------------------------------------------------------------
+        public enum LayeredWindowAttributeFlags : int
+        {
+            /// <summary>
+            /// Use key as a transparency color
+            /// </summary>
+            LWA_COLORKEY = 0x00000001,
+            /// <summary>
+            /// Use Alpha to determine the opacity of the layered window.
+            /// </summary>
+            LWA_ALPHA = 0x00000002
+        }
+
+        #endregion 
+
+        private void magnifier_Load(object sender, EventArgs e)
+        {
+            //Don't let the magnifier grow very large------------------------------------
+            Rectangle r = Screen.PrimaryScreen.Bounds;
+            MaximumSize = new Size((int)(r.Width * 0.75), (int)(r.Height * 0.75));
+            //Store the default style because it might be needed later to reset the settings
+            defaultStyle = GetWindowLong(Handle, -20);
+            //Apply settings when they change -------------------------------------------
+            Properties.Settings.Default.PropertyChanged += new PropertyChangedEventHandler(settingsChanged);
+            //Apply settings now for the first time -------------------------------------
+            applySettings();
+            //---------------------------------------------------------------------------
+
+            if (/*Properties.Settings.Default.*/isLens)//If the magnifier is a lens make click-throughable
             {
-                SetupMagnifier();
-                //UpdateMaginifier();
-
-                this.form.Resize += new EventHandler(form_Resize);
-                this.form.FormClosing += new FormClosingEventHandler(form_FormClosing);
-                timer = new Timer();
-                timer.Tick += new EventHandler(timer_Tick);
-                timer.Interval = NativeMethods.USER_TIMER_MINIMUM;
-                timer.Enabled = true;
-                //HookManager.MouseMove += new MouseEventHandler(mouseMove); 
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                SetWindowLong(this.Handle, -20, defaultStyle | 0x80000 | 0x20);//Layered and transparent
+                SetLayeredWindowAttributes(Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
             }
             else
-            {
-                form.Close();
-            }
-        }
-      
-        private void mouseMove(Object sender, MouseEventArgs e)
-        {
-            UpdateMaginifier();
-        }
-
-
-        public void recreateSelf()
-        {
-            //Used to apply the changed settings on the magnifier which can only happen if the magnifier is recreated
-            RemoveMagnifier();//Remove the magnifier objects by calling windows api
-            NativeMethods.SendMessage(hwndMag, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_CLOSE, 0);//close the inner magnifier window
-            initialized = NativeMethods.MagInitialize();//Initialize the magnifier again by calling windows api
-            if(initialized)
-            {
-                SetupMagnifier();//apply settings
+            {  //Otherwise, render it as toolwindow that is not click-throughable
+                FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+                SetWindowLong(this.Handle, -20, defaultStyle | 0x80000 /*| 0x20*/);//Layered but not transparent
+                //SetWindowLong(Handle, -20, defaultStyle);
+                SetLayeredWindowAttributes(Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
             }
         }
 
-        void form_FormClosing(object sender, FormClosingEventArgs e)
+        private void GlobalMouseHandler_MouseMovedEvent(object sender, MouseEventArgs e)
         {
-            timer.Enabled = false;
-            Dispose();
-        }
-
-        void timer_Tick(object sender, EventArgs e)
-        {
-            UpdateMaginifier();
-        }
-
-        void form_Resize(object sender, EventArgs e)
-        {
-            ResizeMagnifier();
-        }
-
-        ~Magnifier()
-        {
-            Dispose(false);
-        }
-
-        protected virtual void ResizeMagnifier()
-        {
-            if ( initialized && (hwndMag != IntPtr.Zero))
+            try
             {
-                NativeMethods.GetClientRect(form.Handle, ref magWindowRect);
-                // Resize the control to fill the window.
-                NativeMethods.SetWindowPos(hwndMag, IntPtr.Zero,
-                    magWindowRect.left, magWindowRect.top, magWindowRect.right, magWindowRect.bottom, 0);
+
+                int x = e.X - this.Bounds.Width / 2;
+                int y = e.Y - this.Bounds.Height / 2;
+
+                //making the magnifier move to fallow mouse cursor
+               // SetWindowPos(this.Handle, -1, x, y, this.Bounds.Width, this.Bounds.Height, 0x0004 | 0x0040);
             }
+            catch { }
         }
 
-        public virtual void UpdateMaginifier()
+        private void settingsChanged(Object sender, PropertyChangedEventArgs args)
         {
-            if ((!initialized) || (hwndMag == IntPtr.Zero))
-                return;
+            applySettings();
+        }
 
-            POINT mousePoint = new POINT();
-            RECT sourceRect = new RECT();
+        private void applySettings()
+        {    
+            //magnifier defualt size of width, height = 500,500
+            Size = new Size(Properties.Settings.Default.maxMagnifierWidth, Properties.Settings.Default.maxMagnifierHeight);
+            TopMost = Properties.Settings.Default.alwaysOnTop;
+        }
 
-            NativeMethods.GetCursorPos(ref mousePoint);
+        private void magnifier_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.PropertyChanged -= new PropertyChangedEventHandler(settingsChanged);
+        }
 
-            int width = (int)((magWindowRect.right - magWindowRect.left) / magnification);
-            int height = (int)((magWindowRect.bottom - magWindowRect.top) / magnification);
+        // make if possible to click on the magnifier
+        private void magnifier_MouseClick(object sender, MouseEventArgs e)
+        {
+            initialStyle = GetWindowLong(this.Handle, -20);
+            SetWindowLong(this.Handle, -20, initialStyle | 0x80000 | 0x20);
+            SetLayeredWindowAttributes(this.Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
 
-            sourceRect.left = mousePoint.x - width / 2;
-            sourceRect.top = mousePoint.y - height / 2;
+        }
 
-         
-           
-           
+        private void magnifier_MouseHover(object sender, EventArgs e)
+        {
+            MagShowSystemCursor(false);
+        }
+
+        private void magnifier_MouseLeave(object sender, EventArgs e)
+        {
+            MagShowSystemCursor(true);
+        }
+
+        private void magnifier_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            MagShowSystemCursor(false);
+        }
 
 
-            // Don't scroll outside desktop area.
-            if (!isLens)
+
+
+    }
+
+    //global mouse handler function.
+    public class GlobalMouseHandler : IMessageFilter
+    {
+        private const int WM_MOUSEMOVE = 0x0200;
+        private System.Drawing.Point previousMousePosition = new System.Drawing.Point();
+        public static event EventHandler<MouseEventArgs> MouseMovedEvent = delegate { };
+
+
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == WM_MOUSEMOVE)
             {
-                if (sourceRect.left < 0)
+                System.Drawing.Point currentMousePoint = Control.MousePosition;
+                if (previousMousePosition != currentMousePoint)
                 {
-                    sourceRect.left = 0;
-                }
-                if (sourceRect.left > NativeMethods.GetSystemMetrics(NativeMethods.SM_CXSCREEN) - width)
-                {
-                    sourceRect.left = NativeMethods.GetSystemMetrics(NativeMethods.SM_CXSCREEN) - width;
-                }
-                sourceRect.right = sourceRect.left + width;
-
-                if (sourceRect.top < 0)
-                {
-                    sourceRect.top = 0;
-                }
-                if (sourceRect.top > NativeMethods.GetSystemMetrics(NativeMethods.SM_CYSCREEN) - height)
-                {
-                    sourceRect.top = NativeMethods.GetSystemMetrics(NativeMethods.SM_CYSCREEN) - height;
-                }
-                sourceRect.bottom = sourceRect.top + height;
-            }
-            if (this.form == null)
-            {
-                timer.Enabled = false;
-                return;
-            }
-
-            if (this.form.IsDisposed)
-            {
-                timer.Enabled = false;
-                return;
-            }
-
-            // Set the source rectangle for the magnifier control.
-            NativeMethods.MagSetWindowSource(hwndMag, sourceRect);
-
-            // Reclaim topmost status, to prevent unmagnified menus from remaining in view. 
-            if (isLens)// If the magnifier is a lens let it follow the cursor and stay on top
-            {
-                POINT mouse = new POINT();
-                NativeMethods.GetCursorPos(ref mouse);
-
-                NativeMethods.SetWindowPos(form.Handle, NativeMethods.HWND_TOPMOST, mouse.x - (int)(magnification * width / 2), mouse.y - (int)(magnification * height / 2), width, height,
-                (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
-            }
-            else// if the magnifier is not a lens don't move it and keep it on top of all non-topmost windows
-             NativeMethods.SetWindowPos(form.Handle, new IntPtr(0), 0, 0, 0, 0,
-                (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOZORDER | (int)SetWindowPosFlags.SWP_NOREDRAW | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE);
-
-            
-
-            // Force redraw.
-            NativeMethods.InvalidateRect(hwndMag, IntPtr.Zero, true);
-        }
-
-        public float Magnification
-        {
-            get { return magnification; }
-            set
-            {
-                if (magnification != value)
-                {
-                    magnification = value;
-                    // Set the magnification factor.
-                    Transformation matrix = new Transformation(magnification);
-                    NativeMethods.MagSetWindowTransform(hwndMag, ref matrix);
+                    previousMousePosition = currentMousePoint;
+                    MouseMovedEvent(this, new MouseEventArgs(MouseButtons.None, 0, currentMousePoint.X, currentMousePoint.Y, 0));
                 }
             }
+            // Always allow message to continue to the next filter control
+            return false;
         }
-
-        public void setMagnificationFactor()
-        {
-            Transformation matrix = new Transformation(magnification);
-            NativeMethods.MagSetWindowTransform(hwndMag, ref matrix);
-        }
-
-        private void SetupMagnifier()
-        {
-            if (!initialized)
-                return;
-
-            IntPtr hInst;
-
-            hInst = NativeMethods.GetModuleHandle(null);
-
-
-            // Make the window opaque. Which has been dealt with in the magnifier class
-            //form.AllowTransparency = true;
-            //form.TransparencyKey = Color.Empty;
-            //form.Opacity = 255;
-
-            // Create a magnifier control that fills the client area.
-            NativeMethods.GetClientRect(form.Handle, ref magWindowRect);
-            if (isLens)// if the magnifier is a lens don't show magnifier cursor
-            {
-                hwndMag = NativeMethods.CreateWindow((int)ExtendedWindowStyles.WS_EX_CLIENTEDGE, NativeMethods.WC_MAGNIFIER,
-                    "MagnifierWindow", (int)WindowStyles.WS_CHILD | 
-                    (int)WindowStyles.WS_VISIBLE,
-                    magWindowRect.left, magWindowRect.top, magWindowRect.right, magWindowRect.bottom, form.Handle, IntPtr.Zero, hInst, IntPtr.Zero);
-            }
-            else// if the magnifier is not a lens show the maginified cursor
-            {
-                hwndMag = NativeMethods.CreateWindow((int)ExtendedWindowStyles.WS_EX_CLIENTEDGE , NativeMethods.WC_MAGNIFIER,
-                    "MagnifierWindow", (int)WindowStyles.WS_CHILD | (int)MagnifierStyle.MS_SHOWMAGNIFIEDCURSOR |
-                    (int)WindowStyles.WS_VISIBLE,
-                    magWindowRect.left, magWindowRect.top, magWindowRect.right, magWindowRect.bottom, form.Handle, IntPtr.Zero, hInst, IntPtr.Zero);
-            }
-
-
-            if (hwndMag == IntPtr.Zero)
-            {
-                return;
-            }
-
-            // Set the magnification factor.
-            Transformation matrix = new Transformation(magnification);
-            NativeMethods.MagSetWindowTransform(hwndMag, ref matrix);
-        }
-
-        public void RemoveMagnifier()
-        {
-            if (initialized)
-                NativeMethods.MagUninitialize();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {//Safely dispose the magnifier
-            timer.Enabled = false;
-            if (disposing)
-                timer.Dispose();
-            timer = null;
-            form.Resize -= form_Resize; 
-            this.form.FormClosing -= new FormClosingEventHandler(form_FormClosing);
-            
-            RemoveMagnifier();
-        }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
+    
     }
 }
