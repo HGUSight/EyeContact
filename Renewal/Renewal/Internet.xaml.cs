@@ -181,6 +181,10 @@ namespace Renewal
                 IHTMLFormElement form_daum = doc.forms.item(Type.Missing, 0);
                 form_daum.submit();
             }
+            else
+            {
+                MessageBox.Show("naver google daum 쓰세요");
+            }
         }
         #endregion
 
