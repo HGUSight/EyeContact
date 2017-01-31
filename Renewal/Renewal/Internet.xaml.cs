@@ -129,7 +129,6 @@ namespace Renewal
             // Document 속성 읽기
             string title = doc.title;
             string url = doc.url;
-            
             // google
             if (title.IndexOf("Google") != -1)
             {
