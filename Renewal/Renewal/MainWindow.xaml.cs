@@ -24,7 +24,6 @@ namespace Renewal
 
     public partial class MainWindow : Window
     {
-
         #region main
         public MainWindow()
         {
@@ -143,11 +142,7 @@ namespace Renewal
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
         #endregion
-
-
-        //**********************************************
-
-
+        
         #region About hooking - keyboard, mouse, cursor cordinate
 
 
@@ -458,8 +453,6 @@ namespace Renewal
         }
 
         #endregion
-
-
     }
 }
 

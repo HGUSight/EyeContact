@@ -17,8 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-
-
 namespace Renewal
 {
     /// <summary>
@@ -26,7 +24,7 @@ namespace Renewal
     /// </summary>
     public partial class Internet : Window
     {
-
+        #region main
         public Internet()
         {
             InitializeComponent();
@@ -49,20 +47,22 @@ namespace Renewal
 
             Exit.Width = Width;
             Exit.Height = Height / 6;
-
-
         }
+        #endregion
 
+        #region focus
         // 창에 focus 가지 않도록 no activate
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
+        #endregion
+
+        #region initialized
         [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -72,16 +72,16 @@ namespace Renewal
             IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
                 GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
+        #endregion
 
-
-        
+        #region backButton
         private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
             MainWindow.webBrowser.GoBack();
         }
+        #endregion
 
-
-
+        #region wallpaper
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
@@ -99,9 +99,9 @@ namespace Renewal
             keybd_event(Window, 0, KEYUP, 0);
             keybd_event(D, 0, KEYUP, 0);
         }
+        #endregion
 
-
-        //****************************************************************************
+        #region search
 
         [DllImport("user32.dll")]
         private static extern int SendMessage(int hwnd, int msg, int wParam, StringBuilder sb);
@@ -116,101 +116,90 @@ namespace Renewal
         Keyboard dlg;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            
-           
-            url = sb.ToString();
-            Uri myUri = new Uri(url);
-            string host = myUri.Host;
-            //MessageBox.Show("here 1 = " + host);
-            */
-
             dlg = new Keyboard();
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
-
         }
 
-
-        IHTMLDocument2 doc2;
-        IHTMLDocument3 doc3;
+        mshtml.HTMLDocument doc;
         void Keyboard_Closed(object sender, EventArgs e)
         {
-
-            doc2 = (IHTMLDocument2)MainWindow.webBrowser.Document;
+            doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
             
-
-            
-            // Cookie 읽기
-            string cookie = doc2.cookie;
-            Console.WriteLine("Cookie: {0}", cookie);
-
             // Document 속성 읽기
-            string title = doc2.title;
-            string url = doc2.url;
-            Console.WriteLine("{0} - {1}", url, title);
+            string title = doc.title;
+            string url = doc.url;
             
-            //string title = doc2.title;
-            if(title.IndexOf("Google") != -1)
+            // google
+            if (title.IndexOf("Google") != -1)
             {
-                // 특정 Element 컨트롤
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement q = doc3.getElementsByName("q").item("q", 0);
+                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
+
+                IHTMLElement q = doc.getElementsByName("q").item("q", 0);
                 q.setAttribute("value", Clipboard.GetText());
 
-                IHTMLFormElement form_google = doc2.forms.item(Type.Missing, 0);
+                IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
                 form_google.submit();
-
             }
-
             else if(title.IndexOf("NAVER") != -1)
             {
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement query = doc3.getElementsByName("query").item("query", 0);
+                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
+                
                 //검색어 셋팅
+                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
                 query.setAttribute("value", Clipboard.GetText());
-
+                    
                 //네이버검색버튼 : search_btn
-               doc3.getElementById("search_btn").click();
-               // IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
-               // form_naver.submit();
+                doc.getElementById("search_btn").click();
             }
+            else if (title.IndexOf(" : 네이버 통합검색") != -1)
+            {
+                mshtml.IHTMLElementCollection elemColl = null;
+                elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
 
+                foreach (mshtml.IHTMLElement elem in elemColl)
+                {
+                    if (elem.getAttribute("class") != null)
+                    {
+                        if (elem.className == "bt_search spim")
+                        {
+                            IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                            //검색어 셋팅
+                            query.setAttribute("value", Clipboard.GetText());
+                            elem.click();
+                            break;
+                        }
+                    }
+                }
+            }
             else if(title.IndexOf("Daum") != -1)
             {
-                // 특정 Element 컨트롤
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement q_daum = doc3.getElementsByName("q").item("q", 0);
+                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
+                IHTMLElement q_daum = doc.getElementsByName("q").item("q", 0);
                 q_daum.setAttribute("value", Clipboard.GetText());
 
-                IHTMLFormElement form_daum = doc2.forms.item(Type.Missing, 0);
+                IHTMLFormElement form_daum = doc.forms.item(Type.Missing, 0);
                 form_daum.submit();
-
-                //doc3.getElementById("searchSubmit").click();
             }
-                
-     
-
         }
+        #endregion
 
-
-   //     }
-        
-        /*// 앞으로
-        private void Forward_Click(object sender, RoutedEventArgs e) 
+        #region favorite
+        private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.webBrowser.GoForward();
+
         }
-        */
+        #endregion
 
-        /*// 새로고침
-      private void Re_Click(object sender, RoutedEventArgs e)
-      {
-          MainWindow.webBrowser.Refresh();
-      }
-      */
+        #region exit click
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.webBrowser.Quit();
+            Close();
+        }
+        #endregion
 
-        /*******************************************************/
+        #region area set
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -221,17 +210,8 @@ namespace Renewal
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
+        #endregion
 
-        private void Favorite_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow.webBrowser.Quit();
-            Close();
-        }
     }
 }
 

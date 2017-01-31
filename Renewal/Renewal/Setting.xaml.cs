@@ -39,18 +39,14 @@ namespace Renewal
             Left = System.Windows.Application.Current.MainWindow.Left; 
             Top = 0;
         }
-
         private void SetCoordinate_Click(object sender, RoutedEventArgs e)
         {
             SetCoordinate dlg = new Renewal.SetCoordinate();
             dlg.Show();
         }
-
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-        
-
     }
 }
