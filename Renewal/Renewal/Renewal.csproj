@@ -173,6 +173,11 @@
     <Resource Include="IDB_M_DCL_OVER.bmp" />
     <Resource Include="IDB_M_RCL_OVER.bmp" />
     <Resource Include="resources\mouse.png" />
+    <Resource Include="resources\keyboard.png" />
+    <Resource Include="resources\internet.png" />
+    <Resource Include="resources\page_down.png" />
+    <Resource Include="resources\page_up.png" />
+    <Resource Include="resources\setting.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

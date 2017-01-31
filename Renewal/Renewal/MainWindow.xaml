@@ -19,7 +19,7 @@
                         <!-- Content handles within a border -->
                         <Border x:Name="bdr" CornerRadius="22" Margin="9" BorderThickness="0" BorderBrush="Black" Background="White" Effect="{StaticResource z-depth1}">
                             <!-- ContentPresenter properties. Set the content source as the content from each control define below -->
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="20" />
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="20"/>
                         </Border>
                         <!-- Required triggers define here -->
                         <ControlTemplate.Triggers>
@@ -36,16 +36,40 @@
     <StackPanel x:Name="wrapPanel" Focusable="False" FocusManager.IsFocusScope="False">
         <Button x:Name="Mouse" Width="240" Height="180" Click="Mouse_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
-                <Image Source="resources/mouse.png" Height="100" Width="100"/>
-                <Label Content="마우스" HorizontalAlignment="Center"/>
+                <Image Source="resources/mouse.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="마우스" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
-
-        <Button x:Name="Keyboard" Content="Keyboard" Width="240" Height="180" Click="Keyboard_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="Internet" Content="Internet" Width="240" Height="180" Click="Internet_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="PgUp" Content="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="PgDn" Content="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False" />
-        <Button x:Name="Setting" Content="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False" />
+        <Button x:Name="Keyboard" Width="240" Height="180" Click="Keyboard_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/keyboard.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="키보드" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Internet" Width="240" Height="180" Click="Internet_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/internet.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="인터넷" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="PgUp" Width="240" Height= "180" Click="PgUp_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/page_up.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="페이지 업" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="PgDn" Width="240" Height= "180" Click="PgDn_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/page_down.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="페이지 다운" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Setting" Width="240" Height= "180" Click="Setting_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/setting.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="환경설정" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
 
     </StackPanel>
 
