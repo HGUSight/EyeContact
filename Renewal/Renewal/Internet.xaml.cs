@@ -24,6 +24,8 @@ namespace Renewal
     /// </summary>
     public partial class Internet : Window
     {
+        private mshtml.HTMLDocument doc;
+
         #region main
         public Internet()
         {
@@ -75,9 +77,19 @@ namespace Renewal
         #endregion
 
         #region backButton
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
         private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
-            MainWindow.webBrowser.GoBack();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    IE.GoBack();
+                }
+            }
         }
         #endregion
 
@@ -112,7 +124,7 @@ namespace Renewal
 
         public const int WM_GETTEXTLENGTH = 0x000E;
         public const int WM_GETTEXT = 0x000D;
-
+        //button click
         Keyboard dlg;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
@@ -120,20 +132,27 @@ namespace Renewal
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
         }
-
-        mshtml.HTMLDocument doc;
+        // search input complete
         void Keyboard_Closed(object sender, EventArgs e)
         {
-            doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
-            
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
             // Document 속성 읽기
             string title = doc.title;
             string url = doc.url;
+
+            Console.WriteLine("title : " + doc.title);
             // google
             if (title.IndexOf("Google") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
-
                 IHTMLElement q = doc.getElementsByName("q").item("q", 0);
                 q.setAttribute("value", Clipboard.GetText());
 
@@ -142,12 +161,10 @@ namespace Renewal
             }
             else if(title.IndexOf("NAVER") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
-                
                 //검색어 셋팅
                 IHTMLElement query = doc.getElementsByName("query").item("query", 0);
                 query.setAttribute("value", Clipboard.GetText());
-                    
+
                 //네이버검색버튼 : search_btn
                 doc.getElementById("search_btn").click();
             }
@@ -173,12 +190,15 @@ namespace Renewal
             }
             else if(title.IndexOf("Daum") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
                 IHTMLElement q_daum = doc.getElementsByName("q").item("q", 0);
                 q_daum.setAttribute("value", Clipboard.GetText());
 
                 IHTMLFormElement form_daum = doc.forms.item(Type.Missing, 0);
                 form_daum.submit();
+            }
+            else
+            {
+                MessageBox.Show("naver google daum 쓰세요");
             }
         }
         #endregion
@@ -190,11 +210,29 @@ namespace Renewal
         }
         #endregion
 
+        #region login
+
+        #endregion
+
         #region exit click
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.webBrowser.Quit();
-            Close();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    IE.Quit();
+                    MainWindow.internetCount--;
+                    Console.WriteLine("cloase: " + MainWindow.internetCount);
+                }
+            }
+            if(MainWindow.internetCount == 0)
+            {
+                Close();
+                MainWindow.isInternet = false;
+            }
         }
         #endregion
 
@@ -210,7 +248,6 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-
     }
 }
 
