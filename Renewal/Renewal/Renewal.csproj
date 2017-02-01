@@ -188,6 +188,7 @@
     <Resource Include="resources\login.png" />
     <Resource Include="resources\pc.png" />
     <Resource Include="resources\search.png" />
+    <Resource Include="resources\gaze.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
