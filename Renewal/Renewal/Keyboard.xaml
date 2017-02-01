@@ -41,11 +41,19 @@
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button x:Name="Speech" Tag="Speech" Focusable="False" Click="Speech_Click"  FocusManager.IsFocusScope="False">
+            <Button x:Name="Speech" Focusable="False" FocusManager.IsFocusScope="False">
                 <DynamicResource ResourceKey="Stop"/>
             </Button>
+            <Button x:Name="Shift" Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/shift.png" Height="100" Width="100" Margin="5"/>
+            </Button>
         </WrapPanel>
-        <WrapPanel x:Name="rightPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="rightPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button x:Name="SpecialButton"  Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/bk_space.png" Height="100" Width="100" Margin="5"/>
+            </Button>
+
+        </WrapPanel>
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />

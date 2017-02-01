@@ -105,12 +105,12 @@ namespace Renewal
                 topPanel.Children.Add(new Button { Content = i.ToString(), Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             }
 
-            // 좌측 시스템 버튼 생성(Left Panel)
-            //leftPanel.Children.Add(new Button { Content = "▶", Tag = "Speech", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            //leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            // 좌측 시스템 버튼 위치 지정(Left Panel)
             Speech.Width = ButtonWidth;
             Speech.Height = ButtonHeight;
-         
+            Shift.Width = ButtonWidth;
+            Shift.Height = ButtonHeight;
+
 
             // 우측 시스템 버튼 생성(Right Panel)
             Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
@@ -216,7 +216,6 @@ namespace Renewal
             }
             else if (button.Name == "Speech")
             {
-                
                 if (isStart)
                 {
                     Speech.Content = FindResource("Play");
@@ -227,7 +226,7 @@ namespace Renewal
                 }
                 Stt();
             }
-            else if (button.Tag.ToString() == "SpecialButton")
+            else if (button.Name == "SpecialButton")
             {
                 specialPanel.Visibility = Visibility.Visible;
                 if (changeButton.Content.ToString() == "한")
@@ -461,9 +460,5 @@ namespace Renewal
         }
         #endregion
 
-        private void Speech_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
