@@ -41,7 +41,7 @@
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button x:Name="Speech" Tag="Speech" Focusable="False" Click="Speech_Click"  FocusManager.IsFocusScope="False">
+            <Button x:Name="Speech" Tag="Speech" Focusable="False"  FocusManager.IsFocusScope="False">
                 <DynamicResource ResourceKey="Stop"/>
             </Button>
         </WrapPanel>

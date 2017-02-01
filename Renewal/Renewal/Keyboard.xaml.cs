@@ -67,10 +67,8 @@ namespace Renewal
             if (!Internet.isLogin)
                 textBox.Text = "";
             else
-            {
-                Console.WriteLine("login_keyboard");
                 textBox.Text = "ID 를 입력하세요";
-            }
+            
             
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
@@ -460,10 +458,5 @@ namespace Renewal
             }
         }
         #endregion
-
-        private void Speech_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

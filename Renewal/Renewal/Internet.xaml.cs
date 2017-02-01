@@ -29,6 +29,7 @@ namespace Renewal
 
         private string naver = "www.naver.com";
         private string search_naver = "search.naver.com";
+        private string nid_naver = "nid.naver.com";
         private string google = ".google.co.kr";
         private string daum = ".daum.net";
 
@@ -101,8 +102,17 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
-                    if(!IE.Busy)
-                        IE.GoBack();
+                    if (!IE.Busy)
+                    {
+                        try
+                        {
+                            IE.GoBack();
+                        }
+                        catch
+                        {
+                            Console.WriteLine("err");
+                        }
+                    }
                 }
             }
         }
@@ -244,7 +254,7 @@ namespace Renewal
                 Uri uri = new Uri(doc.url);
                 String host = uri.Host;
 
-                if (host.Contains(naver))
+                if (host.Contains(naver) || host.Contains(nid_naver))
                 {
                     mshtml.IHTMLElementCollection elemColl = null;
                     elemColl = doc.getElementsByTagName("input") as mshtml.IHTMLElementCollection;
@@ -268,35 +278,7 @@ namespace Renewal
                                 elem.click();
                         }
                     }
-                    /*
-                    //검색어 셋팅
-                    IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                    query.setAttribute("value", Clipboard.GetText());
-
-                    //네이버검색버튼 : search_btn
-                    doc.getElementById("search_btn").click();
-                    */
                 }/*
-                else if (host.Contains(search_naver))
-                {
-                    mshtml.IHTMLElementCollection elemColl = null;
-                    elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
-
-                    foreach (mshtml.IHTMLElement elem in elemColl)
-                    {
-                        if (elem.getAttribute("class") != null)
-                        {
-                            if (elem.className == "bt_search spim")
-                            {
-                                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                                //검색어 셋팅
-                                query.setAttribute("value", Clipboard.GetText());
-                                elem.click();
-                                break;
-                            }
-                        }
-                    }
-                }
                 else if (host.Contains(daum) || host.Contains(google))
                 {
                     IHTMLElement q = doc.getElementsByName("q").item("q", 0);
@@ -310,10 +292,6 @@ namespace Renewal
                     MessageBox.Show("naver google daum 쓰세요");
                 }
             }
-
-
-            Console.WriteLine("ID :" + login_ID);
-            Console.WriteLine("PW :" + login_PW);
         }
 
         #endregion
