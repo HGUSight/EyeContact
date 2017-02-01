@@ -49,6 +49,8 @@ namespace Renewal
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int mciSendString(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
 
+        // login
+        private bool isPW = false;
 
         #endregion
 
@@ -62,6 +64,14 @@ namespace Renewal
             label.Width = ButtonWidth;
             label.Visibility = Visibility.Hidden;
 
+            if (!Internet.isLogin)
+                textBox.Text = "";
+            else
+            {
+                Console.WriteLine("login_keyboard");
+                textBox.Text = "ID 를 입력하세요";
+            }
+            
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
             topPanel.Width = ButtonWidth * 10;
@@ -164,6 +174,10 @@ namespace Renewal
         #region button-click
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // id, pw 적기전에 비우기
+            if(Internet.isLogin && (textBox.Text == "ID 를 입력하세요" || textBox.Text == "PW 를 입력하세요"))
+                textBox.Text = "";
+            
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
@@ -174,8 +188,28 @@ namespace Renewal
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
             {
-                Clipboard.SetText(textBox.Text);
-                this.Close();
+                if (!Internet.isLogin)
+                {
+                    Clipboard.SetText(textBox.Text);
+                    this.Close();
+                }
+                else
+                {
+                    if(!isPW)
+                    {
+                        Internet.login_ID = textBox.Text;
+                        isPW = true;
+                        textBox.Text = "PW 를 입력하세요";
+                    }
+                    else
+                    {
+                        Internet.login_PW = textBox.Text;
+                        isPW = false;
+                        this.Close();
+                    }
+
+                }
+                
             }
             else if (button.Tag.ToString() == "Speech")
             {
@@ -407,12 +441,18 @@ namespace Renewal
         // 텍스트 박스의 값이 변경되면 버튼 위에 띄어지는 조그만 박스의 값도 업데이트
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            label.Visibility = Visibility.Visible;
-            var sentence = textBox.Text.Split(' ');
-            label.Text = sentence[sentence.Length - 1];
-            if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+            // id, pw 적기전에 비우기
+            if (Internet.isLogin && (textBox.Text == "ID 를 입력하세요" || textBox.Text == "PW 를 입력하세요"))
+                label.Text = "";
+            else
             {
-                label.Visibility = Visibility.Hidden;
+                label.Visibility = Visibility.Visible;
+                var sentence = textBox.Text.Split(' ');
+                label.Text = sentence[sentence.Length - 1];
+                if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+                {
+                    label.Visibility = Visibility.Hidden;
+                }
             }
         }
         #endregion
