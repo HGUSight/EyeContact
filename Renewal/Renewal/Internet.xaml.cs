@@ -89,15 +89,8 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
-                    try
-                    {
+                    if(!IE.Busy)
                         IE.GoBack();
-                    }
-                    catch
-                    {
-                        Console.WriteLine("error");
-                        break;
-                    }
                 }
             }
         }
@@ -155,54 +148,57 @@ namespace Renewal
                     doc = IE.Document as mshtml.HTMLDocument;
                 }
             }
-            // Document 속성 읽기
-            Uri uri = new Uri(doc.url);
-            String host = uri.Host;
-            string naver = "www.naver.com";
-            string search_naver = "search.naver.com";
-            string google = ".google.co.kr";
-            string daum = ".daum.net";
-
-            if(host.Contains(naver))
+            if (doc != null)
             {
-                //검색어 셋팅
-                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                query.setAttribute("value", Clipboard.GetText());
+                // Document 속성 읽기
+                Uri uri = new Uri(doc.url);
+                String host = uri.Host;
+                string naver = "www.naver.com";
+                string search_naver = "search.naver.com";
+                string google = ".google.co.kr";
+                string daum = ".daum.net";
 
-                //네이버검색버튼 : search_btn
-                doc.getElementById("search_btn").click();
-            }
-            else if (host.Contains(search_naver))
-            {
-                mshtml.IHTMLElementCollection elemColl = null;
-                elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
-
-                foreach (mshtml.IHTMLElement elem in elemColl)
+                if (host.Contains(naver))
                 {
-                    if (elem.getAttribute("class") != null)
+                    //검색어 셋팅
+                    IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                    query.setAttribute("value", Clipboard.GetText());
+
+                    //네이버검색버튼 : search_btn
+                    doc.getElementById("search_btn").click();
+                }
+                else if (host.Contains(search_naver))
+                {
+                    mshtml.IHTMLElementCollection elemColl = null;
+                    elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
+
+                    foreach (mshtml.IHTMLElement elem in elemColl)
                     {
-                        if (elem.className == "bt_search spim")
+                        if (elem.getAttribute("class") != null)
                         {
-                            IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                            //검색어 셋팅
-                            query.setAttribute("value", Clipboard.GetText());
-                            elem.click();
-                            break;
+                            if (elem.className == "bt_search spim")
+                            {
+                                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                                //검색어 셋팅
+                                query.setAttribute("value", Clipboard.GetText());
+                                elem.click();
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else if (host.Contains(daum) || host.Contains(google))
-            {
-                IHTMLElement q = doc.getElementsByName("q").item("q", 0);
-                q.setAttribute("value", Clipboard.GetText());
+                else if (host.Contains(daum) || host.Contains(google))
+                {
+                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                    q.setAttribute("value", Clipboard.GetText());
 
-                IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
-                form_google.submit();
-            }
-            else
-            {
-                MessageBox.Show("naver google daum 쓰세요");
+                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
+                    form_google.submit();
+                }
+                else
+                {
+                    MessageBox.Show("naver google daum 쓰세요");
+                }
             }
         }
         #endregion
