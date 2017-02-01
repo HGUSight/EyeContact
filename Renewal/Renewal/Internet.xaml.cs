@@ -146,20 +146,14 @@ namespace Renewal
                 }
             }
             // Document 속성 읽기
-            string title = doc.title;
-            string url = doc.url;
+            Uri uri = new Uri(doc.url);
+            String host = uri.Host;
+            string naver = "www.naver.com";
+            string search_naver = "search.naver.com";
+            string google = ".google.co.kr";
+            string daum = ".daum.net";
 
-            Console.WriteLine("title : " + doc.title);
-            // google
-            if (title.IndexOf("Google") != -1)
-            {
-                IHTMLElement q = doc.getElementsByName("q").item("q", 0);
-                q.setAttribute("value", Clipboard.GetText());
-
-                IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
-                form_google.submit();
-            }
-            else if(title.IndexOf("NAVER") != -1)
+            if(host.Contains(naver))
             {
                 //검색어 셋팅
                 IHTMLElement query = doc.getElementsByName("query").item("query", 0);
@@ -168,7 +162,7 @@ namespace Renewal
                 //네이버검색버튼 : search_btn
                 doc.getElementById("search_btn").click();
             }
-            else if (title.IndexOf(" : 네이버 통합검색") != -1)
+            else if (host.Contains(search_naver))
             {
                 mshtml.IHTMLElementCollection elemColl = null;
                 elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
@@ -188,13 +182,13 @@ namespace Renewal
                     }
                 }
             }
-            else if(title.IndexOf("Daum") != -1)
+            else if (host.Contains(daum) || host.Contains(google))
             {
-                IHTMLElement q_daum = doc.getElementsByName("q").item("q", 0);
-                q_daum.setAttribute("value", Clipboard.GetText());
+                IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                q.setAttribute("value", Clipboard.GetText());
 
-                IHTMLFormElement form_daum = doc.forms.item(Type.Missing, 0);
-                form_daum.submit();
+                IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
+                form_google.submit();
             }
             else
             {
