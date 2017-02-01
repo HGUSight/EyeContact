@@ -291,6 +291,7 @@ namespace Renewal
                 {
                     MessageBox.Show("naver google daum 쓰세요");
                 }
+                isLogin = false;
             }
         }
 
