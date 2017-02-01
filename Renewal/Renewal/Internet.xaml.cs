@@ -89,7 +89,15 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
-                    IE.GoBack();
+                    try
+                    {
+                        IE.GoBack();
+                    }
+                    catch
+                    {
+                        Console.WriteLine("error");
+                        break;
+                    }
                 }
             }
         }
@@ -208,6 +216,11 @@ namespace Renewal
 
         #region login
 
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #endregion
 
         #region exit click
@@ -245,10 +258,6 @@ namespace Renewal
         }
         #endregion
 
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
 
