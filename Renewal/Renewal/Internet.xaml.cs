@@ -330,7 +330,6 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-
     }
 }
 
