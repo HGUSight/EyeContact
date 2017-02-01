@@ -6,9 +6,11 @@
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
         Topmost="True"
-        Background="#CCCCCC"
+        Background="#C1C1C1"
+        AllowsTransparency="True"
         WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
- 
+
+
     <Window.Resources>
         <DropShadowEffect x:Key="z-depth1" BlurRadius="2" ShadowDepth="2" Direction="270" Color="#CCCCCC"/>
         <Style TargetType="{x:Type Button}">
@@ -17,9 +19,10 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <!-- Content handles within a border -->
-                        <Border x:Name="bdr" CornerRadius="2" Margin="1" BorderThickness="6" BorderBrush="Transparent" Background="White" Effect="{StaticResource z-depth1}">
+                        <Border x:Name="bdr" Background="WhiteSmoke" BorderThickness="0" >
                             <!-- ContentPresenter properties. Set the content source as the content from each control define below -->
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="52" TextBlock.FontFamily="Arita-dotum(TTF)" TextBlock.FontWeight="Light"/>
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" 
+                                              TextBlock.FontSize="52" TextBlock.FontFamily="Arita-dotum(TTF)" TextBlock.FontWeight="Light" TextBlock.Foreground="#555555"/>
                         </Border>
                         <!-- Required triggers define here -->
                         <ControlTemplate.Triggers>
@@ -32,7 +35,8 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
+
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -40,7 +44,7 @@
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
-        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="0" BorderThickness="1" HorizontalAlignment="Left" FontWeight="Normal" FontFamily="KoPubDotum Medium" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
+        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="0" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
         <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False"/>
         <TextBox x:Name="label" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="16" BorderThickness="1"  ScrollViewer.CanContentScroll="True" TextWrapping="WrapWithOverflow" Focusable="False"/>
     </Grid>
