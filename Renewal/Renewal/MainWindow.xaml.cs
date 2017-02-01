@@ -416,7 +416,6 @@ namespace Renewal
             webBrowser.GoHome();
 
             internetCount++;
-            Console.WriteLine("open: " + internetCount);
         }
         #endregion
 
