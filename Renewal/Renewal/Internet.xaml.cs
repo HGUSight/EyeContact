@@ -225,11 +225,13 @@ namespace Renewal
                 {
                     IE.Quit();
                     MainWindow.internetCount--;
+                    Console.WriteLine("cloase: " + MainWindow.internetCount);
                 }
             }
             if(MainWindow.internetCount == 0)
             {
                 Close();
+                MainWindow.isInternet = false;
             }
         }
         #endregion
