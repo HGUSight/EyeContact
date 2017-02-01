@@ -24,6 +24,8 @@ namespace Renewal
     /// </summary>
     public partial class Internet : Window
     {
+        private mshtml.HTMLDocument doc;
+
         #region main
         public Internet()
         {
@@ -79,7 +81,6 @@ namespace Renewal
         private static extern IntPtr GetForegroundWindow();
         private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
-
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             IntPtr handle = GetForegroundWindow();
             foreach (SHDocVw.WebBrowser IE in shellWindows)
@@ -87,7 +88,6 @@ namespace Renewal
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
                     IE.GoBack();
-
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace Renewal
 
         public const int WM_GETTEXTLENGTH = 0x000E;
         public const int WM_GETTEXT = 0x000D;
-
+        //button click
         Keyboard dlg;
         private void Search_Click(object sender, RoutedEventArgs e)
         {
@@ -132,23 +132,27 @@ namespace Renewal
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
         }
-
-        mshtml.HTMLDocument doc;
+        // search input complete
         void Keyboard_Closed(object sender, EventArgs e)
         {
-            doc = MainWindow.webBrowser.Document as mshtml.HTMLDocument;
-            
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
             // Document 속성 읽기
             string title = doc.title;
             string url = doc.url;
 
-            Console.WriteLine("test" + doc.url);
-
+            Console.WriteLine("test" + doc.title);
             // google
             if (title.IndexOf("Google") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
-
                 IHTMLElement q = doc.getElementsByName("q").item("q", 0);
                 q.setAttribute("value", Clipboard.GetText());
 
@@ -157,8 +161,6 @@ namespace Renewal
             }
             else if(title.IndexOf("NAVER") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
-                
                 //검색어 셋팅
                 IHTMLElement query = doc.getElementsByName("query").item("query", 0);
                 query.setAttribute("value", Clipboard.GetText());
@@ -188,7 +190,6 @@ namespace Renewal
             }
             else if(title.IndexOf("Daum") != -1)
             {
-                doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
                 IHTMLElement q_daum = doc.getElementsByName("q").item("q", 0);
                 q_daum.setAttribute("value", Clipboard.GetText());
 
@@ -207,6 +208,10 @@ namespace Renewal
         {
 
         }
+        #endregion
+
+        #region login
+
         #endregion
 
         #region exit click
@@ -229,7 +234,6 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-
     }
 }
 
