@@ -409,7 +409,6 @@ namespace Renewal
                 dlg.Show();
                 isInternet = true;
             }
-
             InternetExplorer ie = new InternetExplorer();
             IWebBrowserApp webBrowser = ie;
             
@@ -417,7 +416,7 @@ namespace Renewal
             webBrowser.GoHome();
 
             internetCount++;
-            
+            Console.WriteLine("open: " + internetCount);
         }
         #endregion
 

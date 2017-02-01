@@ -149,7 +149,7 @@ namespace Renewal
             string title = doc.title;
             string url = doc.url;
 
-            Console.WriteLine("test" + doc.title);
+            Console.WriteLine("title : " + doc.title);
             // google
             if (title.IndexOf("Google") != -1)
             {
