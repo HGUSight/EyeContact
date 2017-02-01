@@ -409,10 +409,16 @@ namespace Renewal
         
         public static IWebBrowserApp webBrowser;
 
+        //sure Internet toolbar is opened
+        public static bool isInternet = false;
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
-            Internet dlg = new Renewal.Internet();
-            dlg.Show();
+            if (isInternet == false)
+            {
+                Internet dlg = new Renewal.Internet();
+                dlg.Show();
+                isInternet = true;
+            }
 
             InternetExplorer ie = new InternetExplorer();
             webBrowser = ie;

@@ -75,9 +75,21 @@ namespace Renewal
         #endregion
 
         #region backButton
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
         private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
-            MainWindow.webBrowser.GoBack();
+
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    IE.GoBack();
+
+                }
+            }
         }
         #endregion
 
@@ -124,11 +136,14 @@ namespace Renewal
         mshtml.HTMLDocument doc;
         void Keyboard_Closed(object sender, EventArgs e)
         {
-            doc = (mshtml.HTMLDocument)MainWindow.webBrowser.Document;
+            doc = MainWindow.webBrowser.Document as mshtml.HTMLDocument;
             
             // Document 속성 읽기
             string title = doc.title;
             string url = doc.url;
+
+            Console.WriteLine("test" + doc.url);
+
             // google
             if (title.IndexOf("Google") != -1)
             {
@@ -147,7 +162,7 @@ namespace Renewal
                 //검색어 셋팅
                 IHTMLElement query = doc.getElementsByName("query").item("query", 0);
                 query.setAttribute("value", Clipboard.GetText());
-                    
+
                 //네이버검색버튼 : search_btn
                 doc.getElementById("search_btn").click();
             }
