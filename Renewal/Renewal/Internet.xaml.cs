@@ -89,7 +89,8 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
-                    IE.GoBack();
+                    if(!IE.Busy)
+                        IE.GoBack();
                 }
             }
         }
@@ -147,60 +148,57 @@ namespace Renewal
                     doc = IE.Document as mshtml.HTMLDocument;
                 }
             }
-            // Document 속성 읽기
-            string title = doc.title;
-            string url = doc.url;
-
-            Console.WriteLine("title : " + doc.title);
-            // google
-            if (title.IndexOf("Google") != -1)
+            if (doc != null)
             {
-                IHTMLElement q = doc.getElementsByName("q").item("q", 0);
-                q.setAttribute("value", Clipboard.GetText());
+                // Document 속성 읽기
+                Uri uri = new Uri(doc.url);
+                String host = uri.Host;
+                string naver = "www.naver.com";
+                string search_naver = "search.naver.com";
+                string google = ".google.co.kr";
+                string daum = ".daum.net";
 
-                IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
-                form_google.submit();
-            }
-            else if(title.IndexOf("NAVER") != -1)
-            {
-                //검색어 셋팅
-                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                query.setAttribute("value", Clipboard.GetText());
-
-                //네이버검색버튼 : search_btn
-                doc.getElementById("search_btn").click();
-            }
-            else if (title.IndexOf(" : 네이버 통합검색") != -1)
-            {
-                mshtml.IHTMLElementCollection elemColl = null;
-                elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
-
-                foreach (mshtml.IHTMLElement elem in elemColl)
+                if (host.Contains(naver))
                 {
-                    if (elem.getAttribute("class") != null)
+                    //검색어 셋팅
+                    IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                    query.setAttribute("value", Clipboard.GetText());
+
+                    //네이버검색버튼 : search_btn
+                    doc.getElementById("search_btn").click();
+                }
+                else if (host.Contains(search_naver))
+                {
+                    mshtml.IHTMLElementCollection elemColl = null;
+                    elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
+
+                    foreach (mshtml.IHTMLElement elem in elemColl)
                     {
-                        if (elem.className == "bt_search spim")
+                        if (elem.getAttribute("class") != null)
                         {
-                            IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                            //검색어 셋팅
-                            query.setAttribute("value", Clipboard.GetText());
-                            elem.click();
-                            break;
+                            if (elem.className == "bt_search spim")
+                            {
+                                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                                //검색어 셋팅
+                                query.setAttribute("value", Clipboard.GetText());
+                                elem.click();
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else if(title.IndexOf("Daum") != -1)
-            {
-                IHTMLElement q_daum = doc.getElementsByName("q").item("q", 0);
-                q_daum.setAttribute("value", Clipboard.GetText());
+                else if (host.Contains(daum) || host.Contains(google))
+                {
+                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                    q.setAttribute("value", Clipboard.GetText());
 
-                IHTMLFormElement form_daum = doc.forms.item(Type.Missing, 0);
-                form_daum.submit();
-            }
-            else
-            {
-                MessageBox.Show("naver google daum 쓰세요");
+                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
+                    form_google.submit();
+                }
+                else
+                {
+                    MessageBox.Show("naver google daum 쓰세요");
+                }
             }
         }
         #endregion
@@ -213,6 +211,11 @@ namespace Renewal
         #endregion
 
         #region login
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         #endregion
 
@@ -251,10 +254,6 @@ namespace Renewal
         }
         #endregion
 
-        private void Login_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
 
