@@ -178,6 +178,10 @@
     <Resource Include="resources\page_down.png" />
     <Resource Include="resources\page_up.png" />
     <Resource Include="resources\setting.png" />
+    <Resource Include="resources\drag.png" />
+    <Resource Include="resources\d_click.png" />
+    <Resource Include="resources\r_click.png" />
+    <Resource Include="resources\back.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

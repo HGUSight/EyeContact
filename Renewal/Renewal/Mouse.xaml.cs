@@ -25,19 +25,18 @@ namespace Renewal
             InitializeComponent();
 
             Width = Application.Current.MainWindow.Width;
-            Height = Application.Current.MainWindow.Height;
 
-            RClick.Width = Width;
-            RClick.Height = Height / 6;
+            RClick.Width = Width * 0.95;
+            RClick.Height = Height / 6 * 0.95;
 
-            DClick.Width = Width;
-            DClick.Height = Height / 6;
+            DClick.Width = Width * 0.95;
+            DClick.Height = Height / 6 * 0.95;
 
-            Drag.Width = Width;
-            Drag.Height = Height / 6;
+            Drag.Width = Width * 0.95;
+            Drag.Height = Height / 6 * 0.95;
 
-            Back.Width = Width;
-            Back.Height = Height / 6;
+            Back.Width = Width * 0.95;
+            Back.Height = Height / 6 * 0.95;
 
 
             Left = Application.Current.MainWindow.Left;

@@ -31,7 +31,7 @@ namespace Renewal
 
             // calculate screen and button size
             Width /= 8;
-            
+
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
             Mouse.Width = ButtonWidth * 0.95;
