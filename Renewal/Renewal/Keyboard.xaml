@@ -10,7 +10,6 @@
         AllowsTransparency="True"
         WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
 
-
     <Window.Resources>
         <DropShadowEffect x:Key="z-depth1" BlurRadius="2" ShadowDepth="2" Direction="270" Color="#CCCCCC"/>
         <Style TargetType="{x:Type Button}">
@@ -34,12 +33,18 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Image x:Key="Play" Source="resources/speech_on.png" Height="120" Width="120" />
+        <Image x:Key="Stop" Source="resources/speech_off.png" Height="120" Width="120"/>
     </Window.Resources>
 
 
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
-        <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button x:Name="Speech" Tag="Speech" Focusable="False" Click="Speech_Click"  FocusManager.IsFocusScope="False">
+                <DynamicResource ResourceKey="Stop"/>
+            </Button>
+        </WrapPanel>
         <WrapPanel x:Name="rightPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
