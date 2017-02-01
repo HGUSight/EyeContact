@@ -187,6 +187,8 @@
     <Resource Include="resources\speech_on.png" />
     <Resource Include="resources\shift.png" />
     <Resource Include="resources\bk_space.png" />
+    <Resource Include="resources\star.png" />
+    <Resource Include="resources\enter.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

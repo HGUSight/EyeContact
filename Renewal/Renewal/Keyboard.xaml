@@ -37,10 +37,10 @@
         <Image x:Key="Stop" Source="resources/speech_off.png" Height="120" Width="120"/>
     </Window.Resources>
 
-
     <Grid Margin="0">
         <WrapPanel x:Name="topPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="leftPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+
             <Button x:Name="Speech" Focusable="False" FocusManager.IsFocusScope="False">
                 <DynamicResource ResourceKey="Stop"/>
             </Button>
@@ -49,10 +49,15 @@
             </Button>
         </WrapPanel>
         <WrapPanel x:Name="rightPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button x:Name="SpecialButton"  Focusable="False" FocusManager.IsFocusScope="False">
-                <Image Source="resources/bk_space.png" Height="100" Width="100" Margin="5"/>
+            <Button x:Name="BkSpace"  Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/bk_space.png" Height="90" Width="90" Margin="5"/>
             </Button>
-
+            <Button x:Name="SpecialButton"  Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/star.png" Height="80" Width="80" Margin="5"/>
+            </Button>
+            <Button x:Name="Enter"  Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/enter.png" Height="80" Width="80" Margin="5"/>
+            </Button>
         </WrapPanel>
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />

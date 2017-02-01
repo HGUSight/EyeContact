@@ -67,10 +67,8 @@ namespace Renewal
             if (!Internet.isLogin)
                 textBox.Text = "";
             else
-            {
-                Console.WriteLine("login_keyboard");
                 textBox.Text = "ID 를 입력하세요";
-            }
+            
             
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
@@ -113,10 +111,17 @@ namespace Renewal
 
 
             // 우측 시스템 버튼 생성(Right Panel)
-            Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
-            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            rightPanel.Children.Add(specialButton);
-            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            BkSpace.Width = ButtonWidth;
+            BkSpace.Height = ButtonHeight;
+            SpecialButton.Width = ButtonWidth;
+            SpecialButton.Height = ButtonHeight;
+            Enter.Width = ButtonWidth;
+            Enter.Height = ButtonHeight;
+
+            //Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
+            // rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            //rightPanel.Children.Add(specialButton);
+            // rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             rightPanel.Children.Add(new Button { Content = "OK", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 영어 버튼 생성(English Pannel)
@@ -235,11 +240,15 @@ namespace Renewal
                     changeButton.Content = "한";
                 changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
             }
-            // 시스템 키
-            else if (button.Tag.ToString() == "System")
+            else if(button.Name == "BkSpace")
             {
-                keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYDOWN, 0);
-                keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYUP, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Back), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Back), 0, KEYEVENTF_KEYUP, 0);
+            }
+            else if (button.Name == "Enter")
+            {
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Enter), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Enter), 0, KEYEVENTF_KEYUP, 0);
             }
             // 클릭한 버튼이 한글일 경우
             else if (button.Tag.ToString() == "Korean")
@@ -262,8 +271,6 @@ namespace Renewal
                 textBox.Text += button.Content.ToString();
                 textBox.CaretIndex = textBox.Text.Length;
             }
-
-
         }
         #endregion
 
@@ -451,6 +458,7 @@ namespace Renewal
             {
                 label.Visibility = Visibility.Visible;
                 var sentence = textBox.Text.Split(' ');
+                sentence = sentence[sentence.Length - 1].Split('\n');
                 label.Text = sentence[sentence.Length - 1];
                 if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
                 {
@@ -459,6 +467,5 @@ namespace Renewal
             }
         }
         #endregion
-
     }
 }
