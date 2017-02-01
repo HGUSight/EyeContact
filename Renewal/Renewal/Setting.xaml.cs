@@ -27,13 +27,12 @@ namespace Renewal
             InitializeComponent();
 
             Width = System.Windows.Application.Current.MainWindow.Width;
-            Height = System.Windows.Application.Current.MainWindow.Height;
 
-            SetCoordinate.Width = Width;
-            SetCoordinate.Height = Height / 6;
+            SetCoordinate.Width = Width * 0.95;
+            SetCoordinate.Height = Height / 6 * 0.95;
 
-            Back.Width = Width;
-            Back.Height = Height / 6;
+            Back.Width = Width * 0.95;
+            Back.Height = Height / 6 * 0.95;
 
 
             Left = System.Windows.Application.Current.MainWindow.Left; 

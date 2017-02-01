@@ -182,6 +182,13 @@
     <Resource Include="resources\d_click.png" />
     <Resource Include="resources\r_click.png" />
     <Resource Include="resources\back.png" />
+    <Resource Include="resources\favorite.png" />
+    <Resource Include="resources\i_back.png" />
+    <Resource Include="resources\i_exit.png" />
+    <Resource Include="resources\login.png" />
+    <Resource Include="resources\pc.png" />
+    <Resource Include="resources\search.png" />
+    <Resource Include="resources\gaze.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

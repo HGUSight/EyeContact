@@ -32,23 +32,25 @@ namespace Renewal
             InitializeComponent();
 
             Width = Application.Current.MainWindow.Width;
-            Height = Application.Current.MainWindow.Height;
 
-            Back.Width = Width;
-            Back.Height = Height / 6;
+            Back.Width = Width * 0.95;
+            Back.Height = Height / 6 * 0.95;
 
-            Wallpaper.Width = Width;
-            Wallpaper.Height = Height / 6;
+            Search.Width = Width * 0.95;
+            Search.Height = Height / 6 * 0.95;
+
+            Login.Width = Width * 0.95;
+            Login.Height = Height / 6 * 0.95;
+
+            Wallpaper.Width = Width * 0.95;
+            Wallpaper.Height = Height / 6 * 0.95;
 
 
-            Search.Width = Width;
-            Search.Height = Height / 6;
+            Favorite.Width = Width * 0.95;
+            Favorite.Height = Height / 6 * 0.95;
 
-            Favorite.Width = Width;
-            Favorite.Height = Height / 6;
-
-            Exit.Width = Width;
-            Exit.Height = Height / 6;
+            Exit.Width = Width * 0.95;
+            Exit.Height = Height / 6 * 0.95;
         }
         #endregion
 
@@ -242,6 +244,11 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
+
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
 

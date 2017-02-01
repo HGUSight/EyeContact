@@ -5,10 +5,50 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Setting" Height="1080" Width ="240" Topmost="True" WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True" >
+        Background="WhiteSmoke"
+        Title="Setting" Width ="240" Topmost="True" WindowStyle="None" ShowInTaskbar="False" AllowsTransparency="True" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" >
 
-    <WrapPanel x:Name="wrapPanel">
-        <Button x:Name="SetCoordinate" Content="SetCoordinate" Width="240" Height="180" Click="SetCoordinate_Click"/>
-        <Button x:Name="Back" Content="Back" Width="240" Height="180" Click="Back_Click"/>
-    </WrapPanel>
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="z-depth1" BlurRadius="5" ShadowDepth="1" Direction="270" Color="#CCCCCC"/>
+        <Style TargetType="{x:Type Button}">
+            <!-- Template for button style -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Content handles within a border -->
+                        <Border x:Name="bdr" CornerRadius="22" Margin="9" BorderThickness="0" BorderBrush="Black" Background="White" Effect="{StaticResource z-depth1}">
+                            <!-- ContentPresenter properties. Set the content source as the content from each control define below -->
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="20"/>
+                        </Border>
+                        <!-- Required triggers define here -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <StackPanel x:Name="wrapPanel">
+
+        <Button x:Name="SetCoordinate" Width="240" Height="180" Click="SetCoordinate_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/gaze.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="응시점 조정" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+
+
+        <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/back.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="뒤로" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        
+    </StackPanel>
 </Window>
