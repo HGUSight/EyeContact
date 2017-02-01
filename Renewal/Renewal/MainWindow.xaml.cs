@@ -24,6 +24,9 @@ namespace Renewal
 
     public partial class MainWindow : Window
     {
+        public static bool isInternet = false;
+        public static int internetCount = 0;
+
         #region main
         public MainWindow()
         {
@@ -47,8 +50,6 @@ namespace Renewal
             Setting.Width = ButtonWidth * 0.95;
             Setting.Height = ButtonHeight * 0.95;
 
-          
-
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
             Top = 0;
@@ -58,8 +59,6 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
         }
-
-
         #endregion
 
         #region focus
@@ -401,16 +400,7 @@ namespace Renewal
             keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
             keybd_event(0x22, 0, KEYUP, 0);
         }
-
-
-
-
-        
-        
-        public static IWebBrowserApp webBrowser;
-
         //sure Internet toolbar is opened
-        public static bool isInternet = false;
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
             if (isInternet == false)
@@ -421,12 +411,12 @@ namespace Renewal
             }
 
             InternetExplorer ie = new InternetExplorer();
-            webBrowser = ie;
-
-            //ShowWindow((IntPtr)ie.HWND, 3);
+            IWebBrowserApp webBrowser = ie;
+            
             webBrowser.Visible = true;
             webBrowser.GoHome();
-            
+
+            internetCount++;
         }
         #endregion
 

@@ -217,8 +217,20 @@ namespace Renewal
         #region exit click
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.webBrowser.Quit();
-            Close();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    IE.Quit();
+                    MainWindow.internetCount--;
+                }
+            }
+            if(MainWindow.internetCount == 0)
+            {
+                Close();
+            }
         }
         #endregion
 
