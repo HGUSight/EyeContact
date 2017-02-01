@@ -411,11 +411,18 @@ namespace Renewal
             }
             InternetExplorer ie = new InternetExplorer();
             IWebBrowserApp webBrowser = ie;
-            
+
             webBrowser.Visible = true;
             webBrowser.GoHome();
 
             internetCount++;
+
+            //인터넷 최대화 단축키
+            keybd_event(0x5B, 0, 0, 0); // window key
+            keybd_event(0x26, 0, 0, 0); // arrow up key
+            keybd_event(0x5B, 0, 0x0002, 0);
+            keybd_event(0x26, 0, 0x0002, 0);
+
         }
         #endregion
 
