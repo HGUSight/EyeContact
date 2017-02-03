@@ -61,7 +61,14 @@
                     <Label Content="유튜브" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
-            
+
+            <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
+                <StackPanel>
+                    <Image Source="resources/back.png" Height="100" Width="100" Margin="5"/>
+                    <Label Content="뒤로 가기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                </StackPanel>
+            </Button>
+
         </StackPanel>
     </Grid>
 </Window>

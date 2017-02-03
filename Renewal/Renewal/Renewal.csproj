@@ -196,6 +196,10 @@
     <Resource Include="resources\bk_space.png" />
     <Resource Include="resources\star.png" />
     <Resource Include="resources\enter.png" />
+    <Resource Include="resources\Daum.png" />
+    <Resource Include="resources\Facebook.png" />
+    <Resource Include="resources\Naver.png" />
+    <Resource Include="resources\Youtube.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

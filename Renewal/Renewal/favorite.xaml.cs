@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -23,7 +24,51 @@ namespace Renewal
         public favorite()
         {
             InitializeComponent();
+
+            Top = 0;
+            Left = 0;
+
+            Width = Application.Current.MainWindow.Width;
+
+            Naver.Width = Width * 0.95;
+            Naver.Height = Height / 6 * 0.95;
+
+            Daum.Width = Width * 0.95;
+            Daum.Height = Height / 6 * 0.95;
+
+            Facebook.Width = Width * 0.95;
+            Facebook.Height = Height / 6 * 0.95;
+
+            Youtube.Width = Width * 0.95;
+            Youtube.Height = Height / 6 * 0.95;
+
+            Back.Width = Width * 0.95;
+            Back.Height = Height / 6 * 0.95;
         }
+
+        #region focus
+        // 창에 focus 가지 않도록 no activate
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+
+        #endregion
+
+        #region initialized
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+            IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
+                GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
+        }
+        #endregion
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -90,6 +135,11 @@ namespace Renewal
 
 
             }
+        }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
