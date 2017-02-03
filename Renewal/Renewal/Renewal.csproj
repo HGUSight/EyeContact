@@ -84,6 +84,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBarFunctions.cs" />
+    <Compile Include="favorite.xaml.cs">
+      <DependentUpon>favorite.xaml</DependentUpon>
+    </Compile>
     <Compile Include="magnifier.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +99,10 @@
     <Compile Include="Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
+    <Page Include="favorite.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Internet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
