@@ -93,7 +93,7 @@ namespace Renewal
          
         // err
         private static int errX = 50;
-        private static int errY = 100;
+        private static int errY = 50;
          
         //user Gaze Point
         private static int userCoordinateX = 0;
@@ -112,11 +112,16 @@ namespace Renewal
         private void move_mouse(double x, double y)
         {
             if (lastX == 0 && lastY == 0)
-                lastX = (int)x; lastY = (int)y;
+            {
+                lastX = (int)x;
+                lastY = (int)y;
+            }
 
             if (x <= lastX - errX || x >= lastX + errX || y >= lastY + errY || y <= lastY - errY)
             {
                 SetCursorPos((int)x + userCoordinateX, (int)y + userCoordinateY);
+                lastX = (int)x;
+                lastY = (int)y;
             }
             else
             {
@@ -416,13 +421,13 @@ namespace Renewal
             webBrowser.GoHome();
 
             internetCount++;
-            Console.WriteLine("open: " + internetCount);
 
             //인터넷 최대화 단축키
             keybd_event(0x5B, 0, 0, 0); // window key
             keybd_event(0x26, 0, 0, 0); // arrow up key
             keybd_event(0x5B, 0, 0x0002, 0);
             keybd_event(0x26, 0, 0x0002, 0);
+
         }
         #endregion
 
