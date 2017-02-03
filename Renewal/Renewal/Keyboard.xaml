@@ -8,7 +8,7 @@
         Topmost="True"
         Background="#C1C1C1"
         AllowsTransparency="True"
-        WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" FontFamily="NanumSquare Bold" FontSize="48" FontWeight="Bold">
+        WindowStyle="NONE" ResizeMode="NoResize"  WindowState="Maximized" Margin="0" Width="{DynamicResource {x:Static SystemParameters.PrimaryScreenWidthKey}}" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" FontFamily="Arita-dotum(TTF)" FontSize="52" FontWeight="Light">
 
     <Window.Resources>
         <DropShadowEffect x:Key="z-depth1" BlurRadius="2" ShadowDepth="2" Direction="270" Color="#CCCCCC"/>
@@ -62,8 +62,9 @@
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
-        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="0" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
-        <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False"/>
+        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="20" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
+        <Button x:Name="Space" Content="space" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="Button_Click" Focusable="False"/>
+        <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False" />
         <TextBox x:Name="label" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="16" BorderThickness="1"  ScrollViewer.CanContentScroll="True" TextWrapping="WrapWithOverflow" Focusable="False"/>
     </Grid>
 </Window>

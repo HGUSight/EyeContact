@@ -311,7 +311,7 @@ namespace Renewal
                     Console.WriteLine("cloase: " + MainWindow.internetCount);
                 }
             }
-            if(MainWindow.internetCount == 0)
+            if(MainWindow.internetCount <= 0)
             {
                 Close();
                 MainWindow.isInternet = false;

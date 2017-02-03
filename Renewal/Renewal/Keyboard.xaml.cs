@@ -98,10 +98,11 @@ namespace Renewal
 
 
             // 숫자 버튼 생성(Top Pannel)
-            for (var i = 0; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 topPanel.Children.Add(new Button { Content = i.ToString(), Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             }
+            topPanel.Children.Add(new Button { Content = "0", Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 좌측 시스템 버튼 위치 지정(Left Panel)
             Speech.Width = ButtonWidth;
@@ -118,10 +119,6 @@ namespace Renewal
             Enter.Width = ButtonWidth;
             Enter.Height = ButtonHeight;
 
-            //Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
-            // rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            //rightPanel.Children.Add(specialButton);
-            // rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             rightPanel.Children.Add(new Button { Content = "OK", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 영어 버튼 생성(English Pannel)
@@ -155,10 +152,17 @@ namespace Renewal
             }
             specialPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
+
+
             // 한영 전환 버튼
             changeButton.Width = ButtonWidth;
             changeButton.Height = ButtonHeight;
             changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
+
+            // 스페이스 버튼
+            Space.Width = ButtonWidth * 2;
+            Space.Height = ButtonHeight;
+            Space.Margin = new Thickness(ButtonWidth * 4, ButtonHeight * 5, 0, 0);
 
             // 각 버튼과 Button Click method 연결
             foreach (Button button in topPanel.Children)
@@ -231,6 +235,10 @@ namespace Renewal
                 }
                 Stt();
             }
+            else if (button.Name == "Shift")
+            {
+
+            }
             else if (button.Name == "SpecialButton")
             {
                 specialPanel.Visibility = Visibility.Visible;
@@ -239,6 +247,11 @@ namespace Renewal
                 else
                     changeButton.Content = "한";
                 changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
+            }
+            else if (button.Name == "Space")
+            {
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Space), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Space), 0, KEYEVENTF_KEYUP, 0);
             }
             else if(button.Name == "BkSpace")
             {
