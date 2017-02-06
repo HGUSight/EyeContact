@@ -63,6 +63,12 @@
                 <Label Content="전체화면" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
+        <Button x:Name="Favorite" Width="240" Height="180" Click="Favorite_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/favorite.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="즐겨 찾기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
         <Button x:Name="Exit" Width="240" Height="180" Click="Exit_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
                 <Image Source="resources/i_exit.png" Height="100" Width="100" Margin="5"/>

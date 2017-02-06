@@ -30,8 +30,7 @@ namespace Renewal
         private mshtml.HTMLDocument doc;
 
         private bool playOn = false;
-
-
+        
         private string naver = "www.naver.com";
         private string google = ".google.co.kr";
         private string daum = ".daum.net";
@@ -43,9 +42,6 @@ namespace Renewal
         DispatcherTimer timer = new DispatcherTimer();
 
         private Keyboard dlg;
-        public static bool isLogin = false;
-        public static string login_ID;
-        public static string login_PW;
         #endregion
 
         #region main
@@ -130,14 +126,11 @@ namespace Renewal
             }
         }
         #endregion
-
         
-
-
+        #region search
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
-        #region search
         //button click
         private void Search_Click(object sender, RoutedEventArgs e)
         {
@@ -179,8 +172,7 @@ namespace Renewal
             }
         }
         #endregion
-
-
+        
         #region stop/play
         private void Stop_Play_Click(object sender, RoutedEventArgs e)
         {
@@ -220,9 +212,7 @@ namespace Renewal
         }
                           
         #endregion
-
-
-
+        
         #region FullScreen
         private void FullScreen_Click(object sender, RoutedEventArgs e)
         {
@@ -258,76 +248,15 @@ namespace Renewal
         }
         #endregion
 
-        /*
-        #region login
-        private void Login_Click(object sender, RoutedEventArgs e)
+        #region favorite
+        private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-            isLogin = true;
-            dlg = new Keyboard();
-            dlg.Closed += new EventHandler(Login_Closed);
-            dlg.Show(); // 키보드 열기            
+            favorite dlg = new Renewal.favorite();
+            dlg.Show();
+            timer.Stop();
+            this.Close();
         }
-        void Login_Closed(object sender, EventArgs e)
-        {
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
-            IntPtr handle = GetForegroundWindow();
-
-            foreach (SHDocVw.WebBrowser IE in shellWindows)
-            {
-                if (IE.HWND.Equals(handle.ToInt32()))
-                {
-                    doc = IE.Document as mshtml.HTMLDocument;
-                }
-            }
-            if (doc != null)
-            {
-                // Document 속성 읽기
-                Uri uri = new Uri(doc.url);
-                String host = uri.Host;
-
-                if (host.Contains(naver) || host.Contains(nid_naver))
-                {
-                    mshtml.IHTMLElementCollection elemColl = null;
-                    elemColl = doc.getElementsByTagName("input") as mshtml.IHTMLElementCollection;
-
-                    foreach (mshtml.IHTMLElement elem in elemColl)
-                    {
-                        if (elem.getAttribute("id") != null)
-                        {
-                            if (elem.id == "id")
-                            {
-                                elem.setAttribute("value", login_ID);
-                            }
-                            else if (elem.id == "pw")
-                            {
-                                elem.setAttribute("value", login_PW);
-                            }
-                        }
-                        else if (elem.getAttribute("title") != null)
-                        {
-                            if (elem.title == "로그인")
-                                elem.click();
-                        }
-                    }
-                }/*
-                else if (host.Contains(daum) || host.Contains(google))
-                {
-                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
-                    q.setAttribute("value", Clipboard.GetText());
-
-                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
-                    form_google.submit();
-                }///*
-                else
-                {
-                    System.Windows.MessageBox.Show("naver google daum 쓰세요");
-                }
-                isLogin = false;
-            }
-        }
-
         #endregion
-*/
 
         #region exit click
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -380,46 +309,53 @@ namespace Renewal
         }
         #endregion
 
-
         #region changeWindow
         private void changeWindow(object sender, EventArgs e)
         {
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
-            IntPtr handle = GetForegroundWindow();
-
-            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            try
             {
-                if (IE.HWND.Equals(handle.ToInt32()))
+                SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+                IntPtr handle = GetForegroundWindow();
+
+                foreach (SHDocVw.WebBrowser IE in shellWindows)
                 {
-                    doc = IE.Document as mshtml.HTMLDocument;
+                    if (IE.HWND.Equals(handle.ToInt32()))
+                    {
+                        doc = IE.Document as mshtml.HTMLDocument;
+                    }
+                }
+                if (doc != null)
+                {
+                    // Document 속성 읽기
+                    Uri uri = new Uri(doc.url);
+                    String host = uri.Host;
+
+                    if (host != currentHost)
+                    {
+                        currentHost = host;
+                        if (host.Contains(naver) || host.Contains(daum) || host.Contains(google))
+                        {
+                            Internet dlg = new Renewal.Internet();
+                            dlg.Show();
+                            timer.Stop();
+                            this.Close();
+                        }
+                        else if (host.Contains(facebook))
+                        {
+
+                        }
+                    }
                 }
             }
-            if (doc != null)
+            catch
             {
-                // Document 속성 읽기
-                Uri uri = new Uri(doc.url);
-                String host = uri.Host;
-
-                if (host != currentHost)
-                {
-                    currentHost = host;
-                    if (host.Contains(naver))
-                    {
-                        Internet dlg = new Renewal.Internet();
-                        dlg.Show();
-                        timer.Stop();
-                        this.Close();
-                    }
-                    else if (host.Contains(facebook))
-                    {
-
-                    }
-                }
+                MainWindow.isInternet = false;
+                timer.Stop();
+                this.Close();
             }
         }
         #endregion
 
     }
-
 }
 

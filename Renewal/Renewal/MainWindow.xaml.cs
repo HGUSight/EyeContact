@@ -26,15 +26,14 @@ namespace Renewal
 
     public partial class MainWindow : Window
     {
-
+        #region variable
         public static int internetCount = 0;
         public static bool isInternet = false;
-       // public static bool isInternetY = false;
-        //public static bool isInternetF = false;
 
         private mshtml.HTMLDocument doc;
         private string youtube = "www.youtube.com";
         private string facebook = "www.facebook.com";
+        #endregion
 
         #region main
         public MainWindow()
@@ -497,7 +496,7 @@ namespace Renewal
             keybd_event(0x5B, 0, 0x0002, 0);
             keybd_event(0x26, 0, 0x0002, 0);
             
-            if (isInternet == false )//&& isInternetY == false && isInternetF == false)
+            if (isInternet == false )
             {
                 SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
                 IntPtr handle = GetForegroundWindow();

@@ -229,6 +229,8 @@ namespace Renewal
         {
             favorite dlg = new Renewal.favorite();
             dlg.Show();
+            timer.Stop();
+            this.Close();
         }
         #endregion
 
@@ -352,42 +354,53 @@ namespace Renewal
         }
         #endregion
 
+        #region changeWindow
         private void changeWindow(object sender, EventArgs e)
         {
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
-            IntPtr handle = GetForegroundWindow();
-            
-            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            try
             {
-                if (IE.HWND.Equals(handle.ToInt32()))
+                SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+                IntPtr handle = GetForegroundWindow();
+
+                foreach (SHDocVw.WebBrowser IE in shellWindows)
                 {
-                    doc = IE.Document as mshtml.HTMLDocument;
+                    if (IE.HWND.Equals(handle.ToInt32()))
+                    {
+                        doc = IE.Document as mshtml.HTMLDocument;
+                    }
+                }
+                if (doc != null)
+                {
+                    // Document 속성 읽기
+                    Uri uri = new Uri(doc.url);
+                    String host = uri.Host;
+
+                    if (host != currentHost)
+                    {
+                        currentHost = host;
+                        if (host.Contains(youtube))
+                        {
+                            InternetY dlg = new Renewal.InternetY();
+                            dlg.Show();
+                            timer.Stop();
+                            this.Close();
+                        }
+                        else if (host.Contains(facebook))
+                        {
+
+                        }
+                    }
                 }
             }
-            if (doc != null)
+            catch
             {
-                // Document 속성 읽기
-                Uri uri = new Uri(doc.url);
-                String host = uri.Host;
-
-                if (host != currentHost)
-                {
-                    currentHost = host;
-                    if (host.Contains(youtube))
-                    {
-                        InternetY dlg = new Renewal.InternetY();
-                        dlg.Show();
-                        timer.Stop();
-                        this.Close();
-                    }
-                    else if (host.Contains(facebook))
-                    {
-
-                    }
-                }
+                MainWindow.isInternet = false;
+                timer.Stop();
+                this.Close();
             }
         }
+        #endregion
+ 
     }
-
 }
 

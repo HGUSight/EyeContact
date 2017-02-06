@@ -21,6 +21,13 @@ namespace Renewal
     /// </summary>
     public partial class favorite : Window
     {
+        #region variable
+        private mshtml.HTMLDocument doc;
+        private string youtube = "www.youtube.com";
+        private string facebook = "www.facebook.com";
+        #endregion
+
+        #region main
         public favorite()
         {
             InitializeComponent();
@@ -45,6 +52,7 @@ namespace Renewal
             Back.Width = Width * 0.95;
             Back.Height = Height / 6 * 0.95;
         }
+        #endregion
 
         #region focus
         // 창에 focus 가지 않도록 no activate
@@ -70,6 +78,7 @@ namespace Renewal
         }
         #endregion
 
+        #region button click
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
@@ -83,12 +92,12 @@ namespace Renewal
                 {
                     if (!IE.Busy)
                         IE.Navigate("www.naver.com");
+                    Internet dlg = new Renewal.Internet();
+                    dlg.Show();
+                    this.Close();
                 }
-
-                
             }
         }
-
         private void Daum_Click(object sender, RoutedEventArgs e)
         {
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
@@ -98,13 +107,13 @@ namespace Renewal
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
                     if (!IE.Busy)
-                        IE.Navigate("www.daum.com");
+                        IE.Navigate("www.daum.net");
+                    Internet dlg = new Renewal.Internet();
+                    dlg.Show();
+                    this.Close();
                 }
-
-
             }
         }
-
         private void Facebook_Click(object sender, RoutedEventArgs e)
         {
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
@@ -115,12 +124,12 @@ namespace Renewal
                 {
                     if (!IE.Busy)
                         IE.Navigate("www.facebook.com");
+                    InternetY dlg = new Renewal.InternetY();
+                    dlg.Show();
+                    this.Close();
                 }
-
-
             }
         }
-
         private void Youtube_Click(object sender, RoutedEventArgs e)
         {
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
@@ -131,15 +140,74 @@ namespace Renewal
                 {
                     if (!IE.Busy)
                         IE.Navigate("www.youtube.com");
+                    InternetY dlg = new Renewal.InternetY();
+                    dlg.Show();
+                    this.Close();
                 }
-
-
             }
         }
+#endregion
 
+        #region back click
         private void Back_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+                IntPtr handle = GetForegroundWindow();
+
+                foreach (SHDocVw.WebBrowser IE in shellWindows)
+                {
+                    if (IE.HWND.Equals(handle.ToInt32()))
+                    {
+                        doc = IE.Document as mshtml.HTMLDocument;
+                    }
+                }
+                if (doc != null)
+                {
+                    // Document 속성 읽기
+                    Uri uri = new Uri(doc.url);
+                    String host = uri.Host;
+                    
+                    if (host.Contains(youtube))
+                    {
+                        InternetY dlg = new InternetY();
+                        dlg.Show();
+                        this.Close();
+                    }
+                    else if (host.Contains(facebook))
+                    {
+
+                    }
+                    else // default
+                    {
+                        Internet dlg = new Renewal.Internet();
+                        dlg.Show();
+                        this.Close();
+                    }
+                }
+            }
+            catch
+            {
+                MainWindow.isInternet = false;
+                this.Close();
+            }
+
             this.Close();
         }
+        #endregion
+
+        #region area set
+        // 윈도우 로드, 클로즈 시 Work area 변경
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.Left);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppBarFunctions.SetAppBar(this, ABEdge.None);
+        }
+        #endregion
     }
 }
