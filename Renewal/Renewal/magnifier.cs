@@ -29,6 +29,18 @@ namespace Renewal
 
             int x = Control.MousePosition.X - this.Bounds.Width / 2; ;
             int y = Control.MousePosition.Y - this.Bounds.Height / 2;
+
+            if (x < 0)
+                x = 0;
+            else if (x + this.Bounds.Width > Screen.PrimaryScreen.Bounds.Width)
+                x = Screen.PrimaryScreen.Bounds.Width - this.Bounds.Width;
+
+            if (y < 0)
+                y = 0;
+            else if (y + this.Bounds.Height > Screen.PrimaryScreen.Bounds.Height)
+                y = Screen.PrimaryScreen.Bounds.Height - this.Bounds.Height;
+
+
             this.Location = new Point(x, y);
 
         }
