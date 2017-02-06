@@ -26,8 +26,12 @@ namespace Renewal
 
     public partial class MainWindow : Window
     {
-        public static bool isInternet = false;
+
         public static int internetCount = 0;
+        public static bool isInternet = false;
+       // public static bool isInternetY = false;
+        //public static bool isInternetF = false;
+
         private mshtml.HTMLDocument doc;
         private string youtube = "www.youtube.com";
         private string facebook = "www.facebook.com";
@@ -430,7 +434,7 @@ namespace Renewal
             keybd_event(0x5B, 0, 0x0002, 0);
             keybd_event(0x26, 0, 0x0002, 0);
             
-            if (isInternet == false)
+            if (isInternet == false )//&& isInternetY == false && isInternetF == false)
             {
                 SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
                 IntPtr handle = GetForegroundWindow();
@@ -459,6 +463,7 @@ namespace Renewal
                     {
                         InternetY dlg = new Renewal.InternetY();
                         dlg.Show();
+                        //isInternetY = true;
                     }
                     else if (host.Contains(facebook))
                     {
@@ -467,8 +472,8 @@ namespace Renewal
                     {
                         Internet dlg = new Renewal.Internet();
                         dlg.Show();
+                        isInternet = true;
                     }
-                    isInternet = true;
                 }
                 else
                 {
