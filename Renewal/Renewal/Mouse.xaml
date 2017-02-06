@@ -31,26 +31,27 @@
             </Setter>
         </Style>
     </Window.Resources>
+
     
     <Grid>
         <StackPanel x:Name="wrapPanel">
             <Button x:Name="RClick" Width="240" Height="180" Click="RClick_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/r_click.png" Height="100" Width="100" Margin="5"/>
+                    <Image x:Name="RClick_Icon" Source="resources/r_click.png" Height="100" Width="100" Margin="5"/>
                     <Label Content="오른쪽 클릭" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
 
             <Button x:Name="DClick" Width="240" Height="180" Click="DClick_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/d_click.png" Height="100" Width="100" Margin="5"/>
+                    <Image x:Name="DClick_Icon" Source="resources/d_click.png" Height="100" Width="100" Margin="5"/>
                     <Label Content="더블 클릭" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
 
             <Button x:Name="Drag" Width="240" Height="180" Click="Drag_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/drag.png" Height="100" Width="100" Margin="5"/>
+                    <Image x:Name="Drag_Icon" Source="resources/drag.png" Height="100" Width="100" Margin="5"/>
                     <Label Content="드래그" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
@@ -60,7 +61,6 @@
                     <Label Content="뒤로 가기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
-            
 
         </StackPanel>
         

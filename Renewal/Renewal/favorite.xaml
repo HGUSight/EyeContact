@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
         Focusable="False"
+        Background="#FAE0D4"
         Title="favorite" Width="200" Topmost="True" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True"  BorderThickness="0" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
 
     <Window.Resources>

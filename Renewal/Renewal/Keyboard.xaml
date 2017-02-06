@@ -35,6 +35,8 @@
         </Style>
         <Image x:Key="Play" Source="resources/speech_on.png" Height="120" Width="120" />
         <Image x:Key="Stop" Source="resources/speech_off.png" Height="120" Width="120"/>
+        <Image x:Key="Shift" Source="resources/shift.png" Height="100" Width="100" />
+        <Image x:Key="Shifted" Source="resources/shifted.png" Height="100" Width="100"/>
     </Window.Resources>
 
     <Grid Margin="0">
@@ -58,10 +60,16 @@
             <Button x:Name="Enter"  Focusable="False" FocusManager.IsFocusScope="False">
                 <Image Source="resources/enter.png" Height="80" Width="80" Margin="5"/>
             </Button>
+            <Button x:Name="OK"  Focusable="False" FocusManager.IsFocusScope="False">
+                <Image Source="resources/send.png" Height="100" Width="100" Margin="5"/>
+            </Button>
+
         </WrapPanel>
         <WrapPanel x:Name="englishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"/>
+        <WrapPanel x:Name="smallEnglishPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
+        <WrapPanel x:Name="ssangPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="20" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
         <Button x:Name="Space" Content="space" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="Button_Click" Focusable="False"/>
         <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False" />

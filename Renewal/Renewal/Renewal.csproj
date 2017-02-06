@@ -202,6 +202,11 @@
     <Resource Include="resources\Youtube.png" />
     <Resource Include="resources\coordinate.png" />
     <Resource Include="resources\check.png" />
+    <Resource Include="resources\drag_checked.png" />
+    <Resource Include="resources\d_click_checked.png" />
+    <Resource Include="resources\r_click_checked.png" />
+    <Resource Include="resources\shifted.png" />
+    <Resource Include="resources\send.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

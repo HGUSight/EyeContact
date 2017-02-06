@@ -44,14 +44,23 @@ namespace Renewal
         }
         private void RClick_Click(object sender, RoutedEventArgs e)
         {
+            RClick_Icon.Source = new BitmapImage(new Uri(@"/resources/r_click_checked.png", UriKind.Relative));
+            DClick_Icon.Source = new BitmapImage(new Uri(@"/resources/d_click.png", UriKind.Relative));
+            Drag_Icon.Source = new BitmapImage(new Uri(@"/resources/drag.png", UriKind.Relative));
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.RCLICKED;
         }
         private void DClick_Click(object sender, RoutedEventArgs e)
         {
+            DClick_Icon.Source = new BitmapImage(new Uri(@"/resources/d_click_checked.png", UriKind.Relative));
+            RClick_Icon.Source = new BitmapImage(new Uri(@"/resources/r_click.png", UriKind.Relative));
+            Drag_Icon.Source = new BitmapImage(new Uri(@"/resources/drag.png", UriKind.Relative));
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DOUBLECLICKED;
         }
         private void Drag_Click(object sender, RoutedEventArgs e)
         {
+            Drag_Icon.Source = new BitmapImage(new Uri(@"/resources/drag_checked.png", UriKind.Relative));
+            RClick_Icon.Source = new BitmapImage(new Uri(@"/resources/r_click.png", UriKind.Relative));
+            DClick_Icon.Source = new BitmapImage(new Uri(@"/resources/d_click.png", UriKind.Relative));
             MainWindow.mouseEvent_var = (int)MainWindow.mouseEvent.DRAGCLICKED;
         }
         private void Back_Click(object sender, RoutedEventArgs e)
