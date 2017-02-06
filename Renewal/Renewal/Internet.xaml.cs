@@ -226,7 +226,8 @@ namespace Renewal
         #region favorite
         private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-
+            favorite dlg = new Renewal.favorite();
+            dlg.Show();
         }
         #endregion
 
