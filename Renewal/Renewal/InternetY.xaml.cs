@@ -29,13 +29,12 @@ namespace Renewal
         #region variable
         private mshtml.HTMLDocument doc;
 
+        private bool playOn = false;
+
 
         private string naver = "www.naver.com";
-        private string search_naver = "search.naver.com";
-        private string nid_naver = "nid.naver.com";
         private string google = ".google.co.kr";
         private string daum = ".daum.net";
-        private string youtube = "www.youtube.com";
         private string facebook = "www.facebook.com";
 
         private Uri currentUri;
@@ -185,6 +184,12 @@ namespace Renewal
         #region stop/play
         private void Stop_Play_Click(object sender, RoutedEventArgs e)
         {
+            playOn = !playOn;
+            if(playOn)
+                Stop_Play.Content = FindResource("Play");
+            else
+                Stop_Play.Content = FindResource("Stop");
+
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             IntPtr handle = GetForegroundWindow();
 
@@ -206,7 +211,6 @@ namespace Renewal
                     {
                         if (elem.className == "ytp-play-button ytp-button")
                         {
-
                             elem.click();
                             break;
                         }
@@ -214,7 +218,6 @@ namespace Renewal
                 }
             }
         }
-
                           
         #endregion
 
