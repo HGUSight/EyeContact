@@ -24,7 +24,7 @@ namespace Renewal
     /// <summary>
     /// Internet.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class Internet : Window
+    public partial class InternetY : Window
     {
         #region variable
         private mshtml.HTMLDocument doc;
@@ -39,7 +39,7 @@ namespace Renewal
 
         private Uri currentUri;
         private string currentHost;
-        
+
         DispatcherTimer timer = new DispatcherTimer();
 
         private Keyboard dlg;
@@ -49,7 +49,7 @@ namespace Renewal
         #endregion
 
         #region main
-        public Internet()
+        public InternetY()
         {
             InitializeComponent();
 
@@ -226,8 +226,7 @@ namespace Renewal
         #region favorite
         private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-            favorite dlg = new Renewal.favorite();
-            dlg.Show();
+
         }
         #endregion
 
@@ -351,11 +350,12 @@ namespace Renewal
         }
         #endregion
 
+        #region changeWindow
         private void changeWindow(object sender, EventArgs e)
         {
             SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
             IntPtr handle = GetForegroundWindow();
-            
+
             foreach (SHDocVw.WebBrowser IE in shellWindows)
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
@@ -372,9 +372,9 @@ namespace Renewal
                 if (host != currentHost)
                 {
                     currentHost = host;
-                    if (host.Contains(youtube))
+                    if (host.Contains(naver))
                     {
-                        InternetY dlg = new Renewal.InternetY();
+                        Internet dlg = new Renewal.Internet();
                         dlg.Show();
                         timer.Stop();
                         this.Close();
@@ -386,6 +386,8 @@ namespace Renewal
                 }
             }
         }
+        #endregion
+
     }
 
 }

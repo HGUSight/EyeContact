@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(magnifier));
             this.SuspendLayout();
             // 
             // magnifier
             // 
-            // resources.ApplyResources(this, "$this");
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.ControlBox = false;
             this.DoubleBuffered = true;
             this.MaximizeBox = false;
             this.Name = "magnifier";
@@ -42,10 +43,10 @@
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.magnifier_FormClosing);
             this.Load += new System.EventHandler(this.magnifier_Load);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseClick);
-            this.MouseLeave += new System.EventHandler(this.magnifier_MouseLeave);
-            this.MouseHover += new System.EventHandler(this.magnifier_MouseHover);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseMove);
+          //  this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseDown);
+          //  this.MouseLeave += new System.EventHandler(this.magnifier_MouseLeave);
+            //this.MouseHover += new System.EventHandler(this.magnifier_MouseHover);
+            //this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseMove);
             this.ResumeLayout(false);
 
         }
