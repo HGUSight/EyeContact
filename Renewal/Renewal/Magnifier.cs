@@ -131,6 +131,7 @@ namespace Renewal
         private void magnifier_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.PropertyChanged -= new PropertyChangedEventHandler(settingsChanged);
+            MagShowSystemCursor(true);
         }
 
         // make if possible to click on the magnifier

@@ -253,11 +253,13 @@ namespace Renewal
 
         private static void startMagnifier()
         {
-            
+
+            //System.Windows.MessageBox.Show("mag");
                 if (magnifierWindowLens==null)
                 {
-                   // magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
-                    magnifierWindowLens = new magnifier(true);
+                // magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
+                //System.Windows.MessageBox.Show("mag");
+                magnifierWindowLens = new magnifier(true);
                     magnifierWindowLens.Show();
             //mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, Properties.Settings.Default.isLens);
                     mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, true);
@@ -285,15 +287,17 @@ namespace Renewal
                                                 // http://crynut84.tistory.com/34 참조
                 {
                     #region /*stop watch for magnification*/ 
-                    if (!SW.IsRunning)
-                    {
-                        SW.Start();
-                    }
+                    
                     if(SW.ElapsedMilliseconds > 200)
                     {
                         SW.Stop();
                         Timer_Tick();
                         SW.Reset();
+                    }
+                    if (!SW.IsRunning)
+                    {
+                        SW.Start();
+                        //System.Windows.MessageBox.Show("Start");
                     }
                     #endregion
 
@@ -372,6 +376,7 @@ namespace Renewal
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                 // http://crynut84.tistory.com/34 참조
                 {
+                    SW.Stop();
                     SW.Reset();
 
                     #region /*when user makes first click event after magnification is generated*/
@@ -407,7 +412,7 @@ namespace Renewal
                         if (magnifierWindowLens != null)
                         {
                             magnifierWindowLens.Close();
-                            //magnifierWindowDocked = null;
+                            magnifierWindowLens = null;
                             return (IntPtr)1;
                         }
                         else
