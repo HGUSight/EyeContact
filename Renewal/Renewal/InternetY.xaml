@@ -35,35 +35,30 @@
         </Style>
     </Window.Resources>
 
-    <StackPanel x:Name="wrapPanel" Margin="0,0,84,-196.667" >
+    <StackPanel x:Name="wrapPanel" Margin="0,0,-8,-197" >
         <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
-                <Image Source="resources/i_back.png" Height="100" Width="100" Margin="5"/>
+                <Image Source="resources/back_y.png" Height="100" Width="100" Margin="5"/>
                 <Label Content="뒤로" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
         <Button x:Name="Search" Width="240" Height="180" Click="Search_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
-                <Image Source="resources/search.png" Height="100" Width="100" Margin="5"/>
-                <Label Content="????" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                <Image Source="resources/search_y.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="검색" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
-        <Button x:Name="Login" Width="240" Height="180" Click="Login_Click"  Focusable="False" FocusManager.IsFocusScope="False">
+       
+        <Button x:Name="Stop_Play" Width="240" Height="180" Click="Stop_Play_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
-                <Image Source="resources/login.png" Height="100" Width="100" Margin="5"/>
-                <Label Content="????" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                <Image Source="resources/stop.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="정지" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
-        <Button x:Name="Wallpaper" Width="240" Height="180" Click="Wallpaper_Click" Focusable="False" FocusManager.IsFocusScope="False">
+        <Button x:Name="Fullscreen" Width="240" Height="180" Click="FullScreen_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
-                <Image Source="resources/pc.png" Height="100" Width="100" Margin="5"/>
-                <Label Content="????" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
-            </StackPanel>
-        </Button>
-        <Button x:Name="Favorite" Width="240" Height="180" Click="Favorite_Click" Focusable="False" FocusManager.IsFocusScope="False">
-            <StackPanel>
-                <Image Source="resources/favorite.png" Height="100" Width="100" Margin="5"/>
-                <Label Content="????" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                <Image Source="resources/fullscreen.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="전체화면" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
             </StackPanel>
         </Button>
         <Button x:Name="Exit" Width="240" Height="180" Click="Exit_Click" Focusable="False" FocusManager.IsFocusScope="False">

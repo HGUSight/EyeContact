@@ -215,6 +215,7 @@ namespace Renewal
                     IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
                     form_google.submit();
                 }
+                
                 else
                 {
                     System.Windows.MessageBox.Show("naver google daum 쓰세요");
