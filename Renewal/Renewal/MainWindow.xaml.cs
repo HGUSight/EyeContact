@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Threading;
 using SHDocVw;
 
+
 namespace Renewal
 {
     /// <summary>
@@ -48,7 +49,8 @@ namespace Renewal
             Setting.Width = ButtonWidth;
             Setting.Height = ButtonHeight;
 
-          
+
+
 
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
@@ -59,8 +61,6 @@ namespace Renewal
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
         }
-
-
         #endregion
 
         #region focus
@@ -126,7 +126,6 @@ namespace Renewal
             }
         }
 
-
         #endregion
 
         #region Keyboard Ctrl + v event
@@ -150,8 +149,6 @@ namespace Renewal
 
         #region About hooking - keyboard, mouse, cursor cordinate
 
-
-
         //**********************************************
 
 
@@ -167,6 +164,10 @@ namespace Renewal
 
         [DllImport("kernel32.dll")]
         static extern IntPtr LoadLibrary(string lpFileName);
+
+        [DllImport("Magnification.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "MagShowSystemCursor")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool MagShowSystemCursor([MarshalAs(UnmanagedType.Bool)]bool fShowCursor);
 
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -189,14 +190,17 @@ namespace Renewal
         public const int MOUSEWHEEL = 0x0800;
         //마우스 후킹 변수들 
 
-        public static int mouseEvent_var;
+        public static int mouseEvent_var = (int)mouseEvent.LCLICKED;
+        public static int mouseEvent_var_forMagnification;
+        public static bool flag_mag_start = false;
       
         public enum mouseEvent
         {
             LCLICKED = 0,
             RCLICKED = 1,
             DOUBLECLICKED = 2,
-            DRAGCLICKED = 3
+            DRAGCLICKED = 3,
+            RELEASED = 4
         }
         // 마우스 이벤트 변수들
 
@@ -211,98 +215,111 @@ namespace Renewal
             UnhookWindowsHookEx(hhook);
         }
 
-        public static DispatcherTimer Timer = new DispatcherTimer();
+       
+        public static Stopwatch SW = new Stopwatch();
         public static magnifier magnifierWindowLens = null;
         public static magnifier magnifierWindowDocked = null;
         public static Magnifier mgnLens = null;
         public static Magnifier mgnDocked = null;
+        public static int time = 0 ;
 
 
-        private static void Timer_Tick(object sender, EventArgs e)
+        private static void Timer_Tick()
         {
-            startMagnifier();
-            Timer.Stop();
-            // Create the interop host control.
-            //  System.Windows.Forms.Integration.WindowsFormsHost host =
-            //     new System.Windows.Forms.Integration.WindowsFormsHost();
+            flag_mag_start = true;
+            if (mouseEvent_var == (int)mouseEvent.RCLICKED)
+                mouse_event(RIGHTUP, 0, 0, 0, 0);
+            else
+                mouse_event(LEFTUP, 0, 0, 0, 0);
 
-            // Add the interop host control to the Grid
-            // control's collection of child controls.
-            //MainWindow.wrapPanel.Children.Add(host);
+            startMagnifier();
+
         }
 
         private static void startMagnifier()
         {
-
-            if (Properties.Settings.Default.isLens)
-            {
-                magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
-
-                magnifierWindowLens.Show();
-                mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, Properties.Settings.Default.isLens);
-
-                mgnLens.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
-            }
-            else
-            {
-                magnifierWindowDocked = new magnifier(Properties.Settings.Default.isLens);
-                magnifierWindowDocked.Show();
-                mgnDocked = new Magnifier(magnifierWindowDocked, Properties.Settings.Default.isLens);
-                mgnDocked.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
-            }
-
+            
+                if (magnifierWindowLens==null)
+                {
+                   // magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
+                    magnifierWindowLens = new magnifier(true);
+                    magnifierWindowLens.Show();
+            //mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, Properties.Settings.Default.isLens);
+                    mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, true);
+                    mgnLens.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
+                }
+               /* else if(magnifierWindowDocked==null)
+                {
+                    //System.Windows.MessageBox.Show("This is Docked");
+                    magnifierWindowDocked = new magnifier(Properties.Settings.Default.isLens);
+                    magnifierWindowDocked.Show();
+                    mgnDocked = new Magnifier(magnifierWindowDocked, Properties.Settings.Default.isLens);
+                    mgnDocked.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
+                }
+                */
         }
 
         public static IntPtr hookProc(int code, IntPtr wParam, IntPtr lParam)
         {
-            if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN) // keydown이 인지
+            #region // keydown hooking
+            if (code >= 0 && wParam == (IntPtr)WM_KEYDOWN) 
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                 // http://crynut84.tistory.com/34 참조
                 {
-                    
-
-                    if (!Timer.IsEnabled)
+                    #region /*stop watch for magnification*/ 
+                    if (!SW.IsRunning)
                     {
-                        Timer.Interval = TimeSpan.FromSeconds(2);
-                        Timer.Tick += new EventHandler(Timer_Tick);
-                        Timer.Start();
+                        SW.Start();
                     }
-                    switch (mouseEvent_var)
+                    if(SW.ElapsedMilliseconds > 200)
                     {
-                        case (int)mouseEvent.LCLICKED:
-                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
-                            return (IntPtr)1; //return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
-                           // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
-
-                        case (int)mouseEvent.RCLICKED:
-                            mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭
-                            return (IntPtr)1;  // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
-
-
-                        case (int)mouseEvent.DOUBLECLICKED:
-                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
-                            mouse_event(LEFTUP, 0, 0, 0, 0);
-                            mouse_event(LEFTDOWN, 0, 0, 0, 0);
-                            mouse_event(LEFTUP, 0, 0, 0, 0);
-                            mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return (IntPtr)1;
-
-                        case (int)mouseEvent.DRAGCLICKED:
-                            mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
-                            mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return (IntPtr)1;
+                        SW.Stop();
+                        Timer_Tick();
+                        SW.Reset();
                     }
+                    #endregion
+
+                    #region
+                    if (flag_mag_start)
+                    {
+                        return (IntPtr)1;
+                    }
+                    else
+                    {
+                        switch (mouseEvent_var)
+                        {
+                            case (int)mouseEvent.LCLICKED:
+                                mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 왼쪽 클릭 
+                                return (IntPtr)1; //return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                                                  // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
+
+                            case (int)mouseEvent.RCLICKED:
+                                //mouseEvent_var_forMagnification = (int)mouseEvent.RCLICKED;
+                                mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭
+                                return (IntPtr)1;  // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
 
 
+                            case (int)mouseEvent.DOUBLECLICKED:
+                                mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 더블 클릭 
+                                return (IntPtr)1;
+
+                            case (int)mouseEvent.DRAGCLICKED:
+                                mouse_event(LEFTDOWN, 0, 0, 0, 0); // 마우스 드래그 
+                                return (IntPtr)1;
+
+                            case (int)mouseEvent.RELEASED:
+                                mouse_event(LEFTUP, 0, 0, 0, 0);
+                                mouseEvent_var = (int)mouseEvent.LCLICKED;
+                                return (IntPtr)1;
+                        }
+                    }
+                    #endregion 
 
                 }
-
-
-
-                //when user coordinates gaze Point and mouse position. 
+                #region //when user coordinates gaze Point and mouse position. 
                 if (isCoordinate)
                 {
                     switch (vkCode)
@@ -328,37 +345,65 @@ namespace Renewal
                     }
                     return (IntPtr)1;
                 }
-
                 else
                     return CallNextHookEx(hhook, code, (int)wParam, lParam);
-
-
+                #endregion
             }
+            #endregion
+            #region //keyup hooking
             else if (code >= 0 && wParam == (IntPtr)WM_KEYUP)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 if (vkCode.ToString() == "124") // 38: up key, 81: q key, 124: F13 key(shift+F1)
                                                 // http://crynut84.tistory.com/34 참조
                 {
-                    if (Timer.IsEnabled)
-                        Timer.Stop();
-                    
-                    switch (mouseEvent_var)
-                    {
-                        case (int)mouseEvent.LCLICKED:
-                            mouse_event(LEFTUP, 0, 0, 0, 0);
-                            return (IntPtr)1; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
-                                              // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
-                        case (int)mouseEvent.RCLICKED:
-                            mouse_event(RIGHTUP, 0, 0, 0, 0);
-                            mouseEvent_var = (int)mouseEvent.LCLICKED;
-                            return (IntPtr)1;
+                    SW.Reset();
 
+                    #region /*when user makes first click event after magnification is generated*/
+                    if (flag_mag_start)
+                    { 
+                        flag_mag_start = false;
+                        return (IntPtr)1;
+                    }
+                    #endregion
+                    else
+                    {
+                        switch (mouseEvent_var)
+                        {
+                            case (int)mouseEvent.LCLICKED:
+                                mouse_event(LEFTUP, 0, 0, 0, 0);
+                                break; // return 1: vkCode(up 키) 메세지를 메세지 큐로 전달하지 않음 (=up 키가 작동되지 않음)
+                                                  // return CallNextHookEx(hhook, code, (int)wParam, lParam); : 해당 메세지를 큐로 전달함
+                            case (int)mouseEvent.RCLICKED:
+                                mouse_event(RIGHTUP, 0, 0, 0, 0);
+                                mouseEvent_var = (int)mouseEvent.LCLICKED;
+                                break;
+                            case (int)mouseEvent.DOUBLECLICKED:
+                                mouse_event(LEFTUP, 0, 0, 0, 0);
+                                mouse_event(LEFTDOWN, 0, 0, 0, 0);
+                                mouse_event(LEFTUP, 0, 0, 0, 0);
+                                mouseEvent_var = (int)mouseEvent.LCLICKED;
+                                break;
+                            case (int)mouseEvent.DRAGCLICKED:
+                                mouseEvent_var = (int)mouseEvent.RELEASED;
+                                break;
+                        }
+                        #region /*magnification closing*/
+                        if (magnifierWindowLens != null)
+                        {
+                            magnifierWindowLens.Close();
+                            //magnifierWindowDocked = null;
+                            return (IntPtr)1;
+                        }
+                        else
+                            return (IntPtr)1;
                     }
                 }
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);
             }
-            else 
+            #endregion
+            #endregion
+            else
                 return CallNextHookEx(hhook, code, (int)wParam, lParam);
         }
 
@@ -442,7 +487,7 @@ namespace Renewal
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
-            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+            System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -454,7 +499,7 @@ namespace Renewal
         private void Window_Closed(object sender, EventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
-            Application.Current.Shutdown(); // 모든 자식과 함께 종료
+            System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
 
         #endregion
