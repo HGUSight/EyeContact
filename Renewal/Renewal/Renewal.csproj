@@ -84,6 +84,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBarFunctions.cs" />
+    <Compile Include="InternetY.xaml.cs">
+      <DependentUpon>InternetY.xaml</DependentUpon>
+    </Compile>
     <Compile Include="magnifier.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +100,10 @@
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
     <Page Include="Internet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InternetY.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
