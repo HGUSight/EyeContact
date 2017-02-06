@@ -16,6 +16,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace Renewal
 {
@@ -26,6 +28,20 @@ namespace Renewal
     {
         #region variable
         private mshtml.HTMLDocument doc;
+
+
+        private string naver = "www.naver.com";
+        private string search_naver = "search.naver.com";
+        private string nid_naver = "nid.naver.com";
+        private string google = ".google.co.kr";
+        private string daum = ".daum.net";
+        private string youtube = "www.youtube.com";
+        private string facebook = "www.facebook.com";
+
+        private Uri currentUri;
+        private string currentHost;
+
+        DispatcherTimer timer = new DispatcherTimer();
 
         private Keyboard dlg;
         public static bool isLogin = false;
@@ -38,16 +54,17 @@ namespace Renewal
         {
             InitializeComponent();
 
-            Width = Application.Current.MainWindow.Width;
+            timer.Interval = TimeSpan.FromMilliseconds(500);
+            timer.Tick += new EventHandler(changeWindow);
+            timer.Start();
+
+            Width = System.Windows.Application.Current.MainWindow.Width;
 
             Back.Width = Width * 0.95;
             Back.Height = Height / 6 * 0.95;
 
             Search.Width = Width * 0.95;
             Search.Height = Height / 6 * 0.95;
-
-            Login.Width = Width * 0.95;
-            Login.Height = Height / 6 * 0.95;
 
             Stop_Play.Width = Width * 0.95;
             Stop_Play.Height = Height / 6 * 0.95;
@@ -57,6 +74,10 @@ namespace Renewal
 
             Exit.Width = Width * 0.95;
             Exit.Height = Height / 6 * 0.95;
+
+          //  Login.Width = Width * 0.95;
+          //  Login.Height = Height / 6 * 0.95;
+
         }
         #endregion
 
@@ -118,17 +139,6 @@ namespace Renewal
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
 
         #region search
-
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(int hwnd, int msg, int wParam, StringBuilder sb);
-        [DllImport("user32.dll", EntryPoint = "FindWindow")]
-        private static extern int FindWindow(string _ClassName, string _WindowName);
-        [DllImport("user32.dll", EntryPoint = "FindWindowEx")]
-        private static extern int FindWindowEx(int _Parent, int _ChildAfter, string _ClassName, string _WindowName);
-
-        public const int WM_GETTEXTLENGTH = 0x000E;
-        public const int WM_GETTEXT = 0x000D;
-
         //button click
         private void Search_Click(object sender, RoutedEventArgs e)
         {
@@ -157,14 +167,15 @@ namespace Renewal
 
                 if (host.Contains("youtube.com"))
                 {
+                    //검색어 셋팅
                     IHTMLElement q = doc.getElementsByName("search_query").item("search_query", 0);
-                    q.setAttribute("value", Clipboard.GetText());
+                    q.setAttribute("value", System.Windows.Clipboard.GetText());
 
                     doc.getElementById("search-btn").click();
                 }
                 else
                 {
-                    MessageBox.Show("이곳은 유튜브가 아닙니다.");
+                    System.Windows.MessageBox.Show("이곳은 유튜브가 아닙니다.");
                 }
             }
         }
@@ -184,7 +195,7 @@ namespace Renewal
                     doc = IE.Document as mshtml.HTMLDocument;
                 }
             }
-            if(doc!= null)
+            if (doc != null)
             {
                 mshtml.IHTMLElementCollection elemColl = null;
                 elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
@@ -193,8 +204,9 @@ namespace Renewal
                 {
                     if (elem.getAttribute("class") != null)
                     {
-                        if (elem.className == "ytb-play-button ytb-button")
+                        if (elem.className == "ytp-play-button ytp-button")
                         {
+
                             elem.click();
                             break;
                         }
@@ -202,6 +214,8 @@ namespace Renewal
                 }
             }
         }
+
+                          
         #endregion
 
 
@@ -228,9 +242,11 @@ namespace Renewal
                 {
                     if (elem.getAttribute("class") != null)
                     {
-                        if (elem.className == "ytb-fullscreen-button ytb-button")
+                        if (elem.className == "ytp-fullscreen-button ytp-button")
                         {
+                            
                             elem.click();
+                            Console.WriteLine("yy");
                             break;
                         }
                     }
@@ -239,6 +255,7 @@ namespace Renewal
         }
         #endregion
 
+        /*
         #region login
         private void Login_Click(object sender, RoutedEventArgs e)
         {
@@ -297,16 +314,17 @@ namespace Renewal
 
                     IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
                     form_google.submit();
-                }*/
+                }///*
                 else
                 {
-                    MessageBox.Show("naver google daum 쓰세요");
+                    System.Windows.MessageBox.Show("naver google daum 쓰세요");
                 }
                 isLogin = false;
             }
         }
 
         #endregion
+*/
 
         #region exit click
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -319,12 +337,12 @@ namespace Renewal
                 {
                     IE.Quit();
                     MainWindow.internetCount--;
-                    Console.WriteLine("cloase: " + MainWindow.internetCount);
                 }
             }
             if (MainWindow.internetCount <= 0)
             {
-                Close();
+                this.Close();
+                timer.Stop();
                 MainWindow.isInternet = false;
             }
         }
@@ -334,6 +352,22 @@ namespace Renewal
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
+            if (doc != null)
+            {
+                // Document 속성 읽기
+                currentUri = new Uri(doc.url);
+                currentHost = currentUri.Host;
+            }
             AppBarFunctions.SetAppBar(this, ABEdge.Left);
         }
 
@@ -343,6 +377,46 @@ namespace Renewal
         }
         #endregion
 
-    }  
+
+        #region changeWindow
+        private void changeWindow(object sender, EventArgs e)
+        {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
+            if (doc != null)
+            {
+                // Document 속성 읽기
+                Uri uri = new Uri(doc.url);
+                String host = uri.Host;
+
+                if (host != currentHost)
+                {
+                    currentHost = host;
+                    if (host.Contains(naver))
+                    {
+                        Internet dlg = new Renewal.Internet();
+                        dlg.Show();
+                        timer.Stop();
+                        this.Close();
+                    }
+                    else if (host.Contains(facebook))
+                    {
+
+                    }
+                }
+            }
+        }
+        #endregion
+
+    }
+
 }
 
