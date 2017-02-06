@@ -27,12 +27,6 @@ namespace Renewal
         #region variable
         private mshtml.HTMLDocument doc;
 
-        private string naver = "www.naver.com";
-        private string search_naver = "search.naver.com";
-        private string nid_naver = "nid.naver.com";
-        private string google = ".google.co.kr";
-        private string daum = ".daum.net";
-
         private Keyboard dlg;
         public static bool isLogin = false;
         public static string login_ID;
@@ -55,12 +49,11 @@ namespace Renewal
             Login.Width = Width * 0.95;
             Login.Height = Height / 6 * 0.95;
 
-            Wallpaper.Width = Width * 0.95;
-            Wallpaper.Height = Height / 6 * 0.95;
+            Stop_Play.Width = Width * 0.95;
+            Stop_Play.Height = Height / 6 * 0.95;
 
-
-            Favorite.Width = Width * 0.95;
-            Favorite.Height = Height / 6 * 0.95;
+            Fullscreen.Width = Width * 0.95;
+            Fullscreen.Height = Height / 6 * 0.95;
 
             Exit.Width = Width * 0.95;
             Exit.Height = Height / 6 * 0.95;
@@ -118,25 +111,11 @@ namespace Renewal
         }
         #endregion
 
-        #region wallpaper
-        // 키보드 이벤트 API
+        
+
+
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
-
-        const int KEYDOWN = 0x0000;
-        const int KEYUP = 0x0002;
-
-        private void Wallpaper_Click(object sender, RoutedEventArgs e)
-        {
-            const byte Window = 0x5B;// window key
-            const byte D = 0x44;// D
-
-            keybd_event(Window, 0, KEYDOWN, 0);
-            keybd_event(D, 0, KEYDOWN, 0);
-            keybd_event(Window, 0, KEYUP, 0);
-            keybd_event(D, 0, KEYUP, 0);
-        }
-        #endregion
 
         #region search
 
@@ -176,55 +155,87 @@ namespace Renewal
                 Uri uri = new Uri(doc.url);
                 String host = uri.Host;
 
-                if (host.Contains(naver))
+                if (host.Contains("youtube.com"))
                 {
-                    //검색어 셋팅
-                    IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                    query.setAttribute("value", Clipboard.GetText());
-
-                    //네이버검색버튼 : search_btn
-                    doc.getElementById("search_btn").click();
-                }
-                else if (host.Contains(search_naver))
-                {
-                    mshtml.IHTMLElementCollection elemColl = null;
-                    elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
-
-                    foreach (mshtml.IHTMLElement elem in elemColl)
-                    {
-                        if (elem.getAttribute("class") != null)
-                        {
-                            if (elem.className == "bt_search spim")
-                            {
-                                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
-                                //검색어 셋팅
-                                query.setAttribute("value", Clipboard.GetText());
-                                elem.click();
-                                break;
-                            }
-                        }
-                    }
-                }
-                else if (host.Contains(daum) || host.Contains(google))
-                {
-                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                    IHTMLElement q = doc.getElementsByName("search_query").item("search_query", 0);
                     q.setAttribute("value", Clipboard.GetText());
 
-                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
-                    form_google.submit();
+                    doc.getElementById("search-btn").click();
                 }
                 else
                 {
-                    MessageBox.Show("naver google daum 쓰세요");
+                    MessageBox.Show("이곳은 유튜브가 아닙니다.");
                 }
             }
         }
         #endregion
 
-        #region favorite
-        private void Favorite_Click(object sender, RoutedEventArgs e)
-        {
 
+        #region stop/play
+        private void Stop_Play_Click(object sender, RoutedEventArgs e)
+        {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
+            if(doc!= null)
+            {
+                mshtml.IHTMLElementCollection elemColl = null;
+                elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
+
+                foreach (mshtml.IHTMLElement elem in elemColl)
+                {
+                    if (elem.getAttribute("class") != null)
+                    {
+                        if (elem.className == "ytb-play-button ytb-button")
+                        {
+                            elem.click();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+
+
+        #region FullScreen
+        private void FullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
+            if (doc != null)
+            {
+                mshtml.IHTMLElementCollection elemColl = null;
+                elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
+
+                foreach (mshtml.IHTMLElement elem in elemColl)
+                {
+                    if (elem.getAttribute("class") != null)
+                    {
+                        if (elem.className == "ytb-fullscreen-button ytb-button")
+                        {
+                            elem.click();
+                            break;
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -331,6 +342,7 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-    }
+
+    }  
 }
 
