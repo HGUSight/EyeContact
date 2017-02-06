@@ -200,6 +200,8 @@
     <Resource Include="resources\Facebook.png" />
     <Resource Include="resources\Naver.png" />
     <Resource Include="resources\Youtube.png" />
+    <Resource Include="resources\coordinate.png" />
+    <Resource Include="resources\check.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

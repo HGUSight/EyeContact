@@ -28,5 +28,10 @@ namespace Renewal
         {
             MainWindow.isCoordinate = false;
         }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

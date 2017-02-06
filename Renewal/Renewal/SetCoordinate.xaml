@@ -5,8 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="SetCoordinate" Height="300" Width="300" Closing="Window_Closing">
-    <Grid>
-        
-    </Grid>
+        WindowStyle="NONE"
+        WindowState="Maximized"
+        Topmost="True"
+        AllowsTransparency="True"
+        Title="SetCoordinate" Closing="Window_Closing" Focusable="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="z-depth1" BlurRadius="5" ShadowDepth="1" Direction="270" Color="#CCCCCC"/>
+        <Style TargetType="{x:Type Button}">
+            <!-- Template for button style -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Content handles within a border -->
+                        <Border x:Name="bdr" CornerRadius="22" Margin="9" BorderThickness="0" BorderBrush="Black" Background="White" Effect="{StaticResource z-depth1}">
+                            <!-- ContentPresenter properties. Set the content source as the content from each control define below -->
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="20"/>
+                        </Border>
+                        <!-- Required triggers define here -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Window.Background>
+        <SolidColorBrush Opacity="0.9" Color="White"/>
+    </Window.Background>
+
+    <StackPanel>
+    <Button x:Name="Back" Width="240" Height="180" Focusable="False" FocusManager.IsFocusScope="False" HorizontalAlignment="Right" Click="Back_Click">
+        <StackPanel>
+            <Image Source="resources/check.png" Height="100" Width="100" Margin="5"/>
+            <Label Content="확인" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+        </StackPanel>
+    </Button>
+        <Image Source="resources/coordinate.png"  Margin="300, 250, 300, 0"/>
+    </StackPanel>
+
+
+    
+
+
+
 </Window>
+    
+    
