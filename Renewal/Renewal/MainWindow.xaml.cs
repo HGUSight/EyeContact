@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Threading;
 using SHDocVw;
 
+using mshtml;
+
 
 namespace Renewal
 {
@@ -26,6 +28,9 @@ namespace Renewal
     {
         public static bool isInternet = false;
         public static int internetCount = 0;
+        private mshtml.HTMLDocument doc;
+        private string youtube = "www.youtube.com";
+        private string facebook = "www.facebook.com";
 
         #region main
         public MainWindow()
@@ -465,19 +470,20 @@ namespace Renewal
             keybd_event(0x22, 0, KEYUP, 0);
         }
         //sure Internet toolbar is opened
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
-            if (isInternet == false)
-            {
-                Internet dlg = new Renewal.Internet();
-                dlg.Show();
-                isInternet = true;
-            }
             InternetExplorer ie = new InternetExplorer();
             IWebBrowserApp webBrowser = ie;
             
             webBrowser.Visible = true;
             webBrowser.GoHome();
+            IWebBrowserApp wb = (IWebBrowserApp)ie;
+
+            wb.Visible = true;
+            wb.GoHome();
 
             internetCount++;
 
@@ -486,7 +492,52 @@ namespace Renewal
             keybd_event(0x26, 0, 0, 0); // arrow up key
             keybd_event(0x5B, 0, 0x0002, 0);
             keybd_event(0x26, 0, 0x0002, 0);
+            
+            if (isInternet == false)
+            {
+                SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+                IntPtr handle = GetForegroundWindow();
+                foreach (SHDocVw.WebBrowser IE in shellWindows)
+                {
+                    if (IE.HWND.Equals(handle.ToInt32()))
+                    {
+                        while (IE.Busy == true || IE.ReadyState != SHDocVw.tagREADYSTATE.READYSTATE_COMPLETE)
+                            System.Threading.Thread.Sleep(100);
+                        try
+                        {
+                            doc = IE.Document as mshtml.HTMLDocument;
+                        }
+                        catch
+                        {
+                            System.Windows.MessageBox.Show("err");
+                        }
+                    }
+                }            
+                if (doc != null)
+                {
+                    Uri uri = new Uri(doc.url);
+                    String host = uri.Host;
 
+                    if (host.Contains(youtube))
+                    {
+                        InternetY dlg = new Renewal.InternetY();
+                        dlg.Show();
+                    }
+                    else if (host.Contains(facebook))
+                    {
+                    }
+                    else // naver, daum, google etc. (default)
+                    {
+                        Internet dlg = new Renewal.Internet();
+                        dlg.Show();
+                    }
+                    isInternet = true;
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Internet open error");
+                }
+            }
         }
         #endregion
 
@@ -494,30 +545,23 @@ namespace Renewal
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
-
             AppBarFunctions.SetAppBar(this, ABEdge.Right);
         }
-
-    
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
             System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
             System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
-
         private void Window_Closed(object sender, EventArgs e)
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
             System.Windows.Application.Current.Shutdown(); // 모든 자식과 함께 종료
         }
-
         #endregion
     }
 }

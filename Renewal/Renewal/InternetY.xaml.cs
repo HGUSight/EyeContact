@@ -22,7 +22,7 @@ namespace Renewal
     /// <summary>
     /// Internet.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class Internet : Window
+    public partial class InternetY : Window
     {
         #region variable
         private mshtml.HTMLDocument doc;
@@ -32,11 +32,6 @@ namespace Renewal
         private string nid_naver = "nid.naver.com";
         private string google = ".google.co.kr";
         private string daum = ".daum.net";
-        private string youtube = "www.youtube.com";
-        private string facebook = "www.facebook.com";
-
-        //private Uri originUri;
-        //private string originHost;
 
         private Keyboard dlg;
         public static bool isLogin = false;
@@ -45,11 +40,9 @@ namespace Renewal
         #endregion
 
         #region main
-        public Internet()
+        public InternetY()
         {
             InitializeComponent();
-            
-            //changeWindow();
 
             Width = Application.Current.MainWindow.Width;
 
@@ -146,6 +139,17 @@ namespace Renewal
         #endregion
 
         #region search
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(int hwnd, int msg, int wParam, StringBuilder sb);
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        private static extern int FindWindow(string _ClassName, string _WindowName);
+        [DllImport("user32.dll", EntryPoint = "FindWindowEx")]
+        private static extern int FindWindowEx(int _Parent, int _ChildAfter, string _ClassName, string _WindowName);
+
+        public const int WM_GETTEXTLENGTH = 0x000E;
+        public const int WM_GETTEXT = 0x000D;
+
         //button click
         private void Search_Click(object sender, RoutedEventArgs e)
         {
@@ -220,8 +224,7 @@ namespace Renewal
         #region favorite
         private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-            favorite dlg = new Renewal.favorite();
-            dlg.Show();
+
         }
         #endregion
 
@@ -320,23 +323,6 @@ namespace Renewal
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            /*
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
-            IntPtr handle = GetForegroundWindow();
-
-            foreach (SHDocVw.WebBrowser IE in shellWindows)
-            {
-                if (IE.HWND.Equals(handle.ToInt32()))
-                {
-                    doc = IE.Document as mshtml.HTMLDocument;
-                }
-            }
-            if (doc != null)
-            {
-                // Document 속성 읽기
-                originUri = new Uri(doc.url);
-                originHost = originUri.Host;
-            }*/
             AppBarFunctions.SetAppBar(this, ABEdge.Left);
         }
 
@@ -345,43 +331,6 @@ namespace Renewal
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-        /*
-        private void changeWindow()
-        {
-            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
-            IntPtr handle = GetForegroundWindow();
-
-            foreach (SHDocVw.WebBrowser IE in shellWindows)
-            {
-                if (IE.HWND.Equals(handle.ToInt32()))
-                {
-                    doc = IE.Document as mshtml.HTMLDocument;
-                }
-            }
-            if (doc != null)
-            {
-                // Document 속성 읽기
-                Uri uri = new Uri(doc.url);
-                String host = uri.Host;
-
-
-
-                if (host.Contains(youtube))
-                {
-                    InternetY dlg = new Renewal.InternetY();
-                    dlg.Show();
-                }
-                else if (host.Contains(facebook))
-                {
-                }
-                else // naver, daum, google etc. (default)
-                {
-                    Internet dlg = new Renewal.Internet();
-                    dlg.Show();
-                }
-            }
-        }*/
     }
-
 }
 
