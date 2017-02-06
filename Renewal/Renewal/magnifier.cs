@@ -19,8 +19,8 @@ namespace Renewal
 
         public magnifier(bool isLens)
         {
-            GlobalMouseHandler.MouseMovedEvent += GlobalMouseHandler_MouseMovedEvent;
-            Application.AddMessageFilter(new GlobalMouseHandler());
+            //GlobalMouseHandler.MouseMovedEvent += GlobalMouseHandler_MouseMovedEvent;
+            //Application.AddMessageFilter(new GlobalMouseHandler());
             InitializeComponent();
             this.isLens = isLens;
 
@@ -86,20 +86,10 @@ namespace Renewal
             //Apply settings now for the first time -------------------------------------
             applySettings();
             //---------------------------------------------------------------------------
-
-            if (/*Properties.Settings.Default.*/isLens)//If the magnifier is a lens make click-throughable
-            {
                 FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                 SetWindowLong(this.Handle, -20, defaultStyle | 0x80000 | 0x20);//Layered and transparent
                 SetLayeredWindowAttributes(Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
-            }
-            else
-            {  //Otherwise, render it as toolwindow that is not click-throughable
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-                SetWindowLong(this.Handle, -20, defaultStyle | 0x80000 /*| 0x20*/);//Layered but not transparent
-                //SetWindowLong(Handle, -20, defaultStyle);
-                SetLayeredWindowAttributes(Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
-            }
+          
         }
 
         private void GlobalMouseHandler_MouseMovedEvent(object sender, MouseEventArgs e)
@@ -123,7 +113,7 @@ namespace Renewal
 
         private void applySettings()
         {    
-            //magnifier defualt size of width, height = 500,500
+            //the height and width of magnifier = 500,500 --> can adjust this value in Settings.Designer.cs
             Size = new Size(Properties.Settings.Default.maxMagnifierWidth, Properties.Settings.Default.maxMagnifierHeight);
             TopMost = Properties.Settings.Default.alwaysOnTop;
         }
@@ -131,6 +121,7 @@ namespace Renewal
         private void magnifier_FormClosing(object sender, FormClosingEventArgs e)
         {
             Properties.Settings.Default.PropertyChanged -= new PropertyChangedEventHandler(settingsChanged);
+            // show cursor
             MagShowSystemCursor(true);
         }
 
@@ -142,7 +133,7 @@ namespace Renewal
             SetLayeredWindowAttributes(this.Handle, 0, 255, LayeredWindowAttributeFlags.LWA_ALPHA);
 
         }
-
+        /*
         private void magnifier_MouseHover(object sender, EventArgs e)
         {
             MagShowSystemCursor(false);
@@ -158,12 +149,12 @@ namespace Renewal
 
             MagShowSystemCursor(false);
         }
-
+        */
 
 
 
     }
-
+    /*
     //global mouse handler function.
     public class GlobalMouseHandler : IMessageFilter
     {
@@ -188,4 +179,5 @@ namespace Renewal
         }
     
     }
+    */
 }

@@ -140,7 +140,6 @@ namespace Karna.Magnification
 
 
             // Don't scroll outside desktop area.
-            //if (!isLens)
             if(isLens)
             {
                 if (sourceRect.left < 0)
@@ -180,10 +179,6 @@ namespace Karna.Magnification
 
             POINT mouse = new POINT();
             NativeMethods.GetCursorPos(ref mouse);
-
-            String top = (form.Top).ToString();
-
-           // MessageBox.Show(top);
 
             /*when the position of mouse is in the magnification window region */
             if (mouse.x > form.Left && mouse.x < form.Right && mouse.y < form.Bottom && mouse.y > form.Top)
@@ -260,6 +255,8 @@ namespace Karna.Magnification
             }
             else// if the magnifier is not a lens show the maginified cursor*/
             //{
+
+            // show mainified cursor
                 hwndMag = NativeMethods.CreateWindow((int)ExtendedWindowStyles.WS_EX_CLIENTEDGE , NativeMethods.WC_MAGNIFIER,
                     "MagnifierWindow", (int)WindowStyles.WS_CHILD | (int)MagnifierStyle.MS_SHOWMAGNIFIEDCURSOR |
                     (int)WindowStyles.WS_VISIBLE,
@@ -276,17 +273,17 @@ namespace Karna.Magnification
             Transformation matrix = new Transformation(magnification);
             NativeMethods.MagSetWindowTransform(hwndMag, ref matrix);
 
-            //POINT mousePoint = new POINT();
-            //RECT sourceRect = new RECT();
-
             NativeMethods.GetCursorPos(ref mousePoint);
 
             //int width = (int)((magWindowRect.right - magWindowRect.left) / magnification);
             //int height = (int)((magWindowRect.bottom - magWindowRect.top) / magnification);
 
+            // the size of the sourceRect
             int width = 250;
             int height = 250;
 
+            //Set the area around the mouse to sourceRect.  
+            //and adjust this sourceRect if the sourceRect is over the region of the screen.
             if (mousePoint.x - width / 2 < 0)
                 sourceRect.left = 0;
             else

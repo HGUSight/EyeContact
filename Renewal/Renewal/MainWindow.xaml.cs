@@ -253,15 +253,10 @@ namespace Renewal
 
         private static void startMagnifier()
         {
-
-            //System.Windows.MessageBox.Show("mag");
                 if (magnifierWindowLens==null)
                 {
-                // magnifierWindowLens = new magnifier(Properties.Settings.Default.isLens);
-                //System.Windows.MessageBox.Show("mag");
-                magnifierWindowLens = new magnifier(true);
+                    magnifierWindowLens = new magnifier(true);
                     magnifierWindowLens.Show();
-            //mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, Properties.Settings.Default.isLens);
                     mgnLens = new Karna.Magnification.Magnifier(magnifierWindowLens, true);
                     mgnLens.Magnification = (float)(Properties.Settings.Default.magnificationRate + 2.0) / 2;
                 }
@@ -297,7 +292,6 @@ namespace Renewal
                     if (!SW.IsRunning)
                     {
                         SW.Start();
-                        //System.Windows.MessageBox.Show("Start");
                     }
                     #endregion
 
@@ -316,7 +310,6 @@ namespace Renewal
                                                   // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
 
                             case (int)mouseEvent.RCLICKED:
-                                //mouseEvent_var_forMagnification = (int)mouseEvent.RCLICKED;
                                 mouse_event(RIGHTDOWN, 0, 0, 0, 0); // 마우스 오른쪽 클릭
                                 return (IntPtr)1;  // return CallNextHookEx(hhook, code, (int)wParam, lParam); //: 해당 메세지를 큐로 전달함
 

@@ -44,9 +44,9 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.magnifier_FormClosing);
             this.Load += new System.EventHandler(this.magnifier_Load);
           //  this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseDown);
-            this.MouseLeave += new System.EventHandler(this.magnifier_MouseLeave);
-            this.MouseHover += new System.EventHandler(this.magnifier_MouseHover);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseMove);
+          //  this.MouseLeave += new System.EventHandler(this.magnifier_MouseLeave);
+            //this.MouseHover += new System.EventHandler(this.magnifier_MouseHover);
+            //this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.magnifier_MouseMove);
             this.ResumeLayout(false);
 
         }
