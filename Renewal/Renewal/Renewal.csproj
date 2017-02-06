@@ -84,6 +84,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppBarFunctions.cs" />
+    <Compile Include="favorite.xaml.cs">
+      <DependentUpon>favorite.xaml</DependentUpon>
+    </Compile>
     <Compile Include="magnifier.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +99,10 @@
     <Compile Include="Setting.xaml.cs">
       <DependentUpon>Setting.xaml</DependentUpon>
     </Compile>
+    <Page Include="favorite.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Internet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -169,21 +176,38 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="IDB_M_RCL.bmp" />
-    <Resource Include="IDB_M_DCL.bmp" />
-    <Resource Include="IDB_M_RAG.bmp" />
-    <Resource Include="IDB_M_RAG_OVER.bmp" />
-    <Resource Include="IDB_M_DCL_OVER.bmp" />
-    <Resource Include="IDB_M_RCL_OVER.bmp" />
+    <Resource Include="resources\mouse.png" />
+    <Resource Include="resources\keyboard.png" />
+    <Resource Include="resources\internet.png" />
+    <Resource Include="resources\page_down.png" />
+    <Resource Include="resources\page_up.png" />
+    <Resource Include="resources\setting.png" />
+    <Resource Include="resources\drag.png" />
+    <Resource Include="resources\d_click.png" />
+    <Resource Include="resources\r_click.png" />
+    <Resource Include="resources\back.png" />
+    <Resource Include="resources\favorite.png" />
+    <Resource Include="resources\i_back.png" />
+    <Resource Include="resources\i_exit.png" />
+    <Resource Include="resources\login.png" />
+    <Resource Include="resources\pc.png" />
+    <Resource Include="resources\search.png" />
+    <Resource Include="resources\gaze.png" />
+    <Resource Include="resources\speech_off.png" />
+    <Resource Include="resources\speech_on.png" />
+    <Resource Include="resources\shift.png" />
+    <Resource Include="resources\bk_space.png" />
+    <Resource Include="resources\star.png" />
+    <Resource Include="resources\enter.png" />
+    <Resource Include="resources\Daum.png" />
+    <Resource Include="resources\Facebook.png" />
+    <Resource Include="resources\Naver.png" />
+    <Resource Include="resources\Youtube.png" />
     <Content Include="Tobii.EyeX.Client.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Karna.Magnification\Karna.Magnification.csproj">
-      <Project>{23e96e6a-2cc7-4514-a8db-e0605b4efde9}</Project>
-      <Name>Karna.Magnification</Name>
-    </ProjectReference>
     <COMReference Include="MSHTML">
       <Guid>{3050F1C5-98B5-11CF-BB82-00AA00BDCE0B}</Guid>
       <VersionMajor>4</VersionMajor>
@@ -202,7 +226,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+    <ProjectReference Include="..\Karna.Magnification\Karna.Magnification.csproj">
+      <Project>{23e96e6a-2cc7-4514-a8db-e0605b4efde9}</Project>
+      <Name>Karna.Magnification</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

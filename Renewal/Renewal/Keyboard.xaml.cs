@@ -49,6 +49,8 @@ namespace Renewal
         [DllImport("winmm.dll", EntryPoint = "mciSendStringA", CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true)]
         private static extern int mciSendString(string lpstrCommand, string lpstrReturnString, int uReturnLength, int hwndCallback);
 
+        // login
+        private bool isPW = false;
 
         #endregion
 
@@ -62,6 +64,12 @@ namespace Renewal
             label.Width = ButtonWidth;
             label.Visibility = Visibility.Hidden;
 
+            if (!Internet.isLogin)
+                textBox.Text = "";
+            else
+                textBox.Text = "ID 를 입력하세요";
+            
+            
             // Panel 사이즈, 위치 조정
             topPanel.Height = ButtonHeight;
             topPanel.Width = ButtonWidth * 10;
@@ -90,20 +98,27 @@ namespace Renewal
 
 
             // 숫자 버튼 생성(Top Pannel)
-            for (var i = 0; i <= 9; i++)
+            for (var i = 1; i <= 9; i++)
             {
                 topPanel.Children.Add(new Button { Content = i.ToString(), Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
             }
+            topPanel.Children.Add(new Button { Content = "0", Tag = "Digit", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
-            // 좌측 시스템 버튼 생성(Left Panel)
-            leftPanel.Children.Add(new Button { Content = "▶", Tag = "Speech", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            leftPanel.Children.Add(new Button { Content = "Shift", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            // 좌측 시스템 버튼 위치 지정(Left Panel)
+            Speech.Width = ButtonWidth;
+            Speech.Height = ButtonHeight;
+            Shift.Width = ButtonWidth;
+            Shift.Height = ButtonHeight;
+
 
             // 우측 시스템 버튼 생성(Right Panel)
-            Button specialButton = new Button { Content = "★", Tag = "SpecialButton", Width = ButtonWidth, Height = ButtonHeight, Focusable = false };
-            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Back, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
-            rightPanel.Children.Add(specialButton);
-            rightPanel.Children.Add(new Button { Content = System.Windows.Forms.Keys.Enter, Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
+            BkSpace.Width = ButtonWidth;
+            BkSpace.Height = ButtonHeight;
+            SpecialButton.Width = ButtonWidth;
+            SpecialButton.Height = ButtonHeight;
+            Enter.Width = ButtonWidth;
+            Enter.Height = ButtonHeight;
+
             rightPanel.Children.Add(new Button { Content = "OK", Tag = "System", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
             // 영어 버튼 생성(English Pannel)
@@ -137,10 +152,17 @@ namespace Renewal
             }
             specialPanel.Children.Add(new Button { Content = '.', Tag = "Special", Width = ButtonWidth, Height = ButtonHeight, Focusable = false });
 
+
+
             // 한영 전환 버튼
             changeButton.Width = ButtonWidth;
             changeButton.Height = ButtonHeight;
             changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight * 4, 0, 0);
+
+            // 스페이스 버튼
+            Space.Width = ButtonWidth * 2;
+            Space.Height = ButtonHeight;
+            Space.Margin = new Thickness(ButtonWidth * 4, ButtonHeight * 5, 0, 0);
 
             // 각 버튼과 Button Click method 연결
             foreach (Button button in topPanel.Children)
@@ -164,6 +186,10 @@ namespace Renewal
         #region button-click
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // id, pw 적기전에 비우기
+            if(Internet.isLogin && (textBox.Text == "ID 를 입력하세요" || textBox.Text == "PW 를 입력하세요"))
+                textBox.Text = "";
+            
             var button = sender as Button; // 각 버튼의 데이터를 button 변수로 가져옴
             string content = button.Content.ToString();
 
@@ -174,22 +200,46 @@ namespace Renewal
             // OK 버튼 클릭시 textBox의 내용을 Clipboard에 복사하고 키보드 종료
             if (content == "OK")
             {
-                Clipboard.SetText(textBox.Text);
-                this.Close();
-            }
-            else if (button.Tag.ToString() == "Speech")
-            {
-                if (isStart)
+                if (!Internet.isLogin)
                 {
-                    button.Content = "■";
+                    Clipboard.SetText(textBox.Text);
+                    this.Close();
                 }
                 else
                 {
-                    button.Content = "▶";
+                    if(!isPW)
+                    {
+                        Internet.login_ID = textBox.Text;
+                        isPW = true;
+                        textBox.Text = "PW 를 입력하세요";
+                    }
+                    else
+                    {
+                        Internet.login_PW = textBox.Text;
+                        isPW = false;
+                        this.Close();
+                    }
+
+                }
+                
+            }
+            else if (button.Name == "Speech")
+            {
+                if (isStart)
+                {
+                    Speech.Content = FindResource("Play");
+                }
+                else
+                {
+                    Speech.Content = FindResource("Stop");
                 }
                 Stt();
             }
-            else if (button.Tag.ToString() == "SpecialButton")
+            else if (button.Name == "Shift")
+            {
+
+            }
+            else if (button.Name == "SpecialButton")
             {
                 specialPanel.Visibility = Visibility.Visible;
                 if (changeButton.Content.ToString() == "한")
@@ -198,11 +248,20 @@ namespace Renewal
                     changeButton.Content = "한";
                 changeButton.Margin = new Thickness(ButtonWidth * 9, ButtonHeight, 0, 0);
             }
-            // 시스템 키
-            else if (button.Tag.ToString() == "System")
+            else if (button.Name == "Space")
             {
-                keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYDOWN, 0);
-                keybd_event(Convert.ToByte(button.Content), 0, KEYEVENTF_KEYUP, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Space), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Space), 0, KEYEVENTF_KEYUP, 0);
+            }
+            else if(button.Name == "BkSpace")
+            {
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Back), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Back), 0, KEYEVENTF_KEYUP, 0);
+            }
+            else if (button.Name == "Enter")
+            {
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Enter), 0, KEYEVENTF_KEYDOWN, 0);
+                keybd_event(Convert.ToByte(System.Windows.Forms.Keys.Enter), 0, KEYEVENTF_KEYUP, 0);
             }
             // 클릭한 버튼이 한글일 경우
             else if (button.Tag.ToString() == "Korean")
@@ -225,8 +284,6 @@ namespace Renewal
                 textBox.Text += button.Content.ToString();
                 textBox.CaretIndex = textBox.Text.Length;
             }
-
-
         }
         #endregion
 
@@ -407,12 +464,19 @@ namespace Renewal
         // 텍스트 박스의 값이 변경되면 버튼 위에 띄어지는 조그만 박스의 값도 업데이트
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            label.Visibility = Visibility.Visible;
-            var sentence = textBox.Text.Split(' ');
-            label.Text = sentence[sentence.Length - 1];
-            if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+            // id, pw 적기전에 비우기
+            if (Internet.isLogin && (textBox.Text == "ID 를 입력하세요" || textBox.Text == "PW 를 입력하세요"))
+                label.Text = "";
+            else
             {
-                label.Visibility = Visibility.Hidden;
+                label.Visibility = Visibility.Visible;
+                var sentence = textBox.Text.Split(' ');
+                sentence = sentence[sentence.Length - 1].Split('\n');
+                label.Text = sentence[sentence.Length - 1];
+                if (label.Text == "") // 텍스트 박스의 값이 없으면 조그만 박스도 사라짐
+                {
+                    label.Visibility = Visibility.Hidden;
+                }
             }
         }
         #endregion

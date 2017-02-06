@@ -5,18 +5,73 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Title="Internet" Height="1080" Width="240"
+        Title="Internet" Width="240"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
-        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top">
+        Background="#FAE0D4"
+        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
 
+    <Window.Resources>
+        <DropShadowEffect x:Key="z-depth1" BlurRadius="5" ShadowDepth="1" Direction="270" Color="#CCCCCC"/>
+        <Style TargetType="{x:Type Button}">
+            <!-- Template for button style -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <!-- Content handles within a border -->
+                        <Border x:Name="bdr" CornerRadius="22" Margin="9" BorderThickness="0" BorderBrush="Black" Background="White" Effect="{StaticResource z-depth1}">
+                            <!-- ContentPresenter properties. Set the content source as the content from each control define below -->
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Content" TextBlock.FontSize="20"/>
+                        </Border>
+                        <!-- Required triggers define here -->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
+    <StackPanel x:Name="wrapPanel" >
+        <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/i_back.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="뒤로" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Search" Width="240" Height="180" Click="Search_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/search.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="검색" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Login" Width="240" Height="180" Click="Login_Click"  Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/login.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="로그인" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Wallpaper" Width="240" Height="180" Click="Wallpaper_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/pc.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="바탕화면" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Favorite" Width="240" Height="180" Click="Favorite_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/favorite.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="즐겨찾기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
+        <Button x:Name="Exit" Width="240" Height="180" Click="Exit_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <StackPanel>
+                <Image Source="resources/i_exit.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="창 닫기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+            </StackPanel>
+        </Button>
 
-    <WrapPanel x:Name="wrapPanel" >
-        <Button x:Name="Back" Content="뒤로" Width="240" Height="180" Click="Back_Click" />
-        <Button x:Name="Search" Content="검색" Width="240" Height="180" Click="Search_Click" />
-        <Button x:Name="Wallpaper" Content="바탕화면" Width="240" Height="180" Click="Wallpaper_Click" />
-        <Button x:Name="Favorite" Content="즐겨찾기" Width="240" Height="180" Click="Favorite_Click" />
-        <Button x:Name="Exit" Content="종료" Width="240" Height="180" Click="Exit_Click" />
-    </WrapPanel>
+    </StackPanel>
 </Window>

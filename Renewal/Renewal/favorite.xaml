@@ -1,12 +1,12 @@
-﻿<Window x:Class="Renewal.Mouse"
+﻿<Window x:Class="Renewal.favorite"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Renewal"
         mc:Ignorable="d"
-        Background ="WhiteSmoke"
-        Title="Mouse" Width="200" Topmost="True" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True"  BorderThickness="0" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
+        Focusable="False"
+        Title="favorite" Width="200" Topmost="True" ShowInTaskbar="False" WindowStyle="None" AllowsTransparency="True"  BorderThickness="0" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
 
     <Window.Resources>
         <DropShadowEffect x:Key="z-depth1" BlurRadius="5" ShadowDepth="1" Direction="270" Color="#CCCCCC"/>
@@ -31,38 +31,44 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <StackPanel x:Name="wrapPanel">
-            <Button x:Name="RClick" Width="240" Height="180" Click="RClick_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <Button x:Name="Naver" Width="240" Height="180" Click="Naver_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/r_click.png" Height="100" Width="100" Margin="5"/>
-                    <Label Content="오른쪽 클릭" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                    <Image Source="resources/Naver.png" Height="100" Width="100" Margin="5"/>
+                    <Label Content="네이버" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="DClick" Width="240" Height="180" Click="DClick_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <Button x:Name="Daum" Width="240" Height="180" Click="Daum_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/d_click.png" Height="100" Width="100" Margin="5"/>
-                    <Label Content="더블 클릭" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                    <Image Source="resources/Daum.png" Height="100" Width="100" Margin="5"/>
+                    <Label Content="다음" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="Drag" Width="240" Height="180" Click="Drag_Click" Focusable="False" FocusManager.IsFocusScope="False">
+            <Button x:Name="Facebook" Width="240" Height="180" Click="Facebook_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
-                    <Image Source="resources/drag.png" Height="100" Width="100" Margin="5"/>
-                    <Label Content="드래그" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                    <Image Source="resources/Facebook.png" Height="100" Width="100" Margin="5"/>
+                    <Label Content="페이스북" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
+
+            <Button x:Name="Youtube" Width="240" Height="180" Click="Youtube_Click" Focusable="False" FocusManager.IsFocusScope="False">
+                <StackPanel>
+                    <Image Source="resources/Youtube.png" Height="100" Width="100" Margin="5"/>
+                    <Label Content="유튜브" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
+                </StackPanel>
+            </Button>
+
             <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
                 <StackPanel>
                     <Image Source="resources/back.png" Height="100" Width="100" Margin="5"/>
                     <Label Content="뒤로 가기" HorizontalAlignment="Center" FontSize="18" FontFamily="Arita-dotum(TTF)" Foreground="Gray"/>
                 </StackPanel>
             </Button>
-            
 
         </StackPanel>
-        
     </Grid>
 </Window>

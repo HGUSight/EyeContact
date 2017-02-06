@@ -17,8 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-
-
 namespace Renewal
 {
     /// <summary>
@@ -26,43 +24,62 @@ namespace Renewal
     /// </summary>
     public partial class Internet : Window
     {
+        #region variable
+        private mshtml.HTMLDocument doc;
 
+        private string naver = "www.naver.com";
+        private string search_naver = "search.naver.com";
+        private string nid_naver = "nid.naver.com";
+        private string google = ".google.co.kr";
+        private string daum = ".daum.net";
+
+        private Keyboard dlg;
+        public static bool isLogin = false;
+        public static string login_ID;
+        public static string login_PW;
+        #endregion
+
+        #region main
         public Internet()
         {
             InitializeComponent();
 
             Width = Application.Current.MainWindow.Width;
-            Height = Application.Current.MainWindow.Height;
 
-            Back.Width = Width;
-            Back.Height = Height / 6;
+            Back.Width = Width * 0.95;
+            Back.Height = Height / 6 * 0.95;
 
-            Wallpaper.Width = Width;
-            Wallpaper.Height = Height / 6;
+            Search.Width = Width * 0.95;
+            Search.Height = Height / 6 * 0.95;
 
+            Login.Width = Width * 0.95;
+            Login.Height = Height / 6 * 0.95;
 
-            Search.Width = Width;
-            Search.Height = Height / 6;
-
-            Favorite.Width = Width;
-            Favorite.Height = Height / 6;
-
-            Exit.Width = Width;
-            Exit.Height = Height / 6;
+            Wallpaper.Width = Width * 0.95;
+            Wallpaper.Height = Height / 6 * 0.95;
 
 
+            Favorite.Width = Width * 0.95;
+            Favorite.Height = Height / 6 * 0.95;
+
+            Exit.Width = Width * 0.95;
+            Exit.Height = Height / 6 * 0.95;
         }
+        #endregion
 
+        #region focus
         // 창에 focus 가지 않도록 no activate
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_NOACTIVATE = 0x08000000;
 
+        #endregion
+
+        #region initialized
         [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
 
         protected override void OnSourceInitialized(EventArgs e)
         {
@@ -72,16 +89,36 @@ namespace Renewal
             IntPtr ip = SetWindowLong(helper.Handle, GWL_EXSTYLE,
                 GetWindowLong(helper.Handle, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
         }
+        #endregion
 
-
-        
+        #region backButton
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
         private void Back_Click(object sender, RoutedEventArgs e) // 뒤로
         {
-            MainWindow.webBrowser.GoBack();
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    if (!IE.Busy)
+                    {
+                        try
+                        {
+                            IE.GoBack();
+                        }
+                        catch
+                        {
+                            Console.WriteLine("err");
+                        }
+                    }
+                }
+            }
         }
+        #endregion
 
-
-
+        #region wallpaper
         // 키보드 이벤트 API
         [DllImport("user32.dll", SetLastError = true)]
         static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
@@ -99,9 +136,9 @@ namespace Renewal
             keybd_event(Window, 0, KEYUP, 0);
             keybd_event(D, 0, KEYUP, 0);
         }
+        #endregion
 
-
-        //****************************************************************************
+        #region search
 
         [DllImport("user32.dll")]
         private static extern int SendMessage(int hwnd, int msg, int wParam, StringBuilder sb);
@@ -113,104 +150,177 @@ namespace Renewal
         public const int WM_GETTEXTLENGTH = 0x000E;
         public const int WM_GETTEXT = 0x000D;
 
-        Keyboard dlg;
+        //button click
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            
-           
-            url = sb.ToString();
-            Uri myUri = new Uri(url);
-            string host = myUri.Host;
-            //MessageBox.Show("here 1 = " + host);
-            */
-
             dlg = new Keyboard();
             dlg.Closed += new EventHandler(Keyboard_Closed);
             dlg.Show(); // 키보드 열기
-
         }
-
-
-        IHTMLDocument2 doc2;
-        IHTMLDocument3 doc3;
+        // search input complete
         void Keyboard_Closed(object sender, EventArgs e)
         {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
 
-            doc2 = (IHTMLDocument2)MainWindow.webBrowser.Document;
-            
-
-            
-            // Cookie 읽기
-            string cookie = doc2.cookie;
-            Console.WriteLine("Cookie: {0}", cookie);
-
-            // Document 속성 읽기
-            string title = doc2.title;
-            string url = doc2.url;
-            Console.WriteLine("{0} - {1}", url, title);
-            
-            //string title = doc2.title;
-            if(title.IndexOf("Google") != -1)
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
             {
-                // 특정 Element 컨트롤
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement q = doc3.getElementsByName("q").item("q", 0);
-                q.setAttribute("value", Clipboard.GetText());
-
-                IHTMLFormElement form_google = doc2.forms.item(Type.Missing, 0);
-                form_google.submit();
-
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
             }
-
-            else if(title.IndexOf("NAVER") != -1)
+            if (doc != null)
             {
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement query = doc3.getElementsByName("query").item("query", 0);
-                //검색어 셋팅
-                query.setAttribute("value", Clipboard.GetText());
+                // Document 속성 읽기
+                Uri uri = new Uri(doc.url);
+                String host = uri.Host;
 
-                //네이버검색버튼 : search_btn
-               doc3.getElementById("search_btn").click();
-               // IHTMLFormElement form_naver = doc2.forms.item(Type.Missing, 0);
-               // form_naver.submit();
+                if (host.Contains(naver))
+                {
+                    //검색어 셋팅
+                    IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                    query.setAttribute("value", Clipboard.GetText());
+
+                    //네이버검색버튼 : search_btn
+                    doc.getElementById("search_btn").click();
+                }
+                else if (host.Contains(search_naver))
+                {
+                    mshtml.IHTMLElementCollection elemColl = null;
+                    elemColl = doc.getElementsByTagName("button") as mshtml.IHTMLElementCollection;
+
+                    foreach (mshtml.IHTMLElement elem in elemColl)
+                    {
+                        if (elem.getAttribute("class") != null)
+                        {
+                            if (elem.className == "bt_search spim")
+                            {
+                                IHTMLElement query = doc.getElementsByName("query").item("query", 0);
+                                //검색어 셋팅
+                                query.setAttribute("value", Clipboard.GetText());
+                                elem.click();
+                                break;
+                            }
+                        }
+                    }
+                }
+                else if (host.Contains(daum) || host.Contains(google))
+                {
+                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                    q.setAttribute("value", Clipboard.GetText());
+
+                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
+                    form_google.submit();
+                }
+                else
+                {
+                    MessageBox.Show("naver google daum 쓰세요");
+                }
             }
-
-            else if(title.IndexOf("Daum") != -1)
-            {
-                // 특정 Element 컨트롤
-                doc3 = (IHTMLDocument3)MainWindow.webBrowser.Document;
-                IHTMLElement q_daum = doc3.getElementsByName("q").item("q", 0);
-                q_daum.setAttribute("value", Clipboard.GetText());
-
-                IHTMLFormElement form_daum = doc2.forms.item(Type.Missing, 0);
-                form_daum.submit();
-
-                //doc3.getElementById("searchSubmit").click();
-            }
-                
-     
-
         }
+        #endregion
 
-
-   //     }
-        
-        /*// 앞으로
-        private void Forward_Click(object sender, RoutedEventArgs e) 
+        #region favorite
+        private void Favorite_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow.webBrowser.GoForward();
+            favorite dlg = new Renewal.favorite();
+            dlg.Show();
         }
-        */
+        #endregion
 
-        /*// 새로고침
-      private void Re_Click(object sender, RoutedEventArgs e)
-      {
-          MainWindow.webBrowser.Refresh();
-      }
-      */
+        #region login
+        private void Login_Click(object sender, RoutedEventArgs e)
+        {
+            isLogin = true;
+            dlg = new Keyboard();
+            dlg.Closed += new EventHandler(Login_Closed);
+            dlg.Show(); // 키보드 열기            
+        }
+        void Login_Closed(object sender, EventArgs e)
+        {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
 
-        /*******************************************************/
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    doc = IE.Document as mshtml.HTMLDocument;
+                }
+            }
+            if (doc != null)
+            {
+                // Document 속성 읽기
+                Uri uri = new Uri(doc.url);
+                String host = uri.Host;
+
+                if (host.Contains(naver) || host.Contains(nid_naver))
+                {
+                    mshtml.IHTMLElementCollection elemColl = null;
+                    elemColl = doc.getElementsByTagName("input") as mshtml.IHTMLElementCollection;
+
+                    foreach (mshtml.IHTMLElement elem in elemColl)
+                    {
+                        if (elem.getAttribute("id") != null)
+                        {
+                            if (elem.id == "id")
+                            {
+                                elem.setAttribute("value", login_ID);
+                            }
+                            else if(elem.id == "pw")
+                            {
+                                elem.setAttribute("value", login_PW);
+                            }
+                        }
+                        else if(elem.getAttribute("title") != null)
+                        {
+                            if (elem.title == "로그인")
+                                elem.click();
+                        }
+                    }
+                }/*
+                else if (host.Contains(daum) || host.Contains(google))
+                {
+                    IHTMLElement q = doc.getElementsByName("q").item("q", 0);
+                    q.setAttribute("value", Clipboard.GetText());
+
+                    IHTMLFormElement form_google = doc.forms.item(Type.Missing, 0);
+                    form_google.submit();
+                }*/
+                else
+                {
+                    MessageBox.Show("naver google daum 쓰세요");
+                }
+                isLogin = false;
+            }
+        }
+
+        #endregion
+
+        #region exit click
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
+            IntPtr handle = GetForegroundWindow();
+            foreach (SHDocVw.WebBrowser IE in shellWindows)
+            {
+                if (IE.HWND.Equals(handle.ToInt32()))
+                {
+                    IE.Quit();
+                    MainWindow.internetCount--;
+                    Console.WriteLine("cloase: " + MainWindow.internetCount);
+                }
+            }
+            if(MainWindow.internetCount <= 0)
+            {
+                Close();
+                MainWindow.isInternet = false;
+            }
+        }
+        #endregion
+
+        #region area set
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -221,17 +331,7 @@ namespace Renewal
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
-
-        private void Favorite_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow.webBrowser.Quit();
-            Close();
-        }
+        #endregion
     }
 }
 

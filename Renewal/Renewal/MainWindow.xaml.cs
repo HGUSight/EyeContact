@@ -24,6 +24,8 @@ namespace Renewal
 
     public partial class MainWindow : Window
     {
+        public static bool isInternet = false;
+        public static int internetCount = 0;
 
         #region main
         public MainWindow()
@@ -32,7 +34,7 @@ namespace Renewal
 
             // calculate screen and button size
             Width /= 8;
-            
+
             double ButtonWidth = Width;
             double ButtonHeight = Height / 6;
             Mouse.Width = ButtonWidth;
@@ -51,6 +53,18 @@ namespace Renewal
 
 
 
+            Mouse.Width = ButtonWidth * 0.95;
+            Mouse.Height = ButtonHeight * 0.95;
+            Keyboard.Width = ButtonWidth * 0.95;
+            Keyboard.Height = ButtonHeight * 0.95;
+            Internet.Width = ButtonWidth * 0.95;
+            Internet.Height = ButtonHeight * 0.95;
+            PgUp.Width = ButtonWidth * 0.95;
+            PgUp.Height = ButtonHeight * 0.95;
+            PgDn.Width = ButtonWidth * 0.95;
+            PgDn.Height = ButtonHeight * 0.95;
+            Setting.Width = ButtonWidth * 0.95;
+            Setting.Height = ButtonHeight * 0.95;
 
             // 툴바 위치 설정
             Left = SystemParameters.WorkArea.Right - Width;
@@ -95,7 +109,7 @@ namespace Renewal
          
         // err
         private static int errX = 50;
-        private static int errY = 100;
+        private static int errY = 50;
          
         //user Gaze Point
         private static int userCoordinateX = 0;
@@ -114,11 +128,16 @@ namespace Renewal
         private void move_mouse(double x, double y)
         {
             if (lastX == 0 && lastY == 0)
-                lastX = (int)x; lastY = (int)y;
+            {
+                lastX = (int)x;
+                lastY = (int)y;
+            }
 
             if (x <= lastX - errX || x >= lastX + errX || y >= lastY + errY || y <= lastY - errY)
             {
                 SetCursorPos((int)x + userCoordinateX, (int)y + userCoordinateY);
+                lastX = (int)x;
+                lastY = (int)y;
             }
             else
             {
@@ -142,11 +161,7 @@ namespace Renewal
             keybd_event((byte)'V', 0, 0x0002, 0);
         }
         #endregion
-
-
-        //**********************************************
-
-
+        
         #region About hooking - keyboard, mouse, cursor cordinate
 
         //**********************************************
@@ -451,26 +466,29 @@ namespace Renewal
             keybd_event(0x22, 0, 0, 0);   // Page Up key 다운
             keybd_event(0x22, 0, KEYUP, 0);
         }
-
-
-
-
-        
-        
-        public static IWebBrowserApp webBrowser;
-
+        //sure Internet toolbar is opened
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
-            Internet dlg = new Renewal.Internet();
-            dlg.Show();
-
+            if (isInternet == false)
+            {
+                Internet dlg = new Renewal.Internet();
+                dlg.Show();
+                isInternet = true;
+            }
             InternetExplorer ie = new InternetExplorer();
-            webBrowser = ie;
-
-            //ShowWindow((IntPtr)ie.HWND, 3);
+            IWebBrowserApp webBrowser = ie;
+            
             webBrowser.Visible = true;
             webBrowser.GoHome();
-            
+
+            internetCount++;
+
+            //인터넷 최대화 단축키
+            keybd_event(0x5B, 0, 0, 0); // window key
+            keybd_event(0x26, 0, 0, 0); // arrow up key
+            keybd_event(0x5B, 0, 0x0002, 0);
+            keybd_event(0x26, 0, 0x0002, 0);
+
         }
         #endregion
 
@@ -503,8 +521,6 @@ namespace Renewal
         }
 
         #endregion
-
-
     }
 }
 
