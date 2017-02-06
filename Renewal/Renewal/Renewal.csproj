@@ -86,6 +86,7 @@
     <Compile Include="AppBarFunctions.cs" />
     <Compile Include="favorite.xaml.cs">
       <DependentUpon>favorite.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InternetY.xaml.cs">
       <DependentUpon>InternetY.xaml</DependentUpon>
     </Compile>
