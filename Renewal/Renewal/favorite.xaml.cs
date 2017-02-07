@@ -151,6 +151,7 @@ namespace Renewal
         #region back click
         private void Back_Click(object sender, RoutedEventArgs e)
         {
+            /*
             try
             {
                 SHDocVw.ShellWindows shellWindows = new SHDocVw.ShellWindows();
@@ -191,12 +192,13 @@ namespace Renewal
             {
                 MainWindow.isInternet = false;
                 this.Close();
-            }
+            }*/
 
             this.Close();
         }
         #endregion
 
+        /*
         #region area set
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -208,6 +210,6 @@ namespace Renewal
         {
             AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
-        #endregion
+        #endregion*/
     }
 }

@@ -254,7 +254,6 @@ namespace Renewal
             favorite dlg = new Renewal.favorite();
             dlg.Show();
             timer.Stop();
-            this.Close();
         }
         #endregion
 
@@ -273,13 +272,13 @@ namespace Renewal
             }
             if (MainWindow.internetCount <= 0)
             {
-                this.Close();
                 timer.Stop();
                 MainWindow.isInternet = false;
+                this.Close();
             }
         }
         #endregion
-
+        
         #region area set
         // 윈도우 로드, 클로즈 시 Work area 변경
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -291,6 +290,8 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
+                    while (IE.Busy == true || IE.ReadyState != SHDocVw.tagREADYSTATE.READYSTATE_COMPLETE)
+                        System.Threading.Thread.Sleep(100);
                     doc = IE.Document as mshtml.HTMLDocument;
                 }
             }
@@ -300,15 +301,9 @@ namespace Renewal
                 currentUri = new Uri(doc.url);
                 currentHost = currentUri.Host;
             }
-            AppBarFunctions.SetAppBar(this, ABEdge.Left);
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            AppBarFunctions.SetAppBar(this, ABEdge.None);
         }
         #endregion
-
+    
         #region changeWindow
         private void changeWindow(object sender, EventArgs e)
         {
@@ -332,23 +327,24 @@ namespace Renewal
 
                     if (host != currentHost)
                     {
+                        Console.WriteLine(host + currentHost);
                         currentHost = host;
-                        if (host.Contains(naver) || host.Contains(daum) || host.Contains(google))
+                        if (host.Contains(facebook))
+                        {
+
+                        }
+                        else
                         {
                             Internet dlg = new Renewal.Internet();
                             dlg.Show();
                             timer.Stop();
-                            this.Close();
-                        }
-                        else if (host.Contains(facebook))
-                        {
-
                         }
                     }
                 }
             }
             catch
             {
+                Console.WriteLine("change window err");
                 MainWindow.isInternet = false;
                 timer.Stop();
                 this.Close();

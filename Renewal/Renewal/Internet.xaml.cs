@@ -230,7 +230,6 @@ namespace Renewal
             favorite dlg = new Renewal.favorite();
             dlg.Show();
             timer.Stop();
-            this.Close();
         }
         #endregion
 
@@ -318,9 +317,9 @@ namespace Renewal
             }
             if (MainWindow.internetCount <= 0)
             {
-                this.Close();
                 timer.Stop();
                 MainWindow.isInternet = false;
+                this.Close();
             }
         }
         #endregion
@@ -336,6 +335,8 @@ namespace Renewal
             {
                 if (IE.HWND.Equals(handle.ToInt32()))
                 {
+                    while (IE.Busy == true || IE.ReadyState != SHDocVw.tagREADYSTATE.READYSTATE_COMPLETE)
+                        System.Threading.Thread.Sleep(100);
                     doc = IE.Document as mshtml.HTMLDocument;
                 }
             }
@@ -383,7 +384,6 @@ namespace Renewal
                             InternetY dlg = new Renewal.InternetY();
                             dlg.Show();
                             timer.Stop();
-                            this.Close();
                         }
                         else if (host.Contains(facebook))
                         {
@@ -394,6 +394,7 @@ namespace Renewal
             }
             catch
             {
+                Console.WriteLine("change window err");
                 MainWindow.isInternet = false;
                 timer.Stop();
                 this.Close();

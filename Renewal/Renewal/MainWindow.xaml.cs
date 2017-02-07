@@ -478,7 +478,24 @@ namespace Renewal
 
         private void Internet_Click(object sender, RoutedEventArgs e)
         {
-            InternetExplorer ie = new InternetExplorer();
+            try
+            {
+                InternetExplorer ie = new InternetExplorer();
+                IWebBrowserApp webBrowser = ie;
+
+                webBrowser.Visible = true;
+                webBrowser.GoHome();
+                IWebBrowserApp wb = (IWebBrowserApp)ie;
+
+                wb.Visible = true;
+                wb.GoHome();
+
+                internetCount++;
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("internet connect");
+            }/*
             IWebBrowserApp webBrowser = ie;
             
             webBrowser.Visible = true;
@@ -488,7 +505,7 @@ namespace Renewal
             wb.Visible = true;
             wb.GoHome();
 
-            internetCount++;
+            internetCount++;*/
 
             //인터넷 최대화 단축키
             keybd_event(0x5B, 0, 0, 0); // window key
