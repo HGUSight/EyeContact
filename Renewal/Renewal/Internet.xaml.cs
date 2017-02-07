@@ -229,7 +229,6 @@ namespace Renewal
         {
             favorite dlg = new Renewal.favorite();
             dlg.Show();
-            timer.Stop();
         }
         #endregion
 

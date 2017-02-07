@@ -53,6 +53,8 @@ namespace Renewal
             timer.Tick += new EventHandler(changeWindow);
             timer.Start();
 
+
+           
             Width = System.Windows.Application.Current.MainWindow.Width;
 
             Back.Width = Width * 0.95;
@@ -235,9 +237,8 @@ namespace Renewal
                 {
                     if (elem.getAttribute("class") != null)
                     {
-                        if (elem.className == "ytp-fullscreen-button ytp-button")
+                        if (elem.className == "ytp-size-button ytp-button")
                         {
-                            
                             elem.click();
                             Console.WriteLine("yy");
                             break;
@@ -253,7 +254,6 @@ namespace Renewal
         {
             favorite dlg = new Renewal.favorite();
             dlg.Show();
-            timer.Stop();
         }
         #endregion
 
@@ -335,9 +335,9 @@ namespace Renewal
                         }
                         else
                         {
-                            Internet dlg = new Renewal.Internet();
-                            dlg.Show();
                             timer.Stop();
+                            this.Close();
+
                         }
                     }
                 }

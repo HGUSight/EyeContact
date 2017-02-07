@@ -8,7 +8,10 @@
         Title="InternetY" Width="240"
         Loaded="Window_Loaded"
         Background="#FAE0D4"
-        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}">
+        Top="0"
+        Left="0"
+        WindowStyle="None"
+        ShowActivated="False" Focusable="False" ShowInTaskbar="False"  FocusManager.IsFocusScope="False" Topmost="True" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalAlignment="Top" Height="{DynamicResource {x:Static SystemParameters.PrimaryScreenHeightKey}}" ResizeMode="NoResize">
     
     <Window.Resources>
         <DropShadowEffect x:Key="z-depth1" BlurRadius="5" ShadowDepth="1" Direction="270" Color="#CCCCCC"/>
@@ -36,7 +39,7 @@
         <Image x:Key="Stop" Source="resources/stop.png" Height="100" Width="100"/>
     </Window.Resources>
 
-    <StackPanel x:Name="wrapPanel" Margin="0,0,-8,-197" >
+    <StackPanel x:Name="wrapPanel">
         <Button x:Name="Back" Width="240" Height="180" Click="Back_Click" Focusable="False" FocusManager.IsFocusScope="False">
             <StackPanel>
                 <Image Source="resources/back_y.png" Height="100" Width="100" Margin="5"/>
