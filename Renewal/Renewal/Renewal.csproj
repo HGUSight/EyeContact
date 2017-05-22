@@ -216,7 +216,6 @@
     <Resource Include="resources\d_click_checked.png" />
     <Resource Include="resources\r_click_checked.png" />
     <Resource Include="resources\shifted.png" />
-    <Resource Include="resources\send.png" />
     <Resource Include="resources\back_y.png" />
     <Resource Include="resources\fullscreen.png" />
     <Resource Include="resources\play.png" />

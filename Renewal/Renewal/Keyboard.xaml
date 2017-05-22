@@ -61,7 +61,7 @@
                 <Image Source="resources/enter.png" Height="80" Width="80" Margin="5"/>
             </Button>
             <Button x:Name="OK"  Focusable="False" FocusManager.IsFocusScope="False">
-                <Image Source="resources/send.png" Height="100" Width="100" Margin="5"/>
+                <Label Content="전송" FontSize="60" FontWeight="Light" Foreground="#555555" FontFamily="BM JUA_TTF" FontStretch="Expanded" ></Label>
             </Button>
 
         </WrapPanel>
