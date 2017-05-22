@@ -61,7 +61,7 @@
                 <Image Source="resources/enter.png" Height="80" Width="80" Margin="5"/>
             </Button>
             <Button x:Name="OK"  Focusable="False" FocusManager.IsFocusScope="False">
-                <Label Content="전송" FontSize="60" FontWeight="Light" Foreground="#555555" FontFamily="BM JUA_TTF" FontStretch="Expanded" ></Label>
+                <Label Content="전송" FontSize="60" FontWeight="Normal" Foreground="#666666" FontFamily="BM JUA_TTF" FontStretch="Expanded" ></Label>
             </Button>
 
         </WrapPanel>
@@ -70,9 +70,10 @@
         <WrapPanel x:Name="koreanPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="specialPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <WrapPanel x:Name="ssangPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
-        <TextBox x:Name="textBox" Height="110" TextWrapping="Wrap" VerticalAlignment="Top" Margin="0" Padding="20" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
+        <TextBox x:Name="textBox" Height="110" VerticalAlignment="Top" TextWrapping="Wrap" Margin="0" Padding="20" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" AcceptsReturn="True" TextChanged="textBox_TextChanged"/>
+        <Label x:Name="fakeLabel" Height="110" VerticalAlignment="Top" Margin="0" Padding="20" BorderThickness="2" HorizontalAlignment="Left" FontWeight="Normal" Background="White" />
         <Button x:Name="Space" Content="space" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="Button_Click" Focusable="False"/>
-        <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False" />
+        <Button x:Name="changeButton" Content="영" Margin="0" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="changeButton_Click" Focusable="False"  />
         <TextBox x:Name="label" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="16" BorderThickness="1"  ScrollViewer.CanContentScroll="True" TextWrapping="WrapWithOverflow" Focusable="False"/>
     </Grid>
 </Window>

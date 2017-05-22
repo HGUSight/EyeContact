@@ -100,11 +100,17 @@ namespace Renewal
             specialPanel.Margin = new Thickness(0, ButtonHeight * 3, 0, 0);
 
             // TextBox 사이즈, 위치 조정
-            textBox.Width = ButtonWidth * 7;
-            textBox.Height = ButtonHeight * 2;
-            textBox.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
+            textBox.Width = 0;
+            textBox.Height = 0;
+            //textBox.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
 
-            
+
+            // fakeLabel 사이즈, 위치 조정
+            fakeLabel.Width = ButtonWidth * 7;
+            fakeLabel.Height = ButtonHeight * 2;
+            fakeLabel.Margin = new Thickness(ButtonWidth, ButtonHeight, 0, 0);
+
+
 
 
             // 숫자 버튼 생성(Top Pannel)
@@ -541,6 +547,7 @@ namespace Renewal
                     label.Visibility = Visibility.Hidden;
                 }
             }
+            fakeLabel.Content = textBox.Text;
         }
         #endregion
 
