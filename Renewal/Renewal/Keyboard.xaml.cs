@@ -480,7 +480,7 @@ namespace Renewal
                             
                             var result = SR_Response.ReadToEnd();
                             var jsons = result.Split('\n');
-
+                            Console.WriteLine(result);
                             json_parsing(jsons);
                         }
                     }
