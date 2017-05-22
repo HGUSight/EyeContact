@@ -27,6 +27,7 @@ namespace Renewal
             // Setting a position of Magnifier where is the point of cursor
             this.StartPosition = FormStartPosition.Manual;
 
+            /*
             int x = Control.MousePosition.X - this.Bounds.Width / 2; ;
             int y = Control.MousePosition.Y - this.Bounds.Height / 2;
 
@@ -40,9 +41,10 @@ namespace Renewal
             else if (y + this.Bounds.Height > Screen.PrimaryScreen.Bounds.Height)
                 y = Screen.PrimaryScreen.Bounds.Height - this.Bounds.Height;
 
-
-            this.Location = new Point(x, y);
-
+            */
+            //this.Location = new Point(x, y);
+            this.Location = new Point(0, 0);
+            
         }
 
         #region Native Methods
@@ -90,7 +92,7 @@ namespace Renewal
         {
             //Don't let the magnifier grow very large------------------------------------
             Rectangle r = Screen.PrimaryScreen.Bounds;
-            MaximumSize = new Size((int)(r.Width * 0.75), (int)(r.Height * 0.75));
+           // MaximumSize = new Size((int)(r.Width * 0.75), (int)(r.Height * 0.75));
             //Store the default style because it might be needed later to reset the settings
             defaultStyle = GetWindowLong(Handle, -20);
             //Apply settings when they change -------------------------------------------
@@ -124,9 +126,10 @@ namespace Renewal
         }
 
         private void applySettings()
-        {    
+        {
             //the height and width of magnifier = 500,500 --> can adjust this value in Settings.Designer.cs
-            Size = new Size(Properties.Settings.Default.maxMagnifierWidth, Properties.Settings.Default.maxMagnifierHeight);
+            //Size = new Size(Properties.Settings.Default.maxMagnifierWidth, Properties.Settings.Default.maxMagnifierHeight);
+            Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             TopMost = Properties.Settings.Default.alwaysOnTop;
         }
 

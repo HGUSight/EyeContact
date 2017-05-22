@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Windows;
 //move mouse
 using System.Runtime.InteropServices;
@@ -82,6 +84,8 @@ namespace Renewal
 
             //키보드 후킹 --> up key를 누르면 마우스 왼쪽 버튼 클릭이 작동
             SetHook();
+
+          //  startMagnifier();
         }
         #endregion
 
@@ -130,12 +134,21 @@ namespace Renewal
         private void Move_Mouse()
         {
             var lightlyFilteredGazeDataStream = ((App)System.Windows.Application.Current)._eyeXHost.CreateGazePointDataStream(GazePointDataMode.LightlyFiltered);
-            lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
+
+                lightlyFilteredGazeDataStream.Next += (s, e) => move_mouse(e.X, e.Y);
+           
+                
         }
 
         private void move_mouse(double x, double y)
         {
-            if (lastX == 0 && lastY == 0)
+            if (magnifierWindowLens != null)
+            {
+                x = x / mgnLens.Magnification + mgnLens.getSourceRectLeft();
+                y = y / mgnLens.Magnification + mgnLens.getSourceRectTop();
+            }
+
+                if (lastX == 0 && lastY == 0)
             {
                 lastX = (int)x;
                 lastY = (int)y;
@@ -210,7 +223,7 @@ namespace Renewal
         public const int LEFTUP = 0x0004;
         public const int RIGHTDOWN = 0x0008;
         public const int RIGHTUP = 0x0010;
-        public const int MOUSEWHEEL = 0x0800;
+      //  public const int MOUSEWHEEL = 0x0800;
         //마우스 후킹 변수들 
 
         public static int mouseEvent_var = (int)mouseEvent.LCLICKED;
@@ -303,7 +316,7 @@ namespace Renewal
                     }
                     #endregion
 
-                    #region
+                    #region 
                     if (flag_mag_start)
                     {
                         return (IntPtr)1;
@@ -439,6 +452,7 @@ namespace Renewal
         {
 
             SetHook();
+       
         }
         #endregion
 
